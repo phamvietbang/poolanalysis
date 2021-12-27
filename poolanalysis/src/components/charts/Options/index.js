@@ -2,10 +2,12 @@ export function setUpOptions(props){
     return {
         series: [{
             name: props.name_one,
-            data: props.data_one
+            data: props.data_one,
+            type: props.type,
         }, {
             name: props.name_two,
-            data: props.data_two
+            data: props.data_two,
+            type: props.type
         }],
         options: {
             

@@ -171,7 +171,7 @@ const AllUsers = () => {
             series: [{
                 name: 'users',
                 data: left,
-                type: 'column'
+                type: 'line'
             }, {
                 name: tvl_supply,
                 data: right,
@@ -251,8 +251,6 @@ const AllUsers = () => {
                 }
             }
         }
-        console.log('option', op)
-        console.log('123', datetime)
         
         setChartOptionsOne(op)
     }

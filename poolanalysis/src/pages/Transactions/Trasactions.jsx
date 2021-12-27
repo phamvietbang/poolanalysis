@@ -92,6 +92,7 @@ const Transactions = () => {
         let max_y_right = findMaxRoundNumber(Math.max(...supply))
         setChartOptionsOne(
             {
+                'type': 'line',
                 'name_one': 'total borrow',
                 'name_two': 'total supply',
                 'data_one': borrow,
@@ -130,6 +131,7 @@ const Transactions = () => {
 
         setChartOptionsThree(
             {
+                'type': 'column',
                 'name_one': 'amount of deposits',
                 'name_two': 'number of deposit transactions',
                 'data_one': deposit_amount,
@@ -167,6 +169,7 @@ const Transactions = () => {
 
         setChartOptionsFour(
             {
+                'type': "column",
                 'name_one': 'amount of borrows',
                 'name_two': 'number of borrow transactions',
                 'data_one': borrow_amount,
@@ -197,26 +200,38 @@ const Transactions = () => {
         for (var i in borrow) {
             utilization.push((100 * borrow[i] / supply[i]).toFixed(2))
         }
-        let rate = utilization
+        let uti_rate = utilization
+        let deposit_rate = []
+        let borrow_rate = []
+        let _series = []
         if (loadingTokenRate && tokenName != 'ALL') {
-            switch (selectedBtnUti) {
-                case 1:
-                    rate = interestRateToken.deposit_rate
-                    break
-                case 2:
-                    rate = interestRateToken.borrow_rate
-                    break
-                default:
-                    rate = interestRateToken.uti_rate
-                    break
-            }
+            deposit_rate = interestRateToken.deposit_rate
+            borrow_rate = interestRateToken.borrow_rate
+            uti_rate = interestRateToken.uti_rate
+        }
+        if (borrow_rate==[]){
+            _series = [{   
+                name:'utilization rate',
+                data: uti_rate
+            },]
+        }else{
+            _series = [
+                {   
+                    name:'utilization rate',
+                    data: uti_rate
+                },
+                {   
+                    name:'deposit rate',
+                    data: deposit_rate
+                },
+                {   
+                    name:'borrow rate',
+                    data: borrow_rate
+                },
+            ]
         }
         let chartOptions = {
-            series: [
-                {
-                    data: rate
-                },
-            ],
+            series: _series,
             options: {
                 title: {
                     text: 'Interest Rate',
@@ -250,7 +265,7 @@ const Transactions = () => {
                         axisTicks: {
                             show: true
                         },
-                        
+
                         title: {
                             text: "Percentage (%)"
                         },
@@ -275,21 +290,42 @@ const Transactions = () => {
         switch (selectedBtn) {
             case 1:
                 datetime = datetime.slice(-24,)
-                rate = rate.slice(-24,)
+                uti_rate = uti_rate.slice(-24,)
+                deposit_rate = deposit_rate.slice(-24,)
+                borrow_rate = borrow_rate.slice(-24,)
                 break
             case 2:
                 datetime = datetime.slice(-168,)
-                rate = rate.slice(-168,)
+                uti_rate = uti_rate.slice(-168,)
+                deposit_rate = deposit_rate.slice(-168,)
+                borrow_rate = borrow_rate.slice(-168,)
                 break
             default:
                 break
         }
-        chartOptions = {
-            series: [
-                {
-                    data: rate
+        if (borrow_rate==[]){
+            _series = [{   
+                name:'utilization rate',
+                data: uti_rate
+            },]
+        }else{
+            _series= [
+                {   
+                    name:'utilization rate',
+                    data: uti_rate
                 },
-            ],
+                {   
+                    name:'deposit rate',
+                    data: deposit_rate
+                },
+                {   
+                    name:'borrow rate',
+                    data: borrow_rate
+                },
+            ]
+        }
+        chartOptions = {
+            series:_series,
             options: {
                 title: {
                     text: 'Interest Rate',
@@ -323,7 +359,7 @@ const Transactions = () => {
                         axisTicks: {
                             show: true
                         },
-                        
+
                         title: {
                             text: "Percentage (%)"
                         },
@@ -523,11 +559,6 @@ const Transactions = () => {
                                                 justifyContent="space-between"
                                             >
                                                 <ButtonGroup aria-label="contained primary button group">
-                                                    <Button color={selectedBtnUti === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtnUti(1)}>Deposit Rate</Button>
-                                                    <Button color={selectedBtnUti === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtnUti(2)}>Borrow Rate</Button>
-                                                    <Button color={selectedBtnUti === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtnUti(3)}>Utilization Rate</Button>
-                                                </ButtonGroup>
-                                                <ButtonGroup aria-label="contained primary button group">
                                                     <Button color={selectedBtn === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtn(1)}>24H</Button>
                                                     <Button color={selectedBtn === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtn(2)}>1W</Button>
                                                     <Button color={selectedBtn === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtn(3)}>1M</Button>
@@ -548,11 +579,6 @@ const Transactions = () => {
                                 </Modal>
 
                             </Grid>
-                            <ButtonGroup aria-label="contained primary button group">
-                                <Button color={selectedBtnUti === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtnUti(1)}>Deposit Rate</Button>
-                                <Button color={selectedBtnUti === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtnUti(2)}>Borrow Rate</Button>
-                                <Button color={selectedBtnUti === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtnUti(3)}>Utilization Rate</Button>
-                            </ButtonGroup>
                         </Grid>
                     </Grid>
                 </Grid>
