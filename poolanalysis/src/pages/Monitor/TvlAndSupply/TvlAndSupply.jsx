@@ -14,6 +14,7 @@ import {
     totalValueTokenData,
 } from '../../../redux_components/slices/tokenSlice'
 import { useDispatch } from 'react-redux'
+import { fixedLargeNumber } from '../../../utils/utility'
 
 const TvlAndSupply = () => {
     const dispatch = useDispatch()
@@ -128,7 +129,8 @@ const TvlAndSupply = () => {
                             },
                             labels: {
                                 formatter: function (val, index) {
-                                    return val.toFixed(2);
+                                    // return val.toFixed(2);
+                                    return fixedLargeNumber(val.toFixed(2),1)
                                 },
                             }
                         },
@@ -147,7 +149,8 @@ const TvlAndSupply = () => {
                             },
                             labels: {
                                 formatter: function (val, index) {
-                                    return val.toFixed(2);
+                                    // return val.toFixed(2);
+                                    return fixedLargeNumber(val.toFixed(2),1)
                                 },
                             }
                         }

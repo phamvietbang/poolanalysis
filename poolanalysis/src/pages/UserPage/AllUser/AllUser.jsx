@@ -15,6 +15,7 @@ import {
     totalValueData
 } from '../../../redux_components/slices/lendingPoolSlice'
 import { useState } from 'react'
+import { fixedLargeNumber } from '../../../utils/utility'
 const useStyles = makeStyles((theme) => ({
     modal: {
         display: 'flex',
@@ -96,7 +97,8 @@ const AllUsers = () => {
                     },
                     labels: {
                         formatter: function (val, index) {
-                            return val.toFixed(0);
+                            // return val.toFixed(0);
+                            return fixedLargeNumber(val.toFixed(2),1)
                         },
                     }
                 },
@@ -213,7 +215,8 @@ const AllUsers = () => {
                         },
                         labels: {
                             formatter: function (val, index) {
-                                return val.toFixed(2);
+                                // return val.toFixed(2);
+                                return fixedLargeNumber(val.toFixed(2),1)
                             },
                         }
                     },
@@ -228,7 +231,8 @@ const AllUsers = () => {
                         },
                         labels: {
                             formatter: function (val, index) {
-                                return val.toFixed(2);
+                                // return val.toFixed(2);
+                                return fixedLargeNumber(val.toFixed(2),1)
                             },
                         }
                     },

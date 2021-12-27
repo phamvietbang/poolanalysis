@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { formatAddress, numberWithCommas } from '../../../utils/utility';
 
 const useStyles = makeStyles({
   table: {
@@ -32,11 +33,11 @@ export default function BasicTable(props) {
           {rows.map((row) => (
             <TableRow key={row.wallet}>
               <TableCell>
-                {row.wallet}
+                {formatAddress(row.wallet)}
               </TableCell>
               <TableCell align="center">{row.number_of_deposits}</TableCell>
-              <TableCell align="center">{row.amount_of_deposits}</TableCell>
-              <TableCell align="center">{row.tvl}</TableCell>
+              <TableCell align="center">{numberWithCommas(row.amount_of_deposits,2)}</TableCell>
+              <TableCell align="center">{numberWithCommas(row.tvl,2)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
