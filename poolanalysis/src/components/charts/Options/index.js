@@ -1,3 +1,5 @@
+import { fixedLargeNumber } from "../../../utils/utility";
+
 export function setUpOptions(props){
     return {
         series: [{
@@ -55,7 +57,7 @@ export function setUpOptions(props){
                     },
                     labels: {
                         formatter: function (val, index) {
-                            return val.toFixed(2);
+                            return fixedLargeNumber(val.toFixed(2),1) ;
                         },
                     }
                 },
@@ -74,7 +76,7 @@ export function setUpOptions(props){
                     },
                     labels: {
                         formatter: function (val, index) {
-                            return val.toFixed(2);
+                            return fixedLargeNumber(val.toFixed(2),1);
                         },
                     }
                 }
