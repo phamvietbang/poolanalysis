@@ -65,7 +65,6 @@ const Transactions = () => {
     const [chartOptionsThree, setChartOptionsThree] = React.useState({})
     const [chartOptionsFour, setChartOptionsFour] = React.useState({})
     const totalValue = useSelector(state => state.lendingpool.totalValue)
-    const tvl_supply_tokens = useSelector(state => state.lendingpool.tvlSupply)
     const tokens = useSelector(state => state.lendingpool.tokenName)
     const totalValueToken = useSelector(state => state.token.totalValue)
     const address = useSelector(state => state.lendingpool.tokenAddress)
@@ -93,14 +92,14 @@ const Transactions = () => {
         setChartOptionsOne(
             {
                 'type': 'line',
-                'name_one': 'total borrow',
-                'name_two': 'total supply',
+                'name_one': 'Total borrow',
+                'name_two': 'Total supply',
                 'data_one': borrow,
                 'data_two': supply,
                 'datetime': datetime,
                 'title': 'Total borrow and supply',
-                'title_one': 'borrow (USD)',
-                'title_two': 'supply (USD)',
+                'title_one': 'Total borrow (USD)',
+                'title_two': 'Total supply (USD)',
                 'min_y_left': min_y_left,
                 'max_y_left': max_y_left,
                 'min_y_right': min_y_right,
@@ -124,22 +123,22 @@ const Transactions = () => {
         }
         let deposit_amount = deposits.deposit_amount
         let deposit_tx = deposits.deposit_tx
-        let min_y_left = findMinRoundNumber(Math.min(...deposit_amount))
-        let min_y_right = findMinRoundNumber(Math.min(...deposit_tx))
-        let max_y_left = findMaxRoundNumber(Math.max(...deposit_amount))
-        let max_y_right = findMaxRoundNumber(Math.max(...deposit_tx))
+        let min_y_right = findMinRoundNumber(Math.min(...deposit_amount))
+        let min_y_left = findMinRoundNumber(Math.min(...deposit_tx))
+        let max_y_right = findMaxRoundNumber(Math.max(...deposit_amount))
+        let max_y_left = findMaxRoundNumber(Math.max(...deposit_tx))
 
         setChartOptionsThree(
             {
                 'type': 'column',
-                'name_one': 'amount of deposits',
-                'name_two': 'number of deposit transactions',
-                'data_one': deposit_amount,
-                'data_two': deposit_tx,
+                'name_two': 'Amount of deposits',
+                'name_one': 'Number of deposit transactions',
+                'data_two': deposit_amount,
+                'data_one': deposit_tx,
                 'datetime': datetime,
                 'title': 'Amount and Number Of Deposit Transactions',
-                'title_one': 'amount (USD)',
-                'title_two': 'number',
+                'title_two': 'Amount (USD)',
+                'title_one': 'Number',
                 'min_y_left': min_y_left,
                 'max_y_left': max_y_left,
                 'min_y_right': min_y_right,
@@ -162,22 +161,22 @@ const Transactions = () => {
         }
         let borrow_amount = borrows.borrow_amount
         let borrow_tx = borrows.borrow_tx
-        let min_y_left = findMinRoundNumber(Math.min(...borrow_amount))
-        let min_y_right = findMinRoundNumber(Math.min(...borrow_tx))
-        let max_y_left = findMaxRoundNumber(Math.max(...borrow_amount))
-        let max_y_right = findMaxRoundNumber(Math.max(...borrow_tx))
+        let min_y_right = findMinRoundNumber(Math.min(...borrow_amount))
+        let min_y_left = findMinRoundNumber(Math.min(...borrow_tx))
+        let max_y_right = findMaxRoundNumber(Math.max(...borrow_amount))
+        let max_y_left = findMaxRoundNumber(Math.max(...borrow_tx))
 
         setChartOptionsFour(
             {
                 'type': "column",
-                'name_one': 'amount of borrows',
-                'name_two': 'number of borrow transactions',
-                'data_one': borrow_amount,
-                'data_two': borrow_tx,
+                'name_two': 'Amount of borrows',
+                'name_one': 'Number of borrow transactions',
+                'data_two': borrow_amount,
+                'data_one': borrow_tx,
                 'datetime': datetime,
                 'title': 'Amount and Number Of Borrow Transactions',
-                'title_one': 'amount (USD)',
-                'title_two': 'number',
+                'title_two': 'Amount (USD)',
+                'title_one': 'Number',
                 'min_y_left': min_y_left,
                 'max_y_left': max_y_left,
                 'min_y_right': min_y_right,
@@ -201,35 +200,37 @@ const Transactions = () => {
             utilization.push((100 * borrow[i] / supply[i]).toFixed(2))
         }
         let uti_rate = utilization
-        let deposit_rate = []
-        let borrow_rate = []
+        let deposit_rate = null
+        let borrow_rate = null
         let _series = []
         if (loadingTokenRate && tokenName != 'ALL') {
             deposit_rate = interestRateToken.deposit_rate
             borrow_rate = interestRateToken.borrow_rate
             uti_rate = interestRateToken.uti_rate
         }
-        if (borrow_rate==[]){
-            _series = [{   
-                name:'utilization rate',
-                data: uti_rate
-            },]
-        }else{
+
+        _series = [{
+            name: 'utilization rate',
+            data: uti_rate
+        },]
+        if (borrow_rate && deposit_rate) {
+
             _series = [
-                {   
-                    name:'utilization rate',
+                {
+                    name: 'utilization rate',
                     data: uti_rate
                 },
-                {   
-                    name:'deposit rate',
+                {
+                    name: 'deposit rate',
                     data: deposit_rate
                 },
-                {   
-                    name:'borrow rate',
+                {
+                    name: 'borrow rate',
                     data: borrow_rate
                 },
             ]
         }
+
         let chartOptions = {
             series: _series,
             options: {
@@ -277,6 +278,7 @@ const Transactions = () => {
                     },
                 ],
                 legend: {
+                    showForSingleSeries:true,
                     position: 'top'
                 },
                 grid: {
@@ -291,41 +293,46 @@ const Transactions = () => {
             case 1:
                 datetime = datetime.slice(-24,)
                 uti_rate = uti_rate.slice(-24,)
-                deposit_rate = deposit_rate.slice(-24,)
-                borrow_rate = borrow_rate.slice(-24,)
+                if (deposit_rate && borrow_rate) {
+                    deposit_rate = deposit_rate.slice(-24,)
+                    borrow_rate = borrow_rate.slice(-24,)
+                }
                 break
             case 2:
                 datetime = datetime.slice(-168,)
                 uti_rate = uti_rate.slice(-168,)
-                deposit_rate = deposit_rate.slice(-168,)
-                borrow_rate = borrow_rate.slice(-168,)
+                if (deposit_rate && borrow_rate) {
+                    deposit_rate = deposit_rate.slice(-168,)
+                    borrow_rate = borrow_rate.slice(-168,)
+                }
+
                 break
             default:
                 break
         }
-        if (borrow_rate==[]){
-            _series = [{   
-                name:'utilization rate',
-                data: uti_rate
-            },]
-        }else{
-            _series= [
-                {   
-                    name:'utilization rate',
+        _series = [{
+            name: 'utilization rate',
+            data: uti_rate
+        },]
+        if (borrow_rate && deposit_rate) {
+            _series = [
+                {
+                    name: 'utilization rate',
                     data: uti_rate
                 },
-                {   
-                    name:'deposit rate',
+                {
+                    name: 'deposit rate',
                     data: deposit_rate
                 },
-                {   
-                    name:'borrow rate',
+                {
+                    name: 'borrow rate',
                     data: borrow_rate
                 },
             ]
         }
+
         chartOptions = {
-            series:_series,
+            series: _series,
             options: {
                 title: {
                     text: 'Interest Rate',
@@ -371,6 +378,7 @@ const Transactions = () => {
                     },
                 ],
                 legend: {
+                    showForSingleSeries:true,
                     position: 'top'
                 },
                 grid: {
@@ -577,7 +585,6 @@ const Transactions = () => {
                                         </Grid>
                                     </Fade>
                                 </Modal>
-
                             </Grid>
                         </Grid>
                     </Grid>

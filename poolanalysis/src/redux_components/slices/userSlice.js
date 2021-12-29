@@ -14,24 +14,24 @@ export const totalValueOfUser = createAsyncThunk(
         let config = {
             params: {
                 'wallet': wallet,
-                'lending_pool': state_.layout.lendingpool,
-                'tx_type': "deposits",
+                'lending': state_.layout.lendingpool,
+                'type': "deposits",
             },
         }
         let deposit = await client.get('/stats/total_value/trava_pool/wallet', config)
         config = {
             params: {
                 'wallet': wallet,
-                'lending_pool': state_.layout.lendingpool,
-                'tx_type': "borrows",
+                'lending': state_.layout.lendingpool,
+                'type': "borrows",
             },
         }
         let borrow = client.get('/stats/total_value/trava_pool/wallet', config)
         config = {
             params: {
                 'wallet': wallet,
-                'lending_pool': state_.layout.lendingpool,
-                'tx_type': "withdraw",
+                'lending': state_.layout.lendingpool,
+                'type': "withdraw",
             },
         }
         let withdraw = await client.get('/stats/total_value/trava_pool/wallet', config)
@@ -53,8 +53,8 @@ export const valueOfUser = createAsyncThunk(
                 'start_timestamp': 1630804928,
                 'end_timestamp': 1631816374,
                 'wallet': wallet,
-                'lending_pool': state_.layout.lendingpool,
-                'tx_type': type,
+                'lending': state_.layout.lendingpool,
+                'type': type,
             },
         }
         let result = await client.get('/stats/value/trava_pool/wallet', config)

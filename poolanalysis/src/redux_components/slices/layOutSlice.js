@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    lendingpool: localStorage.getItem("network") || "bsc"
+    lendingpool: localStorage.getItem("network") || "ftm"
 };
 
 

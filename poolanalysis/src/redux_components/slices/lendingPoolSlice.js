@@ -28,23 +28,23 @@ export const totalValueData = createAsyncThunk(
             params: {
                 'start_timestamp': 1638072245,
                 'end_timestamp': 1639234811,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "borrows",
             },
         }
         const borrow = await client.get('/stats/total_value_by_time/trava_pool', config)
         const timestamp = borrow.data.timestamp
-        const borrowInUSD = toFix2Float(borrow.data.totalBorrowInUSD)
+        const borrowInUSD = toFix2Float(borrow.data.totalBorrowChangeLogs)
         config = {
             params: {
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "supply",
             },
         }
         const supply = await client.get('/stats/total_value_by_time/trava_pool', config)
-        const supplyInUSD = toFix2Float(supply.data.totalSupplyInUSD)
+        const supplyInUSD = toFix2Float(supply.data.totalSupplyChangeLogs)
         const tvl = []
         for (var i in supplyInUSD) {
             tvl.push(supplyInUSD[i] - borrowInUSD[i])
@@ -58,7 +58,7 @@ export const tvlSupplyTokensData = createAsyncThunk(
         let config = {
             params: {
                 'timestamp': 1638929833,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "tvl",
             },
         }
@@ -70,7 +70,7 @@ export const tvlSupplyTokensData = createAsyncThunk(
         config = {
             params: {
                 'timestamp': 1638929833,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "total_supply",
             },
         }
@@ -103,43 +103,43 @@ export const depositBorrowData = createAsyncThunk(
             params: {
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "deposits",
             },
         }
         let deposit_amount = await client.get('/stats/amount_of_tx/trava_pool', config)
         let timestamp = deposit_amount.data.timestamp
-        let d_a = toFix2Float(deposit_amount.data.amountOfDeposit)
+        let d_a = toFix2Float(deposit_amount.data.deposits)
         config = {
             params: {
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
-                'dapp': state_.layout.lendingpool,
-                'tx_type': "deposits",
+                'lending': state_.layout.lendingpool,
+                'type': "deposits",
             },
         }
         let deposit_tx = await client.get('/stats/number_of_tx/trava_pool', config)
-        let d_tx = toFix2Float(deposit_tx.data.numberOfDeposits)
+        let d_tx = toFix2Float(deposit_tx.data.deposits)
         config = {
             params: {
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "borrows",
             },
         }
         let borrow_amount = await client.get('/stats/amount_of_tx/trava_pool', config)
-        let b_a = toFix2Float(borrow_amount.data.amountOfBorrow)
+        let b_a = toFix2Float(borrow_amount.data.borrows)
         config = {
             params: {
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
-                'dapp': state_.layout.lendingpool,
-                'tx_type': "borrows",
+                'lending': state_.layout.lendingpool,
+                'type': "borrows",
             },
         }
         let borrow_tx = await client.get('/stats/number_of_tx/trava_pool', config)
-        let b_tx = toFix2Float(borrow_tx.data.numberOfBorrows)
+        let b_tx = toFix2Float(borrow_tx.data.borrows)
         const result = {
             'timestamp':timestamp,
             'deposit_amount':d_a,

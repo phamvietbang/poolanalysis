@@ -18,27 +18,52 @@ export const countUsersData = createAsyncThunk(
             params: {
                 'timestamp': 1639238430,
                 'days': 10,
-                'lending_pool':state_.layout.lendingpool,
+                'lending':state_.layout.lendingpool,
             },
         }
         let result = await client.get('/stats/number_of_users/trava_pool',config)
+        // console.log(result)
         return result.data
     } 
 )
 export const seriesUsers = createAsyncThunk(
     "allUsers/users",
-    async (type, thunkAPI) => {
+    async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
         let config = {
             params: {
                 'start_timestamp': 1636238430,
                 'end_timestamp': 1639274475,
-                'dapp':state_.layout.lendingpool,
-                'type': type,
+                'lending':state_.layout.lendingpool,
+                'type': "activeUsers",
             },
         }
-        let users = await client.get('/stats/histogram_of_users/trava_pool',config)
-        let result = users.data
+        let active = await client.get('/stats/histogram_of_users/trava_pool',config)
+        config = {
+            params: {
+                'start_timestamp': 1636238430,
+                'end_timestamp': 1639274475,
+                'lending':state_.layout.lendingpool,
+                'type': "justDepositUsers",
+            },
+        }
+        let jdeposit = await client.get('/stats/histogram_of_users/trava_pool',config)
+        config = {
+            params: {
+                'start_timestamp': 1636238430,
+                'end_timestamp': 1639274475,
+                'lending':state_.layout.lendingpool,
+                'type': "depositAndBorrowUsers",
+            },
+        }
+        let dp = await client.get('/stats/histogram_of_users/trava_pool',config)
+        let result = {
+            'timestamp':active.data.timestamp,
+            'activeUsers': active.data.users,
+            'justDeposits': jdeposit.data.users,
+            'depositBorrows':dp.data.users
+        }
+        // console.log(result)
         return result
     }
 )
@@ -49,12 +74,12 @@ export const topDepositsAmount = createAsyncThunk(
         let state_ = thunkAPI.getState()
         let config = {
             params: {
-                'type': "deposits",
-                'lending_pool':state_.layout.lendingpool,
+                'lending':state_.layout.lendingpool,
                 'top': top,
             },
         }
         let result = await client.get('/stats/top_deposit/trava_pool',config)
+        console.log(result)
         return result.data
     }
 )
@@ -65,11 +90,12 @@ export const topDepositsTransact = createAsyncThunk(
         let state_ = thunkAPI.getState()
         let config = {
             params: {
-                'lending_pool':state_.layout.lendingpool,
+                'lending':state_.layout.lendingpool,
                 'top': top,
             },
         }
         let result = await client.get('/stats/top_users_transacting/trava_pool',config)
+        // console.log(result)
         return result.data
     }
 )

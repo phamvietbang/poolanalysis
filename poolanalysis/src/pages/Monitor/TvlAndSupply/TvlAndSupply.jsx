@@ -75,16 +75,16 @@ const TvlAndSupply = () => {
         setChartOptions(
             {
                 series: [{
-                    name: 'tvl',
+                    name: 'Total value lock',
                     data: tvl
                 }, {
-                    name: 'total supply',
+                    name: 'Total supply',
                     data: supply
                 }],
                 options: {
                     
                     title: {
-                        text: 'Tvl and Total Supply',
+                        text: 'Total value lock and Total Supply',
                         align: 'center'
                     },
                     color: ['#6ab04c', '#2980b9'],
@@ -125,7 +125,7 @@ const TvlAndSupply = () => {
                             max: max_y_left,
                             tickAmount: 4,
                             title: {
-                                text: "Total Value Lock (USD)"
+                                text: "Total value lock (USD)"
                             },
                             labels: {
                                 formatter: function (val, index) {
@@ -145,7 +145,7 @@ const TvlAndSupply = () => {
                             floating: false,
                             opposite: true,
                             title: {
-                                text: "Total Supply (USD)"
+                                text: "Total supply (USD)"
                             },
                             labels: {
                                 formatter: function (val, index) {

@@ -19,7 +19,7 @@ export const events_data = createAsyncThunk(
             params: {
                 'start_timestamp': 1632482787,
                 'end_timestamp': 1633047296,
-                'lending_pool': state_.layout.lendingpool
+                'lending': state_.layout.lendingpool
             },
         }
         const data = await client.get('/stats/events_data/trava_pool', config)

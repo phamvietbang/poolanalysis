@@ -1,14 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import client from "./../../services/requests";
-// list token: danh sách token
-// tvl series: datetime - value
-// total supply series: datetime - value
-// utilization/deposit rate/borrow rate series: datetime - value
-// lượng deposit/ số deposit: datetime - value
-// lượng borrow/ số borrow: datetime - value
-
-
-// thunk functions
 
 const initialState = {
     isLoading: false,
@@ -16,7 +7,6 @@ const initialState = {
     totalValue: {},
     depositBorrow: {},
     interestRate: {},
-    listTokens:{},
 }
 
 export const totalValueTokenData = createAsyncThunk(
@@ -28,27 +18,33 @@ export const totalValueTokenData = createAsyncThunk(
                 'start_timestamp': 0,
                 'end_timestamp': 1688859641,
                 'token': token,
-                'dapp': state_.layout.lendingpool,
-                'tx_type': "borrows",
+                'lending': state_.layout.lendingpool,
+                'type': "borrows",
             },
         }
         const borrow = await client.get('/stats/total_value_by_time/trava_pool/token', config)
         const timestamp = borrow.data.timestamp
-        const borrowInUSD = borrow.data.totalBorrowInUSD
+        const borrowInUSD = borrow.data.totalBorrowOfTokenChangeLogs
         config = {
             params: {
                 'start_timestamp': 0,
                 'end_timestamp': 1688859641,
                 'token': token,
-                'dapp': state_.layout.lendingpool,
-                'tx_type': "supply",
+                'lending': state_.layout.lendingpool,
+                'type': "supply",
             },
         }
         const supply = await client.get('/stats/total_value_by_time/trava_pool/token', config)
-        const supplyInUSD = supply.data.totalSupplyInUSD
+        
+        const supplyInUSD = supply.data.totalSupplyOfTokenChangeLogs
         const tvl = []
         for(var i in supplyInUSD){
+            if(supplyInUSD[i]<borrowInUSD[i] && borrowInUSD[i]-supplyInUSD[i]<10){
+                tvl.push(0)
+                continue
+            }
             tvl.push(supplyInUSD[i]-borrowInUSD[i])
+            
         }
         return {'token':token, 'timestamp': timestamp,'supply': supplyInUSD,'borrow': borrowInUSD,'tvl': tvl}
     }
@@ -62,8 +58,8 @@ export const depositBorrowTokenData = createAsyncThunk(
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
                 'token': token,
-                'lending_pool': state_.layout.lendingpool,
-                'tx_type': "deposits",
+                'lending': state_.layout.lendingpool,
+                'type': "deposits",
             },
         }
         let deposit_amount = await client.get('/stats/value/trava_pool/token', config)
@@ -72,9 +68,9 @@ export const depositBorrowTokenData = createAsyncThunk(
             params: {
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'token': token,
-                'tx_type': "deposits",
+                'type': "deposits",
             },
         }
         let deposit_tx = await client.get('/stats/number_of_tx/trava_pool/token', config)
@@ -84,10 +80,11 @@ export const depositBorrowTokenData = createAsyncThunk(
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
                 'token': token,
-                'lending_pool': state_.layout.lendingpool,
-                'tx_type': "borrows",
+                'lending': state_.layout.lendingpool,
+                'type': "borrows",
             },
         }
+        
         let borrow_amount = await client.get('/stats/value/trava_pool/token', config)
         let b_a_time = borrow_amount.data.timestamp
         config = {
@@ -95,8 +92,8 @@ export const depositBorrowTokenData = createAsyncThunk(
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
                 'token': token,
-                'dapp': state_.layout.lendingpool,
-                'tx_type': "borrows",
+                'lending': state_.layout.lendingpool,
+                'type': "borrows",
             },
         }
         let borrow_tx = await client.get('/stats/number_of_tx/trava_pool/token', config)
@@ -107,21 +104,21 @@ export const depositBorrowTokenData = createAsyncThunk(
             borrow_a[i] = 0
             for(var j in d_a_time){
                 if(d_a_time[j]<timestamp[i] && d_a_time[j]>timestamp[i-1]){
-                    deposit_a[i]+=deposit_amount.data.valueInUSD[j]
+                    deposit_a[i]+=deposit_amount.data.value[j]
                 }
             }
             for(var j in b_a_time){
                 if(b_a_time[j]<timestamp[i] && b_a_time[j]>=timestamp[i-1]){
-                    borrow_a[i]+=borrow_amount.data.valueInUSD[j]
+                    borrow_a[i]+=borrow_amount.data.value[j]
                 }
             }
         }
         const result = {
             'timestamp':timestamp,
             'deposit_amount':deposit_a,
-            'deposit_tx':deposit_tx.data.numberOfDeposits,
+            'deposit_tx':deposit_tx.data.deposits,
             'borrow_amount':borrow_a,
-            'borrow_tx':borrow_tx.data.numberOfBorrows
+            'borrow_tx':borrow_tx.data.borrows
         }
         console.log(result)
         return result
@@ -138,7 +135,7 @@ export const interestRateTokenData = createAsyncThunk(
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
                 'token': token,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "deposits",
             },
         }
@@ -148,7 +145,7 @@ export const interestRateTokenData = createAsyncThunk(
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
                 'token': token,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "borrows",
             },
         }
@@ -158,7 +155,7 @@ export const interestRateTokenData = createAsyncThunk(
                 'start_timestamp': 1636642811,
                 'end_timestamp': 1639234811,
                 'token': token,
-                'dapp': state_.layout.lendingpool,
+                'lending': state_.layout.lendingpool,
                 'type': "utilization",
             },
         }
@@ -169,7 +166,6 @@ export const interestRateTokenData = createAsyncThunk(
             'borrow_rate':borrow_rate.data.borrowRate,
             'uti_rate': uti_rate.data.utilizationRate
         }
-        console.log(result)
         return result
     }
 )
@@ -177,11 +173,6 @@ export const interestRateTokenData = createAsyncThunk(
 const tokenSlice = createSlice({
     name: 'token',
     initialState,
-    reducers:{
-        updateListTokens(state, action){
-            state.listTokens = action.payload
-        }
-    },
     extraReducers: (builder) => {
         builder
             .addCase(totalValueTokenData.pending, (state) => {

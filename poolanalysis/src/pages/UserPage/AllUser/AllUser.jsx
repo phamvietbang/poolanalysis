@@ -67,15 +67,18 @@ const AllUsers = () => {
     const [openChartTwo, setOpenChartTwo] = React.useState(false);
     const [type, setType] = useState('activeUsers')
     const [loadingAll, setLoadingAll] = useState(false)
-    const [chartOptionsOne, setChartOptionsOne] = useState({ 'series': [], 'options': {xaxis:{type: "numeric"}} })
+    const [chartOptionsOne, setChartOptionsOne] = useState({ 'series': [], 'options': { xaxis: { type: "numeric" } } })
     const [chartOptionsTwo, setChartOptionsTwo] = useState({ 'series': [], 'options': {} })
-    console.log('truoc',chartOptionsOne)
     const [selectedBtn, setSelectedBtn] = useState(3)
     const tvlSupply = useSelector(state => state.lendingpool.totalValue)
     const users = useSelector(state => state.allusers.users)
     const countUsers = useSelector(state => state.allusers.countUsers)
     const topA = useSelector(state => state.allusers.topDepositsA)
     const topT = useSelector(state => state.allusers.topDepositsT)
+    console.log(topT)
+    console.log(topA)
+    console.log(countUsers)
+    console.log(users)
     function handleChangeChartOptionsTwo() {
         if (!loadingAll) {
             return
@@ -93,12 +96,12 @@ const AllUsers = () => {
                 },
                 yaxis: {
                     title: {
-                        text: 'amount (USD)'
+                        text: 'Amount (USD)'
                     },
                     labels: {
                         formatter: function (val, index) {
                             // return val.toFixed(0);
-                            return fixedLargeNumber(val.toFixed(2),1)
+                            return fixedLargeNumber(val.toFixed(2), 1)
                         },
                     }
                 },
@@ -137,62 +140,79 @@ const AllUsers = () => {
         if (!loadingAll) {
             return
         }
-        console.log(tvlSupply)
-        let left = users.users
-        let right = []
+        
+        let active = users.activeUsers
+        let jdeposit = users.justDeposits
+        let db = users.depositBorrows
         let datetime = []
         for (var i in users.timestamp) {
             datetime.push(users.timestamp[i] * 1000)
         }
-        if (tvl_supply == 'tvl') {
-            right = tvlSupply.tvl.slice(0, left.length)
-        } else {
-            right = tvlSupply.supply.slice(0, left.length)
-        }
-        datetime = datetime.slice(0, left.length)
-        console.log('se',selectedBtn)
+        let tvl = tvlSupply.tvl.slice(0, active.length)
+        let supply = tvlSupply.supply.slice(0, active.length)
+        datetime = datetime.slice(0, active.length)
         switch (selectedBtn) {
             case 1:
-                left = left.slice(-24,)
-                right = right.slice(-24,)
+                active = active.slice(-24,)
+                jdeposit = jdeposit.slice(-24,)
+                db = db.slice(-24,)
+                tvl = tvl.slice(-24,)
+                supply = supply.slice(-24,)
                 datetime = datetime.slice(-24,)
                 break
             case 2:
-                left = left.slice(-168,)
-                right = right.slice(-168,)
+                active = active.slice(-168,)
+                jdeposit = jdeposit.slice(-168,)
+                db = db.slice(-168,)
+                tvl = tvl.slice(-168,)
+                supply = supply.slice(-168,)
                 datetime = datetime.slice(-168,)
                 break
             default:
-                left = left
-                right = right
-                datetime = datetime
                 break
         }
-        
+
         let op = {
             series: [{
-                name: 'users',
-                data: left,
+                name: 'active users',
+                data: active,
                 type: 'line'
-            }, {
-                name: tvl_supply,
-                data: right,
+            },
+            {
+                name: 'just deposit users',
+                data: jdeposit,
                 type: 'line'
-            }],
+            },
+            {
+                name: 'deposit and borrow users',
+                data: db,
+                type: 'line'
+            },
+            // {
+            //     name: 'Total value lock',
+            //     data: tvl,
+            //     type: 'line'
+            // },
+            // {
+            //     name: 'Total supply',
+            //     data: supply,
+            //     type: 'line'
+            // }
+        ],
             options: {
                 title: {
                     text: 'Users and total value',
                     align: 'center'
                 },
-                color: ['#6ab04c', '#2980b9'],
                 dataLabels: {
                     enabled: false
                 },
                 stroke: {
                     curve: 'smooth',
+                    width:2,
                 },
                 xaxis: {
-                    
+
                     categories: datetime,
                     type: 'datetime',
                     labels: {
@@ -206,39 +226,89 @@ const AllUsers = () => {
                 },
                 yaxis: [
                     {
-                        axisTicks: {
-                            show: true
-                        },
-
-                        title: {
-                            text: "users"
-                        },
-                        labels: {
-                            formatter: function (val, index) {
-                                // return val.toFixed(2);
-                                return fixedLargeNumber(val.toFixed(2),1)
-                            },
-                        }
-                    },
-                    {
-                        axisTicks: {
-                            show: true
-                        },
-
-                        opposite: true,
-                        title: {
-                            text: tvl_supply
+                        // axisTicks: {
+                        //     show: true
+                        // },
+                        min: findMinRoundNumber(Math.min(...db)),
+                        max: findMaxRoundNumber(Math.max(...active)),
+                        title:{
+                            text: 'Number of users'
                         },
                         labels: {
                             formatter: function (val, index) {
                                 // return val.toFixed(2);
-                                return fixedLargeNumber(val.toFixed(2),1)
+                                return fixedLargeNumber(val, 1)
                             },
                         }
                     },
+                    // {
+                    //     axisTicks: {
+                    //         show: true
+                    //     },
+                    //     min: findMinRoundNumber(Math.min(...jdeposit)),
+                    //     max: findMaxRoundNumber(Math.max(...jdeposit)),
+                    //     title:{
+                    //         text: 'Just deposit users'
+                    //     },
+                    //     labels: {
+                    //         formatter: function (val, index) {
+                    //             // return val.toFixed(2);
+                    //             return fixedLargeNumber(val.toFixed(2), 1)
+                    //         },
+                    //     }
+                    // },
+                    // {
+                    //     axisTicks: {
+                    //         show: true
+                    //     },
+                    //     min: findMinRoundNumber(Math.min(...db)),
+                    //     max: findMaxRoundNumber(Math.max(...db)),
+                    //     title:{
+                    //         text: 'Deposit and borrow users'
+                    //     },
+                    //     labels: {
+                    //         formatter: function (val, index) {
+                    //             // return val.toFixed(2);
+                    //             return fixedLargeNumber(val.toFixed(2), 1)
+                    //         },
+                    //     }
+                    // },
+                    // {
+                    //     axisTicks: {
+                    //         show: true
+                    //     },
+                    //     opposite:true,
+                    //     min: findMinRoundNumber(Math.min(...tvl)),
+                    //     max: findMaxRoundNumber(Math.max(...tvl)),
+                    //     title:{
+                    //         text: 'Total value lock (USD)'
+                    //     },
+                    //     labels: {
+                    //         formatter: function (val, index) {
+                    //             // return val.toFixed(2);
+                    //             return fixedLargeNumber(val.toFixed(2), 1)
+                    //         },
+                    //     }
+                    // },
+                    // {
+                    //     axisTicks: {
+                    //         show: true
+                    //     },
+                    //     min: findMinRoundNumber(Math.min(...tvl)),
+                    //     max: findMaxRoundNumber(Math.max(...supply)),
+                    //     opposite: true,
+                    //     title:{
+                    //         text: 'Total supply (USD)'
+                    //     },
+                    //     labels: {
+                    //         formatter: function (val, index) {
+                    //             // return val.toFixed(2);
+                    //             return fixedLargeNumber(val.toFixed(2), 1)
+                    //         },
+                    //     }
+                    // },
                 ],
                 chart: {
-                    id: 'conco',
                     background: 'transparent',
                     toolbar: {
                         tools: {
@@ -255,7 +325,7 @@ const AllUsers = () => {
                 }
             }
         }
-        
+
         setChartOptionsOne(op)
     }
     const handleOpenChartTwo = () => {
@@ -279,15 +349,11 @@ const AllUsers = () => {
             dispatch(totalValueData()),
             dispatch(topDepositsTransact(5)),
             dispatch(countUsersData()),
-            dispatch(seriesUsers(type)),
+            dispatch(seriesUsers()),
             dispatch(topDepositsAmount(top)),
         ])
         setLoadingAll(true)
     }
-    useEffect(() => {
-        dispatch(seriesUsers(type))
-
-    }, [type])
     useEffect(() => {
         dispatch(topDepositsAmount(top))
     }, [top])
@@ -313,13 +379,14 @@ const AllUsers = () => {
     const top_users_transacting = []
     for (var i in topT.walletAddress) {
         top_users_transacting.push(createData(topT.walletAddress[i], topT.numberOfTx[i],
-            topT.tvl[i], topT.totalAmountOfDepositsInUSD[i]))
+            topT.tvl[i], topT.depositsInUSD[i]))
     }
+    console.log(users)
     return (
         <Container fixed={true} maxWidth={"lg"}>
             <Grid
                 container
-                className='row_phu'
+                className='row'
                 direction="row"
                 justifyContent="space-between"
                 alignItems="baseline"
@@ -336,7 +403,7 @@ const AllUsers = () => {
                 }
             </Grid >
             <Grid className="row">
-                <Grid className="col-12">
+                <Grid className="col-6">
                     <Grid className="card full-height">
                         <Grid
                             container
@@ -345,25 +412,6 @@ const AllUsers = () => {
                             alignItems="baseline"
                         >
                             <Grid>
-                                <ButtonGroup aria-label="contained primary button group">
-                                    <Button color={type === 'activeUsers' ? "secondary" : "primary"} onClick={() => setType('activeUsers')}>Active User</Button>
-                                    <Button color={type === 'justDepositUsers' ? "secondary" : "primary"} onClick={() => setType('justDepositUsers')}>Just Deposit User</Button>
-                                    <Button color={type === 'depositAndBorrowUsers' ? "secondary" : "primary"} onClick={() => setType('depositAndBorrowUsers')}>Deposit-Borrow User</Button>
-                                </ButtonGroup>
-
-                            </Grid>
-                            <Grid>
-                                <FormControl variant="outlined" className={classes.formControl}>
-                                    <Select
-                                        id="demo-simple-select-outlined"
-                                        value={tvl_supply}
-                                        onChange={handleChangeTvlSupply}
-                                        className={classes.selectControl}
-                                    >
-                                        <MenuItem value={'tvl'}>Tvl</MenuItem>
-                                        <MenuItem value={'supply'}>Total Supply</MenuItem>
-                                    </Select>
-                                </FormControl>
                                 <ButtonGroup aria-label="contained primary button group">
                                     <Button color={selectedBtn === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtn(1)}>24h</Button>
                                     <Button color={selectedBtn === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtn(2)}>1W</Button>
@@ -376,7 +424,32 @@ const AllUsers = () => {
                             options={chartOptionsOne.options}
                             series={chartOptionsOne.series}
 
-                            height='536'
+                            height='400'
+                        />
+                    </Grid>
+                </Grid>
+                <Grid className="col-6">
+                    <Grid className="card full-height">
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="baseline"
+                        >
+                            <Grid>
+                                <ButtonGroup aria-label="contained primary button group">
+                                    <Button color={selectedBtn === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtn(1)}>24h</Button>
+                                    <Button color={selectedBtn === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtn(2)}>1W</Button>
+                                    <Button color={selectedBtn === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtn(3)}>1M</Button>
+                                </ButtonGroup>
+                            </Grid>
+                        </Grid>
+                        {/* chart */}
+                        <Chart
+                            options={chartOptionsOne.options}
+                            series={chartOptionsOne.series}
+
+                            height='400'
                         />
                     </Grid>
                 </Grid>

@@ -23,10 +23,10 @@ export default function BasicTable(props) {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Wallet</TableCell>
-            <TableCell align="center">Number Deposits</TableCell>
-            <TableCell align="center">Deposit Amount</TableCell>
-            <TableCell align="center">Tvl</TableCell>
+            <TableCell>Wallet Address</TableCell>
+            <TableCell align="center">Number Of Transactions</TableCell>
+            <TableCell align="center">Total value lock (USD)</TableCell>
+            <TableCell align="center">Deposit Amount (USD)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
