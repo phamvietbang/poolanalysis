@@ -9,7 +9,8 @@ import BasicTable from './UserTable'
 import StatusCard from './../../../components/status-card/StatusCard'
 import {
     seriesUsers, countUsersData,
-    topDepositsAmount, topDepositsTransact
+    topDepositsAmount, topDepositsTransact,
+    clusteringUsersData
 } from '../../../redux_components/slices/allUsersSlice'
 import {
     totalValueData
@@ -64,21 +65,21 @@ const AllUsers = () => {
     const classes = useStyles();
     const [top, setTop] = React.useState(5);
     const [tvl_supply, setTvlSupply] = React.useState('tvl');
+    const [openChartOne, setOpenChartOne] = React.useState(false);
     const [openChartTwo, setOpenChartTwo] = React.useState(false);
-    const [type, setType] = useState('activeUsers')
+    const [openChartThree, setOpenChartThree] = React.useState(false);
+    const [selectedType, setSelectedType] = useState(1)
     const [loadingAll, setLoadingAll] = useState(false)
     const [chartOptionsOne, setChartOptionsOne] = useState({ 'series': [], 'options': { xaxis: { type: "numeric" } } })
     const [chartOptionsTwo, setChartOptionsTwo] = useState({ 'series': [], 'options': {} })
+    const [chartOptionsThree, setChartOptionsThree] = useState({ 'series': [], 'options': {} })
     const [selectedBtn, setSelectedBtn] = useState(3)
     const tvlSupply = useSelector(state => state.lendingpool.totalValue)
     const users = useSelector(state => state.allusers.users)
     const countUsers = useSelector(state => state.allusers.countUsers)
     const topA = useSelector(state => state.allusers.topDepositsA)
     const topT = useSelector(state => state.allusers.topDepositsT)
-    console.log(topT)
-    console.log(topA)
-    console.log(countUsers)
-    console.log(users)
+    const tvlDeposit = useSelector(state => state.allusers.clusteringUsers)
     function handleChangeChartOptionsTwo() {
         if (!loadingAll) {
             return
@@ -140,7 +141,7 @@ const AllUsers = () => {
         if (!loadingAll) {
             return
         }
-        
+
         let active = users.activeUsers
         let jdeposit = users.justDeposits
         let db = users.depositBorrows
@@ -188,20 +189,20 @@ const AllUsers = () => {
                 data: db,
                 type: 'line'
             },
-            // {
-            //     name: 'Total value lock',
-            //     data: tvl,
-            //     type: 'line'
-            // },
-            // {
-            //     name: 'Total supply',
-            //     data: supply,
-            //     type: 'line'
-            // }
-        ],
+                // {
+                //     name: 'Total value lock',
+                //     data: tvl,
+                //     type: 'line'
+                // },
+                // {
+                //     name: 'Total supply',
+                //     data: supply,
+                //     type: 'line'
+                // }
+            ],
             options: {
                 title: {
-                    text: 'Users and total value',
+                    text: 'Number of users change in a month',
                     align: 'center'
                 },
                 dataLabels: {
@@ -209,7 +210,7 @@ const AllUsers = () => {
                 },
                 stroke: {
                     curve: 'smooth',
-                    width:2,
+                    width: 2,
                 },
                 xaxis: {
 
@@ -231,7 +232,7 @@ const AllUsers = () => {
                         // },
                         min: findMinRoundNumber(Math.min(...db)),
                         max: findMaxRoundNumber(Math.max(...active)),
-                        title:{
+                        title: {
                             text: 'Number of users'
                         },
                         labels: {
@@ -328,13 +329,106 @@ const AllUsers = () => {
 
         setChartOptionsOne(op)
     }
+    function handleChangeChartOptionThree() {
+        if (!loadingAll) {
+            return
+        }
+        console.log(tvlDeposit)
+        let amount = tvlDeposit.amount
+        let count = []
+        let tit = ''
+        let txt = ''
+        switch (selectedType) {
+            case 1:
+                count = tvlDeposit.deposit
+                tit = 'Number of users with amount of deposit'
+                txt = 'Amount of deposit (USD)'
+                break
+            case 2:
+                count = tvlDeposit.tvl
+                tit = 'Number of users with amount of total value lock'
+                txt = 'Total value lock (USD)'
+                break
+            default:
+                break
+        }
+
+        let op = {
+            series: [{
+                name: 'number of users',
+                data: count,
+            },
+            ],
+            options: {
+                title: {
+                    text: tit,
+                    align: 'center'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2,
+                },
+                xaxis: {
+                    categories: amount,
+                    title: {
+                        text: txt
+                    }
+                },
+                yaxis: [
+                    {
+                        axisTicks: {
+                            show: true
+                        },
+                        title: {
+                            text: 'Number of users'
+                        },
+                    },
+                ],
+                plotOptions: {
+                    bar: {
+                        columnWidth: '100%',
+                    }
+                },
+                chart: {
+                    background: 'transparent',
+                    toolbar: {
+                        tools: {
+                            download: false,
+                            pan: false,
+                        },
+                    }
+                },
+                legend: {
+                    position: 'top'
+                },
+                grid: {
+                    show: true
+                }
+            }
+        }
+
+        setChartOptionsThree(op)
+    }
     const handleOpenChartTwo = () => {
         setOpenChartTwo(true);
     };
-    //
-
     const handleCloseChartTwo = () => {
         setOpenChartTwo(false);
+    };
+    const handleOpenChartOne = () => {
+        setOpenChartOne(true);
+    };
+    const handleCloseChartOne = () => {
+        setOpenChartOne(false);
+    };
+    const handleOpenChartThree = () => {
+        setOpenChartThree(true);
+    };
+    const handleCloseChartThree = () => {
+        setOpenChartThree(false);
     };
 
     const handleChangeTop = (event) => {
@@ -351,12 +445,16 @@ const AllUsers = () => {
             dispatch(countUsersData()),
             dispatch(seriesUsers()),
             dispatch(topDepositsAmount(top)),
+            dispatch(clusteringUsersData()),
         ])
         setLoadingAll(true)
     }
     useEffect(() => {
         dispatch(topDepositsAmount(top))
     }, [top])
+    useEffect(() => {
+        handleChangeChartOptionThree()
+    }, [loadingAll, selectedType, tvlDeposit])
     useEffect(() => {
         fetchData()
     }, [])
@@ -386,7 +484,7 @@ const AllUsers = () => {
         <Container fixed={true} maxWidth={"lg"}>
             <Grid
                 container
-                className='row'
+                className='row_phu'
                 direction="row"
                 justifyContent="space-between"
                 alignItems="baseline"
@@ -426,6 +524,45 @@ const AllUsers = () => {
 
                             height='400'
                         />
+                        <Grid>
+                            <Button variant="outlined" onClick={handleOpenChartOne}>Full</Button>
+                            <Modal
+                                aria-labelledby="transition-modal-title"
+                                aria-describedby="transition-modal-description"
+                                className={classes.modal}
+                                open={openChartOne}
+                                onClose={handleCloseChartOne}
+                                closeAfterTransition
+                                BackdropComponent={Backdrop}
+                                BackdropProps={{
+                                    timeout: 500,
+                                }}
+                            >
+                                <Fade in={openChartOne}>
+                                    <Grid
+                                        className='card'
+                                        container
+                                        xs={8}
+                                        direction="column"
+                                        justifyContent="center"
+                                        alignItems="center">
+                                        <Grid>
+                                            <ButtonGroup aria-label="contained primary button group">
+                                                <Button color={selectedBtn === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtn(1)}>24h</Button>
+                                                <Button color={selectedBtn === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtn(2)}>1W</Button>
+                                                <Button color={selectedBtn === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtn(3)}>1M</Button>
+                                            </ButtonGroup>
+                                        </Grid>
+                                        <Chart
+                                            options={{ ...chartOptionsOne }.options}
+                                            series={{ ...chartOptionsOne }.series}
+                                            height='500'
+                                            width={1000}
+                                        />
+                                    </Grid>
+                                </Fade>
+                            </Modal>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid className="col-6">
@@ -438,22 +575,59 @@ const AllUsers = () => {
                         >
                             <Grid>
                                 <ButtonGroup aria-label="contained primary button group">
-                                    <Button color={selectedBtn === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtn(1)}>24h</Button>
-                                    <Button color={selectedBtn === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtn(2)}>1W</Button>
-                                    <Button color={selectedBtn === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtn(3)}>1M</Button>
+                                    <Button color={selectedType === 1 ? "secondary" : "primary"} onClick={() => setSelectedType(1)}>Amount of deposit</Button>
+                                    <Button color={selectedType === 2 ? "secondary" : "primary"} onClick={() => setSelectedType(2)}>Total value lock</Button>
                                 </ButtonGroup>
                             </Grid>
                         </Grid>
                         {/* chart */}
                         <Chart
-                            options={chartOptionsOne.options}
-                            series={chartOptionsOne.series}
-
+                            options={chartOptionsThree.options}
+                            series={chartOptionsThree.series}
+                            type='bar'
                             height='400'
                         />
+                        <Grid>
+                            <Button variant="outlined" onClick={handleOpenChartThree}>Full</Button>
+                            <Modal
+                                aria-labelledby="transition-modal-title"
+                                aria-describedby="transition-modal-description"
+                                className={classes.modal}
+                                open={openChartThree}
+                                onClose={handleCloseChartThree}
+                                closeAfterTransition
+                                BackdropComponent={Backdrop}
+                                BackdropProps={{
+                                    timeout: 500,
+                                }}
+                            >
+                                <Fade in={openChartThree}>
+                                    <Grid
+                                        className='card'
+                                        container
+                                        xs={8}
+                                        direction="column"
+                                        justifyContent="center"
+                                        alignItems="center">
+                                        <Grid>
+                                            <ButtonGroup aria-label="contained primary button group">
+                                                <Button color={selectedType === 1 ? "secondary" : "primary"} onClick={() => setSelectedType(1)}>Amount of deposit</Button>
+                                                <Button color={selectedType === 2 ? "secondary" : "primary"} onClick={() => setSelectedType(2)}>Total value lock</Button>
+                                            </ButtonGroup>
+                                        </Grid>
+                                        <Chart
+                                            options={{ ...chartOptionsThree }.options}
+                                            series={{ ...chartOptionsThree }.series}
+                                            type='bar'
+                                            height='500'
+                                            width={1000}
+                                        />
+                                    </Grid>
+                                </Fade>
+                            </Modal>
+                        </Grid>
                     </Grid>
                 </Grid>
-
             </Grid>
             <Grid className="row">
                 <Grid className="col-6">

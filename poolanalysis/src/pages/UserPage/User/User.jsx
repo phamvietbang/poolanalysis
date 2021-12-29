@@ -5,8 +5,11 @@ import {
     useDispatch
     , useSelector
 } from 'react-redux'
-import { totalValueOfUser, valueOfUser } from '../../../redux_components/slices/userSlice'
+import { totalValueOfUser, valueOfUser, transactionAmount } from '../../../redux_components/slices/userSlice'
 import StatusCard from './../../../components/status-card/StatusCard'
+import ZoomChart from '../../../components/charts/ZoomChart'
+import { setUpOptions, setUpOptionChartNormal, setUpOptionChartOneSeries } from '../../../components/charts/Options'
+import { fixedLargeNumber } from "../../../utils/utility";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -22,59 +25,197 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 const chartOptions = {
-    series: [{
-        name: 'active user',
-        data: [40, 70, 20, 90, 36, 80, 30, 91, 60]
-    }, {
-        name: 'total supply',
-        data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10]
-    }],
+    series: [],
     options: {
-        title: {
-            text: 'Bieu do 1',
-            align: 'center'
-        },
-        chart: {
-            background: 'transparent',
-            toolbar: {
-                tools: {
-                    download: false,
-                    pan: false,
-                },
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        color: ['#6ab04c', '#2980b9'],
-        stroke: {
-            curve: 'smooth'
-        },
-        xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-        },
-        legend: {
-            position: 'top'
-        },
-        grid: {
-            show: false
-        }
     }
 }
-
+const type_amount = [{ 'name': 'Deposits (USD)', 'amount': 0 },
+{ 'name': 'Borrows (USD)', 'amount': 0 },
+{ 'name': 'Liquidation Threshold', 'amount': 0 },
+{ 'name': 'Loan To Value (USD)', 'amount': 0 },
+{ 'name': 'Health Factor', 'amount': 0 }]
 const User = () => {
     const dispatch = useDispatch()
     const classes = useStyles();
+    const [optionChartOne, setOptionChartOne] = React.useState({});
+    const [optionChartTwo, setOptionChartTwo] = React.useState({series: [],options:{xaxis: {
+        type: 'datetime',
+        tickAmount: 6,
+    },}});
+    const [optionChartThree, setOptionChartThree] = React.useState({});
+    const [optionChartFour, setOptionChartFour] = React.useState({});
+    const [amount, setAmount] = React.useState(type_amount)
     const [openChartOne, setOpenChartOne] = React.useState(false);
     const [openChartTwo, setOpenChartTwo] = React.useState(false);
     const [openChartThree, setOpenChartThree] = React.useState(false);
     const [openChartFour, setOpenChartFour] = React.useState(false);
-    const [loadingTotalValue, setLoadingTotalValue] = React.useState(false)
-    const [loadingValue, setLoadingValue] = React.useState(false)
+    const [loadingAll, setLoadingAll] = React.useState(false)
+    const [address, setAddress] = React.useState('')
     const [btn, setBtn] = React.useState(3)
     const [type, setType] = React.useState('deposits')
     const totalValue = useSelector(state => state.user.totalValue)
     const value = useSelector(state => state.user.value)
+    const tx_amount = useSelector(state => state.user.tx_amount)
+
+
+    const makeAmount = () => {
+        if (!loadingAll || Object.keys(totalValue).length === 0) {
+            return
+        }
+        let tmp = [{ 'name': 'Deposits (USD)', 'amount': totalValue.deposit.toFixed(0) },
+        { 'name': 'Borrows (USD)', 'amount': totalValue.borrow.toFixed(0) },
+        { 'name': 'Liquidation Threshold (%)', 'amount': totalValue.liquidationT.toFixed(0) },
+        { 'name': 'Loan To Value (%)', 'amount': totalValue.ltv.toFixed(0) },
+        { 'name': 'Health Factor', 'amount': totalValue.health_factor.toFixed(2) }]
+        setAmount(tmp)
+    }
+
+    const makeOptionChartTwo = () => {
+        if (!loadingAll || Object.keys(tx_amount).length === 0) {
+            return
+        }
+        let op = {
+            series: [{
+                name:'deposit',
+                data: tx_amount.deposit,
+            },
+            {
+                name:'borrow',
+                data: tx_amount.borrow
+            },
+            {
+                name:'withdraw',
+                data: tx_amount.withdraw
+            },
+            {   
+                name:'repay',
+                data: tx_amount.repay
+            },
+            ],
+            options:{
+                title: {
+                    text: 'History transactions of wallets',
+                    align: 'center'
+                },
+                chart: {
+                    background: 'transparent',
+                    toolbar: {
+                        tools: {
+                            download: false,
+                            pan: false,
+                        },
+                    }
+                },
+                legend: {
+                    position: 'top'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                plotOptions: {
+                    bar: {
+                        columnWidth: '10%',
+                    }
+                },
+                xaxis: {
+                    type: 'datetime',
+                    tickAmount: 6,
+                },
+                tooltip: {
+                    x: {
+                        format: 'dd MMM yyyy hh:mm'
+                    }
+                },
+                yaxis:{
+                    title: {
+                        text: "Amount (USD)",
+                    },
+                    labels: {
+                        formatter: function (val, index) {
+                            return fixedLargeNumber(val.toFixed(2),1) ;
+                        },
+                    }
+                }
+            }
+        }
+            
+        setOptionChartTwo(op)
+    }
+
+    const makeOptionChartOne = () => {
+        if (!loadingAll || Object.keys(value).length === 0) {
+            return
+        }
+        let datetime = []
+        for (var i in value.timestamp) {
+            datetime.push(value.timestamp[i] * 1000)
+        }
+        let deposit = value.deposit
+        let borrow = value.borrow
+        setOptionChartOne(
+            {
+                'type': 'line',
+                'name_one': 'Amount of borrow',
+                'name_two': 'Amount of deposit',
+                'data_one': borrow,
+                'data_two': deposit,
+                'datetime': datetime,
+                'title': 'Amount of borrow and deposit',
+                'title_one': 'Amount (USD)',
+            }
+
+        )
+    }
+    const makeOptionChartThree = () => {
+        if (!loadingAll || Object.keys(value).length === 0) {
+            return
+        }
+        // console.log(value)
+        let datetime = []
+        for (var i in value.timestamp) {
+            datetime.push(value.timestamp[i] * 1000)
+        }
+        let liquidation = value.liquidation
+        let ltv = value.ltv
+        setOptionChartThree(
+            {
+                'type': 'line',
+                'name_one': 'Liquidation threshold',
+                'name_two': 'Loan to value',
+                'data_one': liquidation,
+                'data_two': ltv,
+                'datetime': datetime,
+                'title': 'Liquidation threshold and loan to value',
+                'title_one': 'Percentage (%)',
+            }
+
+        )
+    }
+    const makeOptionChartFour = () => {
+        if (!loadingAll || Object.keys(value).length === 0) {
+            return
+        }
+        // console.log(value)
+        let datetime = []
+        for (var i in value.timestamp) {
+            datetime.push(value.timestamp[i] * 1000)
+        }
+        let hf = value.hf
+        setOptionChartFour(
+            {
+                'type': 'line',
+                'name_one': 'health factor',
+                'data_one': hf,
+                'datetime': datetime,
+                'title': 'Health factor of wallet',
+                'title_one': 'Health factor',
+            }
+
+        )
+    }
+    const handleChangeAddress = (event) => {
+        setAddress(event.target.value)
+    }
 
     const handleOpenChartOne = () => {
         setOpenChartOne(true);
@@ -83,6 +224,7 @@ const User = () => {
     const handleCloseChartOne = () => {
         setOpenChartOne(false);
     };
+
     const handleOpenChartTwo = () => {
         setOpenChartTwo(true);
     };
@@ -90,6 +232,7 @@ const User = () => {
     const handleCloseChartTwo = () => {
         setOpenChartTwo(false);
     };
+
     const handleOpenChartThree = () => {
         setOpenChartThree(true);
     };
@@ -97,29 +240,43 @@ const User = () => {
     const handleCloseChartThree = () => {
         setOpenChartThree(false);
     };
+
     const handleOpenChartFour = () => {
         setOpenChartFour(true);
     };
+
     const handleCloseChartFour = () => {
         setOpenChartFour(false);
     };
-    // useEffect(() => {
-    //     dispatch(totalValueOfUser('0xac2a1e9ccc678bfe8e7cfcaf3912109f4b7e2570')).then(() => setLoadingTotalValue(true))
-    //     dispatch(valueOfUser('0xac2a1e9ccc678bfe8e7cfcaf3912109f4b7e2570',type)).then(() => setLoadingValue(true))
-    // }, [type])
-    // if (!loadingTotalValue || !loadingValue) {
-    //     return
-    // }
-    // console.log(totalValue)
-    const type_amount = [{ 'name': 'Deposits (USD)', 'amount': 124 },
-    { 'name': 'Borrows (USD)', 'amount': 124 },
-    { 'name': 'Withdraws (USD)', 'amount': 124 },
-    { 'name': 'LTV (USD)', 'amount': 1234 },
-    { 'name': 'Health Factor', 'amount': 1234 }]
+
+    const makeWalletData = () => {
+        if (address != '') {
+            setLoadingAll(false)
+            dispatch(totalValueOfUser(address))
+            dispatch(valueOfUser(address))
+            dispatch(transactionAmount(address))
+            setLoadingAll(true)
+        }
+    }
+    console.log(optionChartTwo)
+    useEffect(() => {
+        makeAmount()
+    }, [loadingAll, totalValue])
+    useEffect(() => {
+        makeWalletData()
+    }, [address])
+    useEffect(() => {
+        makeOptionChartOne()
+        makeOptionChartFour()
+        makeOptionChartThree()
+    }, [loadingAll, value])
+    useEffect(() => {
+        makeOptionChartTwo()
+    }, [loadingAll, tx_amount])
     return (
         <Container fixed={true} maxWidth={"lg"}>
             <Grid className='row_phu card_phu'>
-                <TextField label="Address" variant="outlined"/>
+                <TextField label="Address" variant="outlined" onChange={handleChangeAddress} />
             </Grid>
             <Grid container
                 className='row_user'
@@ -127,7 +284,7 @@ const User = () => {
                 justifyContent="space-between"
                 alignItems="baseline">
                 {
-                    type_amount.map((item, index) => (
+                    amount.map((item, index) => (
                         <Grid xs={2} key={index}>
                             <StatusCard
                                 count={item.amount}
@@ -137,22 +294,14 @@ const User = () => {
                     ))
                 }
             </Grid>
-            
+
             <Grid className="row">
                 <Grid className="col-6">
                     <Grid className="card_phu">
-                        <Grid>
-                            <ButtonGroup aria-label="contained primary button group">
-                                <Button>Deposits</Button>
-                                <Button>Borrows</Button>
-                                <Button>Withdraws</Button>
-                            </ButtonGroup>
-
-                        </Grid>
                         {/* chart */}
                         <Chart
-                            options={chartOptions.options}
-                            series={chartOptions.series}
+                            options={setUpOptionChartNormal(optionChartOne).options}
+                            series={setUpOptionChartNormal(optionChartOne).series}
                             type='line'
                             height='400'
                         />
@@ -186,25 +335,18 @@ const User = () => {
                                             alignItems="center">
                                             <Grid>
                                                 <ButtonGroup aria-label="contained primary button group">
-                                                    <Button color={type === 'deposits' ? "secondary" : "primary"} onClick={() => setType('deposits')}>Deposit</Button>
-                                                    <Button color={type === 'borrows' ? "secondary" : "primary"} onClick={() => setType('borrows')}>Borrow</Button>
-                                                    <Button color={type === 'withdraws' ? "secondary" : "primary"} onClick={() => setType('withdraws')}>Withdraw</Button>
-                                                </ButtonGroup>
-                                            </Grid>
-                                            <Chart
-                                                options={chartOptions.options}
-                                                series={chartOptions.series}
-                                                type='line'
-                                                high={500}
-                                                width={1000}
-                                            />
-                                            <Grid>
-                                                <ButtonGroup aria-label="contained primary button group">
                                                     <Button color={btn === 1 ? "secondary" : "primary"} onClick={() => setBtn(1)}>24H</Button>
                                                     <Button color={btn === 2 ? "secondary" : "primary"} onClick={() => setBtn(2)}>1W</Button>
                                                     <Button color={btn === 3 ? "secondary" : "primary"} onClick={() => setBtn(3)}>1M</Button>
                                                 </ButtonGroup>
                                             </Grid>
+                                            <Chart
+                                                options={setUpOptionChartNormal({ ...optionChartOne }).options}
+                                                series={setUpOptionChartNormal({ ...optionChartOne }).series}
+                                                type='line'
+                                                high={500}
+                                                width={1000}
+                                            />
                                         </Grid>
                                     </Fade>
                                 </Modal>
@@ -216,9 +358,9 @@ const User = () => {
                     <Grid className="card_phu">
                         {/* chart */}
                         <Chart
-                            options={chartOptions.options}
-                            series={chartOptions.series}
-                            type='line'
+                            options={optionChartTwo.options}
+                            series={optionChartTwo.series}
+                            type='scatter'
                             height='400'
                         />
                         <Grid
@@ -249,6 +391,13 @@ const User = () => {
                                             direction="column"
                                             justifyContent="center"
                                             alignItems="center">
+                                            <Grid>
+                                                <ButtonGroup aria-label="contained primary button group">
+                                                    <Button>24H</Button>
+                                                    <Button>1W</Button>
+                                                    <Button>1M</Button>
+                                                </ButtonGroup>
+                                            </Grid>
                                             <Chart
                                                 options={chartOptions.options}
                                                 series={chartOptions.series}
@@ -256,21 +405,10 @@ const User = () => {
                                                 high={500}
                                                 width={1000}
                                             />
-                                            <Grid>
-                                                <ButtonGroup aria-label="contained primary button group">
-                                                    <Button>Day</Button>
-                                                    <Button>Hour</Button>
-                                                </ButtonGroup>
-                                            </Grid>
+
                                         </Grid>
                                     </Fade>
                                 </Modal>
-                            </Grid>
-                            <Grid>
-                                <ButtonGroup aria-label="contained primary button group">
-                                    <Button>Day</Button>
-                                    <Button>Hour</Button>
-                                </ButtonGroup>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -281,8 +419,8 @@ const User = () => {
                     <Grid className="card">
                         {/* chart */}
                         <Chart
-                            options={chartOptions.options}
-                            series={chartOptions.series}
+                            options={setUpOptionChartNormal(optionChartThree).options}
+                            series={setUpOptionChartNormal(optionChartThree).series}
                             type='line'
                             height='400'
                         />
@@ -314,28 +452,23 @@ const User = () => {
                                             direction="column"
                                             justifyContent="center"
                                             alignItems="center">
+                                            <Grid>
+                                                <ButtonGroup aria-label="contained primary button group">
+                                                    <Button>24H</Button>
+                                                    <Button>1W</Button>
+                                                    <Button>1M</Button>
+                                                </ButtonGroup>
+                                            </Grid>
                                             <Chart
-                                                options={chartOptions.options}
-                                                series={chartOptions.series}
+                                                options={setUpOptionChartNormal({ ...optionChartThree }).options}
+                                                series={setUpOptionChartNormal({ ...optionChartThree }).series}
                                                 type='line'
                                                 high={500}
                                                 width={1000}
                                             />
-                                            <Grid>
-                                                <ButtonGroup aria-label="contained primary button group">
-                                                    <Button>Day</Button>
-                                                    <Button>Hour</Button>
-                                                </ButtonGroup>
-                                            </Grid>
                                         </Grid>
                                     </Fade>
                                 </Modal>
-                            </Grid>
-                            <Grid>
-                                <ButtonGroup aria-label="contained primary button group">
-                                    <Button>Day</Button>
-                                    <Button>Hour</Button>
-                                </ButtonGroup>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -344,8 +477,8 @@ const User = () => {
                     <Grid className="card">
                         {/* chart */}
                         <Chart
-                            options={chartOptions.options}
-                            series={chartOptions.series}
+                            options={setUpOptionChartOneSeries(optionChartFour).options}
+                            series={setUpOptionChartOneSeries(optionChartFour).series}
                             type='line'
                             height='400'
                         />
@@ -377,28 +510,23 @@ const User = () => {
                                             direction="column"
                                             justifyContent="center"
                                             alignItems="center">
+                                            <Grid>
+                                                <ButtonGroup aria-label="contained primary button group">
+                                                    <Button>24H</Button>
+                                                    <Button>1W</Button>
+                                                    <Button>1M</Button>
+                                                </ButtonGroup>
+                                            </Grid>
                                             <Chart
-                                                options={chartOptions.options}
-                                                series={chartOptions.series}
+                                                options={setUpOptionChartOneSeries({ ...optionChartFour }).options}
+                                                series={setUpOptionChartOneSeries({ ...optionChartFour }).series}
                                                 type='line'
                                                 high={500}
                                                 width={1000}
                                             />
-                                            <Grid>
-                                                <ButtonGroup aria-label="contained primary button group">
-                                                    <Button>Day</Button>
-                                                    <Button>Hour</Button>
-                                                </ButtonGroup>
-                                            </Grid>
                                         </Grid>
                                     </Fade>
                                 </Modal>
-                            </Grid>
-                            <Grid>
-                                <ButtonGroup aria-label="contained primary button group">
-                                    <Button>Day</Button>
-                                    <Button>Hour</Button>
-                                </ButtonGroup>
                             </Grid>
                         </Grid>
                     </Grid>

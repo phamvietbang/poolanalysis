@@ -55,7 +55,6 @@ const Transactions = () => {
     const [loadingTokenRate, setLoadingTokenRate] = useState(false)
     const [loadingDBT, setLoadingDBT] = useState(false)
     const [selectedBtn, setSelectedBtn] = React.useState(3);
-    const [selectedBtnUti, setSelectedBtnUti] = React.useState(3);
     const [tokenName, setTokenName] = useState('ALL')
     const [openChartThree, setOpenChartThree] = React.useState(false);
     const [openChartFour, setOpenChartFour] = React.useState(false);
@@ -89,6 +88,7 @@ const Transactions = () => {
         let min_y_right = findMinRoundNumber(Math.min(...supply))
         let max_y_left = findMaxRoundNumber(Math.max(...borrow))
         let max_y_right = findMaxRoundNumber(Math.max(...supply))
+        
         setChartOptionsOne(
             {
                 'type': 'line',
@@ -440,7 +440,7 @@ const Transactions = () => {
     }, [tokenName, totalValue, totalValueToken, loadingT, loadingLp])
     useEffect(() => {
         makeChartOptionsTwo()
-    }, [totalValue, tokenName, loadingLp, interestRateToken, loadingTokenRate, selectedBtn, selectedBtnUti])
+    }, [totalValue, tokenName, loadingLp, interestRateToken, loadingTokenRate, selectedBtn])
     useEffect(() => {
         makechartOptionsThree()
         makechartOptionsFour()
@@ -624,9 +624,7 @@ const Transactions = () => {
                                     }}
                                 >
                                     <Fade in={openChartThree}>
-
                                         <ZoomChart data={{ ...chartOptionsThree }} />
-
                                     </Fade>
                                 </Modal>
                             </Grid>

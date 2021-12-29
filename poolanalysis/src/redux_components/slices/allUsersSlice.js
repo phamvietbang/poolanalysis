@@ -7,8 +7,64 @@ const initialState = {
     countUsers: {},
     users: {},
     topDepositsA:{},
-    topDepositsT:{}
+    topDepositsT:{},
+    clusteringUsers:{}
 }
+
+export const clusteringUsersData = createAsyncThunk(
+    "allUsers/clustering_users",
+    async (_, thunkAPI) => {
+        let state_ = thunkAPI.getState()
+        let config = {
+            params: {
+                'lending':state_.layout.lendingpool,
+            },
+        }
+        let result = await client.get('/stats/deposit_tvl/trava_pool/wallet',config)
+        let deposit = result.data.deposit
+        let tvl = result.data.tvl
+        let amount = ['<1000', '1000-5000', '5000-10000', '10000-15000','15000-20000', '>20000'] 
+        let cluster_tvl = [0,0,0,0,0,0]
+        let cluster_deposit = [0,0,0,0,0,0]
+        for(var i in tvl){
+            if (tvl[i]<1000){
+                cluster_tvl[0]+=1
+            }else if(tvl[i]>=1000 && tvl[i]<5000){
+                cluster_tvl[1]+=1
+            }else if(tvl[i]>=5000 && tvl[i]<10000){
+                cluster_tvl[2]+=1
+            }else if(tvl[i]>=10000 && tvl[i]<15000){
+                cluster_tvl[3]+=1
+            }else if(tvl[i]>15000 && tvl[i]<20000){
+                cluster_tvl[4]+=1
+            }else{
+                cluster_tvl[5]+=1
+            }
+            if (deposit[i]<1000){
+                cluster_deposit[0]+=1
+            }else if(deposit[i]>=1000 && deposit[i]<5000){
+                cluster_deposit[1]+=1
+            }else if(deposit[i]>=5000 && deposit[i]<10000){
+                cluster_deposit[2]+=1
+            }else if(deposit[i]>=10000 && deposit[i]<15000){
+                cluster_deposit[3]+=1
+            }else if(deposit[i]>15000 && deposit[i]<20000){
+                cluster_deposit[4]+=1
+            }else{
+                cluster_deposit[5]+=1
+            }
+        }
+        result = {
+            'amount':amount,
+            'deposit':cluster_deposit,
+            'tvl':cluster_tvl
+        }
+        console.log(result)
+        return result
+    }
+)
+    
+
 
 export const countUsersData = createAsyncThunk(
     "allUsers/count_users",
@@ -79,7 +135,6 @@ export const topDepositsAmount = createAsyncThunk(
             },
         }
         let result = await client.get('/stats/top_deposit/trava_pool',config)
-        console.log(result)
         return result.data
     }
 )
@@ -156,6 +211,20 @@ const countUsers = createSlice({
             state.topDepositsT = action.payload;
         })
         .addCase(topDepositsTransact.rejected, (state, action) => {
+            // Tắt trạng thái loading, lưu thông báo lỗi vào store
+            state.isLoading = false;
+            state.errorMessage = action.payload.message;
+        });
+        builder
+        .addCase(clusteringUsersData.pending, (state) => {
+            // Bật trạng thái loading
+            state.isLoading = true;
+        })
+        .addCase(clusteringUsersData.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.clusteringUsers = action.payload;
+        })
+        .addCase(clusteringUsersData.rejected, (state, action) => {
             // Tắt trạng thái loading, lưu thông báo lỗi vào store
             state.isLoading = false;
             state.errorMessage = action.payload.message;
