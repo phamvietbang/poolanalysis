@@ -37,7 +37,7 @@ export const transactionAmount = createAsyncThunk(
         let config = {
             params: {
                 'start_timestamp': 1630804928,
-                'end_timestamp': 1639673200,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'deposits',
@@ -47,7 +47,7 @@ export const transactionAmount = createAsyncThunk(
         config = {
             params: {
                 'start_timestamp': 1630804928,
-                'end_timestamp': 1639673200,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'borrows',
@@ -57,7 +57,7 @@ export const transactionAmount = createAsyncThunk(
         config = {
             params: {
                 'start_timestamp': 1630804928,
-                'end_timestamp': 1639673200,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'withdraws',
@@ -67,7 +67,7 @@ export const transactionAmount = createAsyncThunk(
         config = {
             params: {
                 'start_timestamp': 1630804928,
-                'end_timestamp': 1639673200,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'repays',
@@ -92,8 +92,8 @@ export const valueOfUser = createAsyncThunk(
         let state_ = thunkAPI.getState()
         let config = {
             params: {
-                'start_timestamp': 1630804928,
-                'end_timestamp': 1638673200,
+                'start_timestamp': 1638316800,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'depositLogs',
@@ -102,8 +102,8 @@ export const valueOfUser = createAsyncThunk(
         let deposit = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': 1630804928,
-                'end_timestamp': 1638673200,
+                'start_timestamp': 1638316800,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'borrowLogs',
@@ -112,8 +112,8 @@ export const valueOfUser = createAsyncThunk(
         let borrow = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': 1630804928,
-                'end_timestamp': 1638673200,
+                'start_timestamp': 1638316800,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'liquidationThresholdLogs',
@@ -122,8 +122,8 @@ export const valueOfUser = createAsyncThunk(
         let lT = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': 1630804928,
-                'end_timestamp': 1638673200,
+                'start_timestamp': 1638316800,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'loanToValueLogs',
@@ -132,8 +132,8 @@ export const valueOfUser = createAsyncThunk(
         let ltv = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': 1630804928,
-                'end_timestamp': 1638673200,
+                'start_timestamp': 1638316800,
+                'end_timestamp': 1640908800,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
                 'type': 'healthFactorLogs',
