@@ -42,7 +42,7 @@ const User = () => {
     const [openChartThree, setOpenChartThree] = React.useState(false);
     const [openChartFour, setOpenChartFour] = React.useState(false);
     const [loadingAll, setLoadingAll] = React.useState(false)
-    const [address, setAddress] = React.useState('')
+    const [address, setAddress] = React.useState('0x8f9276e46036e0a9bb3db46e9bc7e4e3972380b8')
     const [selectedBtn, setSelectedBtn] = React.useState(3)
     const [type, setType] = React.useState('deposits')
     const totalValue = useSelector(state => state.user.totalValue)
@@ -86,7 +86,7 @@ const User = () => {
             ],
             options:{
                 title: {
-                    text: 'History transactions of wallets',
+                    text: 'History transactions of wallet',
                     align: 'center'
                 },
                 chart: {
@@ -268,7 +268,7 @@ const User = () => {
     return (
         <Container fixed={true} maxWidth={"lg"}>
             <Grid className='row_phu card_phu'>
-                <TextField label="Address" variant="outlined" onChange={handleChangeAddress} />
+                <TextField label="Address" variant="outlined" value={address} onChange={handleChangeAddress} />
             </Grid>
             <Grid container
                 className='row_user'
