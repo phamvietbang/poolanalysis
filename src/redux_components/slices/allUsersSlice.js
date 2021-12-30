@@ -78,7 +78,7 @@ export const countUsersData = createAsyncThunk(
             },
         }
         let result = await client.get('/stats/number_of_users/trava_pool',config)
-        // console.log(result)
+        console.log(result)
         return result.data
     } 
 )
@@ -91,7 +91,7 @@ export const seriesUsers = createAsyncThunk(
                 'start_timestamp': 1636238430,
                 'end_timestamp': 1639274475,
                 'lending':state_.layout.lendingpool,
-                'type': "activeUsers",
+                'type': "totalNumberOfActiveUserChangeLogs",
             },
         }
         let active = await client.get('/stats/histogram_of_users/trava_pool',config)
@@ -100,7 +100,7 @@ export const seriesUsers = createAsyncThunk(
                 'start_timestamp': 1636238430,
                 'end_timestamp': 1639274475,
                 'lending':state_.layout.lendingpool,
-                'type': "justDepositUsers",
+                'type': "totalNumberOfDepositingOnlyUserChangeLogs",
             },
         }
         let jdeposit = await client.get('/stats/histogram_of_users/trava_pool',config)
@@ -109,7 +109,7 @@ export const seriesUsers = createAsyncThunk(
                 'start_timestamp': 1636238430,
                 'end_timestamp': 1639274475,
                 'lending':state_.layout.lendingpool,
-                'type': "depositAndBorrowUsers",
+                'type': "totalNumberOfBorrowingUserChangeLogs",
             },
         }
         let dp = await client.get('/stats/histogram_of_users/trava_pool',config)
@@ -119,7 +119,7 @@ export const seriesUsers = createAsyncThunk(
             'justDeposits': jdeposit.data.users,
             'depositBorrows':dp.data.users
         }
-        // console.log(result)
+        console.log(result)
         return result
     }
 )
@@ -135,6 +135,7 @@ export const topDepositsAmount = createAsyncThunk(
             },
         }
         let result = await client.get('/stats/top_deposit/trava_pool',config)
+        console.log(result)
         return result.data
     }
 )
@@ -150,7 +151,7 @@ export const topDepositsTransact = createAsyncThunk(
             },
         }
         let result = await client.get('/stats/top_users_transacting/trava_pool',config)
-        // console.log(result)
+        console.log(result)
         return result.data
     }
 )

@@ -13,7 +13,7 @@ const menu = [
         items: [
             {
                 title: 'All Users',
-                to: '/all-users'
+                to: '/'
             },
             {
                 title: 'User',

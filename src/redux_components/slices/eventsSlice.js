@@ -18,7 +18,7 @@ export const events_data = createAsyncThunk(
         let config = {
             params: {
                 'start_timestamp': 1632482787,
-                'end_timestamp': 1633047296,
+                'end_timestamp': 1639047296,
                 'lending': state_.layout.lendingpool
             },
         }
