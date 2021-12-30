@@ -7,7 +7,7 @@ import {
 } from 'react-redux'
 import { totalValueOfUser, valueOfUser, transactionAmount } from '../../../redux_components/slices/userSlice'
 import StatusCard from './../../../components/status-card/StatusCard'
-import ZoomChart from '../../../components/charts/ZoomChart'
+import {ZoomChartOneSeries, ZoomChartNormal} from '../../../components/charts/ZoomChart'
 import { setUpOptions, setUpOptionChartNormal, setUpOptionChartOneSeries } from '../../../components/charts/Options'
 import { fixedLargeNumber } from "../../../utils/utility";
 
@@ -24,11 +24,6 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2, 4, 3),
     },
 }));
-const chartOptions = {
-    series: [],
-    options: {
-    }
-}
 const type_amount = [{ 'name': 'Deposits (USD)', 'amount': 0 },
 { 'name': 'Borrows (USD)', 'amount': 0 },
 { 'name': 'Liquidation Threshold', 'amount': 0 },
@@ -38,10 +33,7 @@ const User = () => {
     const dispatch = useDispatch()
     const classes = useStyles();
     const [optionChartOne, setOptionChartOne] = React.useState({});
-    const [optionChartTwo, setOptionChartTwo] = React.useState({series: [],options:{xaxis: {
-        type: 'datetime',
-        tickAmount: 6,
-    },}});
+    const [optionChartTwo, setOptionChartTwo] = React.useState({series: [],options:{xaxis: {type: 'datetime'},}});
     const [optionChartThree, setOptionChartThree] = React.useState({});
     const [optionChartFour, setOptionChartFour] = React.useState({});
     const [amount, setAmount] = React.useState(type_amount)
@@ -51,7 +43,7 @@ const User = () => {
     const [openChartFour, setOpenChartFour] = React.useState(false);
     const [loadingAll, setLoadingAll] = React.useState(false)
     const [address, setAddress] = React.useState('')
-    const [btn, setBtn] = React.useState(3)
+    const [selectedBtn, setSelectedBtn] = React.useState(3)
     const [type, setType] = React.useState('deposits')
     const totalValue = useSelector(state => state.user.totalValue)
     const value = useSelector(state => state.user.value)
@@ -326,28 +318,7 @@ const User = () => {
                                     }}
                                 >
                                     <Fade in={openChartOne}>
-                                        <Grid
-                                            className='card'
-                                            container
-                                            xs={8}
-                                            direction="column"
-                                            justifyContent="center"
-                                            alignItems="center">
-                                            <Grid>
-                                                <ButtonGroup aria-label="contained primary button group">
-                                                    <Button color={btn === 1 ? "secondary" : "primary"} onClick={() => setBtn(1)}>24H</Button>
-                                                    <Button color={btn === 2 ? "secondary" : "primary"} onClick={() => setBtn(2)}>1W</Button>
-                                                    <Button color={btn === 3 ? "secondary" : "primary"} onClick={() => setBtn(3)}>1M</Button>
-                                                </ButtonGroup>
-                                            </Grid>
-                                            <Chart
-                                                options={setUpOptionChartNormal({ ...optionChartOne }).options}
-                                                series={setUpOptionChartNormal({ ...optionChartOne }).series}
-                                                type='line'
-                                                high={500}
-                                                width={1000}
-                                            />
-                                        </Grid>
+                                        <ZoomChartNormal data={{...optionChartOne}}/>
                                     </Fade>
                                 </Modal>
                             </Grid>
@@ -391,17 +362,17 @@ const User = () => {
                                             direction="column"
                                             justifyContent="center"
                                             alignItems="center">
-                                            <Grid>
+                                            {/* <Grid>
                                                 <ButtonGroup aria-label="contained primary button group">
-                                                    <Button>24H</Button>
-                                                    <Button>1W</Button>
-                                                    <Button>1M</Button>
+                                                    <Button color={selectedBtn === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtn(1)}>24H</Button>
+                                                    <Button color={selectedBtn === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtn(2)}>1W</Button>
+                                                    <Button color={selectedBtn === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtn(3)}>1M</Button>
                                                 </ButtonGroup>
-                                            </Grid>
+                                            </Grid> */}
                                             <Chart
-                                                options={chartOptions.options}
-                                                series={chartOptions.series}
-                                                type='line'
+                                                options={{...optionChartTwo}.options}
+                                                series={{...optionChartTwo}.series}
+                                                type='scatter'
                                                 high={500}
                                                 width={1000}
                                             />
@@ -445,28 +416,7 @@ const User = () => {
                                     }}
                                 >
                                     <Fade in={openChartThree}>
-                                        <Grid
-                                            className='card'
-                                            container
-                                            xs={8}
-                                            direction="column"
-                                            justifyContent="center"
-                                            alignItems="center">
-                                            <Grid>
-                                                <ButtonGroup aria-label="contained primary button group">
-                                                    <Button>24H</Button>
-                                                    <Button>1W</Button>
-                                                    <Button>1M</Button>
-                                                </ButtonGroup>
-                                            </Grid>
-                                            <Chart
-                                                options={setUpOptionChartNormal({ ...optionChartThree }).options}
-                                                series={setUpOptionChartNormal({ ...optionChartThree }).series}
-                                                type='line'
-                                                high={500}
-                                                width={1000}
-                                            />
-                                        </Grid>
+                                        <ZoomChartNormal data={{...optionChartThree}}/>
                                     </Fade>
                                 </Modal>
                             </Grid>
@@ -503,28 +453,7 @@ const User = () => {
                                     }}
                                 >
                                     <Fade in={openChartFour}>
-                                        <Grid
-                                            className='card'
-                                            container
-                                            xs={8}
-                                            direction="column"
-                                            justifyContent="center"
-                                            alignItems="center">
-                                            <Grid>
-                                                <ButtonGroup aria-label="contained primary button group">
-                                                    <Button>24H</Button>
-                                                    <Button>1W</Button>
-                                                    <Button>1M</Button>
-                                                </ButtonGroup>
-                                            </Grid>
-                                            <Chart
-                                                options={setUpOptionChartOneSeries({ ...optionChartFour }).options}
-                                                series={setUpOptionChartOneSeries({ ...optionChartFour }).series}
-                                                type='line'
-                                                high={500}
-                                                width={1000}
-                                            />
-                                        </Grid>
+                                        <ZoomChartOneSeries data={{...optionChartFour}}/>
                                     </Fade>
                                 </Modal>
                             </Grid>
