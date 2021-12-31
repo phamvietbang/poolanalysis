@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import Paper from '@material-ui/core/Paper';
+import { numberWithCommas } from '../../../utils/utility';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -189,9 +190,9 @@ export default function EnhancedTable(props) {
                       selected={isItemSelected}
                     >
                       <TableCell align="center">{row.token}</TableCell>
-                      <TableCell align="center">{row.tvl}</TableCell>
+                      <TableCell align="center">{numberWithCommas(row.tvl, 2)}</TableCell>
                       <TableCell align="center">{row.tvl_p}</TableCell>
-                      <TableCell align="center">{row.supply}</TableCell>
+                      <TableCell align="center">{numberWithCommas(row.supply,2)}</TableCell>
                       <TableCell align="center">{row.supply_p}</TableCell>
                     </TableRow>
                   );
