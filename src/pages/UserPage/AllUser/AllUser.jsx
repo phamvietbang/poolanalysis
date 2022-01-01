@@ -479,7 +479,6 @@ const AllUsers = () => {
         top_users_transacting.push(createData(topT.walletAddress[i], topT.numberOfTx[i],
             topT.tvl[i], topT.depositsInUSD[i]))
     }
-    console.log(users)
     return (
         <Container fixed={true} maxWidth={"lg"}>
             <Grid

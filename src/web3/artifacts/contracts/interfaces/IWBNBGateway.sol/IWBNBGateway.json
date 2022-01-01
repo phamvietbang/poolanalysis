@@ -1,0 +1,103 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IWBNBGateway",
+  "sourceName": "contracts/interfaces/IWBNBGateway.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "lendingPool",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint16",
+          "name": "referralCode",
+          "type": "uint16"
+        }
+      ],
+      "name": "borrowBNB",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "lendingPool",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "onBehalfOf",
+          "type": "address"
+        },
+        {
+          "internalType": "uint16",
+          "name": "referralCode",
+          "type": "uint16"
+        }
+      ],
+      "name": "depositBNB",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "lendingPool",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "onBehalfOf",
+          "type": "address"
+        }
+      ],
+      "name": "repayBNB",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "lendingPool",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "onBehalfOf",
+          "type": "address"
+        }
+      ],
+      "name": "withdrawBNB",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

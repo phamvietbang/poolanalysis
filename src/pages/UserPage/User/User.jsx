@@ -5,11 +5,14 @@ import {
     useDispatch
     , useSelector
 } from 'react-redux'
-import { totalValueOfUser, valueOfUser, transactionAmount } from '../../../redux_components/slices/userSlice'
+import { Autocomplete } from '@material-ui/lab'
+import { totalValueOfUser, valueOfUser, transactionAmount, dataToken, seriesDataToken } from '../../../redux_components/slices/userSlice'
 import StatusCard from './../../../components/status-card/StatusCard'
-import {ZoomChartOneSeries, ZoomChartNormal} from '../../../components/charts/ZoomChart'
+import { ZoomChartOneSeries, ZoomChartNormal } from '../../../components/charts/ZoomChart'
 import { setUpOptions, setUpOptionChartNormal, setUpOptionChartOneSeries } from '../../../components/charts/Options'
 import { fixedLargeNumber } from "../../../utils/utility";
+import UserTable from './UserTable'
+
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -29,27 +32,46 @@ const type_amount = [{ 'name': 'Deposits (USD)', 'amount': 0 },
 { 'name': 'Liquidation Threshold', 'amount': 0 },
 { 'name': 'Loan To Value (USD)', 'amount': 0 },
 { 'name': 'Health Factor', 'amount': 0 }]
+function createData(token, token_address, deposit, borrow) {
+    return { token, token_address, deposit, borrow };
+}
+
 const User = () => {
     const dispatch = useDispatch()
     const classes = useStyles();
     const [optionChartOne, setOptionChartOne] = React.useState({});
-    const [optionChartTwo, setOptionChartTwo] = React.useState({series: [],options:{xaxis: {type: 'datetime'},}});
+    const [optionChartTwo, setOptionChartTwo] = React.useState({ series: [], options: { xaxis: { type: 'datetime' }, } });
     const [optionChartThree, setOptionChartThree] = React.useState({});
     const [optionChartFour, setOptionChartFour] = React.useState({});
+    const [optionChartFive, setOptionChartFive] = React.useState({ series: [], options: { xaxis: { type: 'datetime' }, } });
+    const [optionChartFiveZoom, setOptionChartFiveZoom] = React.useState({ series: [], options: { xaxis: { type: 'datetime' }, } });
     const [amount, setAmount] = React.useState(type_amount)
     const [openChartOne, setOpenChartOne] = React.useState(false);
     const [openChartTwo, setOpenChartTwo] = React.useState(false);
     const [openChartThree, setOpenChartThree] = React.useState(false);
     const [openChartFour, setOpenChartFour] = React.useState(false);
+    const [openChartFive, setOpenChartFive] = React.useState(false);
     const [loadingAll, setLoadingAll] = React.useState(false)
     const [address, setAddress] = React.useState('0x8f9276e46036e0a9bb3db46e9bc7e4e3972380b8')
     const [selectedBtn, setSelectedBtn] = React.useState(3)
+    const [selectedBtn2, setSelectedBtn2] = React.useState(3)
     const [type, setType] = React.useState('deposits')
+    const [tokenName, setTokenName] = React.useState('')
     const totalValue = useSelector(state => state.user.totalValue)
     const value = useSelector(state => state.user.value)
     const tx_amount = useSelector(state => state.user.tx_amount)
+    const data_token = useSelector(state => state.user.data_token)
+    const series_data_token = useSelector(state => state.user.series_data_token)
 
-
+    const data_token_list = []
+    for (var i in data_token.token) {
+        data_token_list.push(createData(data_token.token[i], data_token.token_address[i],
+            data_token.depositTokens[i], data_token.borrowTokens[i]))
+    }
+    const coin = []
+    for (var i in data_token.token) {
+        coin.push({ 'name': data_token.token[i] })
+    }
     const makeAmount = () => {
         if (!loadingAll || Object.keys(totalValue).length === 0) {
             return
@@ -68,23 +90,23 @@ const User = () => {
         }
         let op = {
             series: [{
-                name:'deposit',
+                name: 'deposit',
                 data: tx_amount.deposit,
             },
             {
-                name:'borrow',
+                name: 'borrow',
                 data: tx_amount.borrow
             },
             {
-                name:'withdraw',
+                name: 'withdraw',
                 data: tx_amount.withdraw
             },
-            {   
-                name:'repay',
+            {
+                name: 'repay',
                 data: tx_amount.repay
             },
             ],
-            options:{
+            options: {
                 title: {
                     text: 'History transactions of wallet',
                     align: 'center'
@@ -104,11 +126,6 @@ const User = () => {
                 dataLabels: {
                     enabled: false
                 },
-                plotOptions: {
-                    bar: {
-                        columnWidth: '10%',
-                    }
-                },
                 xaxis: {
                     type: 'datetime',
                     tickAmount: 6,
@@ -118,20 +135,174 @@ const User = () => {
                         format: 'dd MMM yyyy hh:mm'
                     }
                 },
-                yaxis:{
+                yaxis: {
                     title: {
                         text: "Amount (USD)",
                     },
                     labels: {
                         formatter: function (val, index) {
-                            return fixedLargeNumber(val.toFixed(2),1) ;
+                            return fixedLargeNumber(val.toFixed(2), 1);
                         },
                     }
                 }
             }
         }
-            
+
         setOptionChartTwo(op)
+    }
+
+    const makeOptionChartFive = () => {
+        if (!loadingAll || Object.keys(series_data_token).length === 0) {
+            return
+        }
+        let start = 0
+        let end = 1640908800
+        let deposit = series_data_token.deposit
+        let borrow = series_data_token.borrow
+        let op = {
+            series: [{
+                name: 'deposit',
+                data: deposit,
+            },
+            {
+                name: 'borrow',
+                data: borrow
+            },
+            ],
+            options: {
+                title: {
+                    text: 'Deposit and borrow change of token',
+                    align: 'center'
+                },
+                chart: {
+                    background: 'transparent',
+                    toolbar: {
+                        tools: {
+                            download: false,
+                            pan: false,
+                        },
+                    }
+                },
+                legend: {
+                    position: 'top'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    type: 'datetime',
+                    tickAmount: 6,
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                tooltip: {
+                    x: {
+                        format: 'dd MMM yyyy hh:mm'
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: "Amount (USD)",
+                    },
+                    labels: {
+                        formatter: function (val, index) {
+                            return fixedLargeNumber(val.toFixed(2), 1);
+                        },
+                    }
+                }
+            }
+        }
+
+        setOptionChartFive(op)
+        if (selectedBtn2===1){
+            deposit = []
+            borrow = []
+            start = end-24*3600
+            for (var i in series_data_token.deposit){
+                if(series_data_token.deposit[i][0]>=start && series_data_token.deposit[i][0]<=end){
+                    deposit.push(series_data_token.deposit[i])
+                }
+            }
+            for (var i in series_data_token.borrow){
+                if(series_data_token.borrow[i][0]>=start && series_data_token.borrow[i][0]<=end){
+                    borrow.push(series_data_token.borrow[i])
+                }
+            }
+        }
+        if (selectedBtn2===2){
+            deposit = []
+            borrow = []
+            start = end-24*3600*7
+            for (var i in series_data_token.deposit){
+                if(series_data_token.deposit[i][0]>=start && series_data_token.deposit[i][0]<=end){
+                    deposit.push(series_data_token.deposit[i])
+                }
+            }
+            for (var i in series_data_token.borrow){
+                if(series_data_token.borrow[i][0]>=start && series_data_token.borrow[i][0]<=end){
+                    borrow.push(series_data_token.borrow[i])
+                }
+            }
+        }
+        op = {
+            series: [{
+                name: 'deposit',
+                data: deposit,
+            },
+            {
+                name: 'borrow',
+                data: borrow
+            },
+            ],
+            options: {
+                title: {
+                    text: 'Deposit and borrow change of token',
+                    align: 'center'
+                },
+                chart: {
+                    background: 'transparent',
+                    toolbar: {
+                        tools: {
+                            download: false,
+                            pan: false,
+                        },
+                    }
+                },
+                legend: {
+                    position: 'top'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    type: 'datetime',
+                    tickAmount: 6,
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                tooltip: {
+                    x: {
+                        format: 'dd MMM yyyy hh:mm'
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: "Amount (USD)",
+                    },
+                    labels: {
+                        formatter: function (val, index) {
+                            return fixedLargeNumber(val.toFixed(2), 1);
+                        },
+                    }
+                }
+            }
+        }
+
+        setOptionChartFiveZoom(op)
     }
 
     const makeOptionChartOne = () => {
@@ -241,30 +412,76 @@ const User = () => {
         setOpenChartFour(false);
     };
 
+    const handleOpenChartFive = () => {
+        setOpenChartFive(true);
+    };
+
+    const handleCloseChartFive = () => {
+        setOpenChartFive(false);
+    };
+
+    const makeSeriesDataToken = () => {
+        if (!loadingAll || Object.keys(data_token).length === 0) { return }
+        let tokenAddress = data_token.token_address[0]
+        for (var i in data_token.token) {
+            if (tokenName === data_token.token[i]) {
+                tokenAddress = data_token.token_address[i]
+                break
+            }
+        }
+
+        dispatch(seriesDataToken({ 'wallet': address, 'token': tokenAddress }))
+    }
+
     const makeWalletData = () => {
         if (address != '') {
             setLoadingAll(false)
             dispatch(totalValueOfUser(address))
             dispatch(valueOfUser(address))
             dispatch(transactionAmount(address))
+            dispatch(dataToken(address))
             setLoadingAll(true)
         }
     }
-    console.log(optionChartTwo)
+    // console.log(optionChartTwo)
+    const handleChangeTokenName = (value) => {
+        setTokenName(value.name)
+    }
+
+    const makeTokenName = () => {
+        if (!loadingAll || Object.keys(data_token).length === 0) { return }
+        setTokenName(data_token.token[0])
+    }
+
     useEffect(() => {
         makeAmount()
     }, [loadingAll, totalValue])
+
     useEffect(() => {
         makeWalletData()
     }, [address])
+
     useEffect(() => {
         makeOptionChartOne()
         makeOptionChartFour()
         makeOptionChartThree()
-    }, [loadingAll, value])
+        makeOptionChartFive()
+    }, [loadingAll, value, series_data_token, selectedBtn2])
+
     useEffect(() => {
         makeOptionChartTwo()
     }, [loadingAll, tx_amount])
+
+    useEffect(() => {
+        makeSeriesDataToken()
+    }, [loadingAll, tokenName, data_token])
+
+    useEffect(() => {
+        makeTokenName()
+    }, [loadingAll, data_token])
+    if (!loadingAll) {
+        return <div></div>
+    }
     return (
         <Container fixed={true} maxWidth={"lg"}>
             <Grid className='row_phu card_phu'>
@@ -318,7 +535,7 @@ const User = () => {
                                     }}
                                 >
                                     <Fade in={openChartOne}>
-                                        <ZoomChartNormal data={{...optionChartOne}}/>
+                                        <ZoomChartNormal data={{ ...optionChartOne }} />
                                     </Fade>
                                 </Modal>
                             </Grid>
@@ -362,16 +579,16 @@ const User = () => {
                                             direction="column"
                                             justifyContent="center"
                                             alignItems="center">
-                                            {/* <Grid>
+                                            <Grid>
                                                 <ButtonGroup aria-label="contained primary button group">
                                                     <Button color={selectedBtn === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtn(1)}>24H</Button>
                                                     <Button color={selectedBtn === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtn(2)}>1W</Button>
                                                     <Button color={selectedBtn === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtn(3)}>1M</Button>
                                                 </ButtonGroup>
-                                            </Grid> */}
+                                            </Grid>
                                             <Chart
-                                                options={{...optionChartTwo}.options}
-                                                series={{...optionChartTwo}.series}
+                                                options={{ ...optionChartTwo }.options}
+                                                series={{ ...optionChartTwo }.series}
                                                 type='scatter'
                                                 high={500}
                                                 width={1000}
@@ -416,7 +633,7 @@ const User = () => {
                                     }}
                                 >
                                     <Fade in={openChartThree}>
-                                        <ZoomChartNormal data={{...optionChartThree}}/>
+                                        <ZoomChartNormal data={{ ...optionChartThree }} />
                                     </Fade>
                                 </Modal>
                             </Grid>
@@ -453,11 +670,87 @@ const User = () => {
                                     }}
                                 >
                                     <Fade in={openChartFour}>
-                                        <ZoomChartOneSeries data={{...optionChartFour}}/>
+                                        <ZoomChartOneSeries data={{ ...optionChartFour }} />
                                     </Fade>
                                 </Modal>
                             </Grid>
                         </Grid>
+                    </Grid>
+                </Grid>
+
+            </Grid>
+            <Grid className="row">
+                <Grid className="col-6">
+                    <Grid className="card">
+                        <Autocomplete
+                            id="select coin"
+                            options={coin}
+                            getOptionLabel={(option) => option.name}
+                            value={{ 'name': tokenName }}
+                            onChange={(event, value) => handleChangeTokenName(value)}
+                            style={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="Coin" variant="outlined" />}
+                        />
+
+                        <Chart
+                            options={optionChartFive.options}
+                            series={optionChartFive.series}
+                            type='line'
+                            height='400'
+                        />
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="baseline"
+                        >
+                            <Grid>
+                                <Button variant="outlined" onClick={handleOpenChartFive}>Full</Button>
+                                <Modal
+                                    aria-labelledby="transition-modal-title"
+                                    aria-describedby="transition-modal-description"
+                                    className={classes.modal}
+                                    open={openChartFive}
+                                    onClose={handleCloseChartFive}
+                                    closeAfterTransition
+                                    BackdropComponent={Backdrop}
+                                    BackdropProps={{
+                                        timeout: 500,
+                                    }}
+                                >
+                                    <Fade in={openChartFive}>
+                                        <Grid
+                                            className='card'
+                                            container
+                                            xs={8}
+                                            direction="column"
+                                            justifyContent="center"
+                                            alignItems="center">
+                                            <Grid>
+                                                <ButtonGroup aria-label="contained primary button group">
+                                                    <Button color={selectedBtn2 === 1 ? "secondary" : "primary"} onClick={() => setSelectedBtn2(1)}>24H</Button>
+                                                    <Button color={selectedBtn2 === 2 ? "secondary" : "primary"} onClick={() => setSelectedBtn2(2)}>1W</Button>
+                                                    <Button color={selectedBtn2 === 3 ? "secondary" : "primary"} onClick={() => setSelectedBtn2(3)}>1M</Button>
+                                                </ButtonGroup>
+                                            </Grid>
+                                            <Chart
+                                                options={optionChartFiveZoom.options}
+                                                series={optionChartFiveZoom.series}
+                                                type='line'
+                                                high={500}
+                                                width={1000}
+                                            />
+
+                                        </Grid>
+                                    </Fade>
+                                </Modal>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid className="col-6">
+                    <Grid className="card">
+                        <UserTable data={data_token_list} />
                     </Grid>
                 </Grid>
 

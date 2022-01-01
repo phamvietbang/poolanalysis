@@ -11,6 +11,8 @@ import App from './NavBar';
 import LinkRoutes from './Routes';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateLendingPool } from './../../redux_components/slices/layOutSlice'
+import DesktopHeader from './DesktopHeader'
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -69,7 +71,7 @@ export default function PermanentDrawerLeft() {
                         alignItems="center"
                         xs={12}
                     >
-                        <div className={classes.button}>
+                        {/* <div className={classes.button}> */}
                             {/* <Button variant="contained" color="primary" onClick={handleClick}>{type}</Button> */}
                             <Select
                                 variant="outlined"
@@ -81,12 +83,12 @@ export default function PermanentDrawerLeft() {
                                     icon: classes.whiteColor
                                 }}
                             >
-                                <MenuItem value='all'>ALL</MenuItem>
                                 <MenuItem value='bsc'>BSC</MenuItem>
                                 <MenuItem value='ftm'>FTM</MenuItem>
                             </Select>
-                            <Button variant="contained" color="primary">Connect Wallet</Button>
-                        </div>
+                            {/* <Button variant="contained" color="primary">Connect Wallet</Button> */}
+                            <DesktopHeader/>
+                        {/* </div> */}
                     </Grid>
                 </Toolbar>
 
