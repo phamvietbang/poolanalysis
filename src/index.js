@@ -9,13 +9,30 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
 import Layout from './pages/Layout'
 import {store} from './redux_components/store'
+import CloseIcon from "@material-ui/icons/Close";
+import {IconButton} from '@material-ui/core'
+import { SnackbarProvider } from "notistack";
+import { createRef } from "react";
 
-
+const notistackRef = createRef();
+const onClickDismiss = (key) => () => {
+  notistackRef.current.closeSnackbar(key);
+};
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
+      <SnackbarProvider
+          maxSnack={3}
+          ref={notistackRef}
+          action={(key) => (
+            <IconButton size="small" onClick={onClickDismiss(key)}>
+              <CloseIcon />
+            </IconButton>
+          )}
+        >
         <Layout />
+        </SnackbarProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,

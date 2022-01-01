@@ -6,6 +6,9 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { Link } from "react-router-dom";
+import DISCONNECT from "./disconnect.svg";
+import CONNECT from "./connect.svg";
+
 
 const menu = [
     {
