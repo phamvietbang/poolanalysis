@@ -23,7 +23,10 @@ const TvlAndSupply = () => {
     const [loadingT, setLoadingT] = useState(false)
     const [tokenName, setTokenName] = useState('ALL')
     const [selectedBtn, setSelectedBtn] = React.useState(3);
-    const [chartOptions, setChartOptions] = useState({})
+    const [chartOptions, setChartOptions] = useState({
+        series: [],
+        options: { xaxis: { type: "datetime" } },
+    })
     const totalValue = useSelector(state => state.lendingpool.totalValue)
     const tvl_supply_tokens = useSelector(state => state.lendingpool.tvlSupply)
     const tokens = useSelector(state => state.lendingpool.tokenName)
@@ -43,7 +46,7 @@ const TvlAndSupply = () => {
         let string_number = Math.floor(number) + ''
         let decimal = string_number.length - 3
         let tmp = Math.pow(10, decimal)
-        return tmp * (Math.floor(number / tmp)+1)
+        return tmp * (Math.floor(number / tmp) + 1)
     }
 
 
@@ -81,7 +84,7 @@ const TvlAndSupply = () => {
                     name: 'Total supply',
                     data: supply
                 }],
-                options: {      
+                options: {
                     title: {
                         text: 'Total value lock and Total Supply',
                         align: 'center'
@@ -101,7 +104,7 @@ const TvlAndSupply = () => {
                     },
                     stroke: {
                         curve: 'smooth',
-                        width:2
+                        width: 2
                     },
                     xaxis: {
                         categories: datetime.slice(time,),
@@ -123,7 +126,7 @@ const TvlAndSupply = () => {
                             labels: {
                                 formatter: function (val, index) {
                                     // return val.toFixed(2);
-                                    return fixedLargeNumber(val.toFixed(2),1)
+                                    return fixedLargeNumber(val.toFixed(2), 1)
                                 },
                             }
                         },
@@ -139,7 +142,7 @@ const TvlAndSupply = () => {
                             labels: {
                                 formatter: function (val, index) {
                                     // return val.toFixed(2);
-                                    return fixedLargeNumber(val.toFixed(2),1)
+                                    return fixedLargeNumber(val.toFixed(2), 1)
                                 },
                             }
                         }
@@ -180,7 +183,7 @@ const TvlAndSupply = () => {
         dispatch(tvlSupplyTokensData()).then(() => setLoadingTokens(true))
     }, [])
 
-    
+
     if (!loadingLp || !loadingTokens) {
         return <div></div>;
     }
