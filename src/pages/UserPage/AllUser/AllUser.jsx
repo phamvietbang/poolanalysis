@@ -117,7 +117,7 @@ const AllUsers = () => {
           labels: {
             formatter: function (val, index) {
               // return val.toFixed(0);
-              return fixedLargeNumber(val.toFixed(2), 1);
+              return fixedLargeNumber(val, 1);
             },
           },
         },

@@ -277,6 +277,11 @@ const Transactions = () => {
                         }
                     },
                 ],
+                tooltip: {
+                    x: {
+                        format: 'dd MMM yyyy hh'
+                    }
+                },
                 legend: {
                     showForSingleSeries:true,
                     position: 'top'
@@ -377,6 +382,11 @@ const Transactions = () => {
                         }
                     },
                 ],
+                tooltip: {
+                    x: {
+                        format: 'dd MMM yyyy hh'
+                    }
+                },
                 legend: {
                     showForSingleSeries:true,
                     position: 'top'
