@@ -73,7 +73,6 @@ const AllUsers = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [top, setTop] = React.useState(5);
-  const [tvl_supply, setTvlSupply] = React.useState("tvl");
   const [openChartOne, setOpenChartOne] = React.useState(false);
   const [openChartTwo, setOpenChartTwo] = React.useState(false);
   const [openChartThree, setOpenChartThree] = React.useState(false);
@@ -92,7 +91,6 @@ const AllUsers = () => {
     options: {},
   });
   const [selectedBtn, setSelectedBtn] = useState(3);
-  const tvlSupply = useSelector((state) => state.lendingpool.totalValue);
   const users = useSelector((state) => state.allusers.users);
   const countUsers = useSelector((state) => state.allusers.countUsers);
   const topA = useSelector((state) => state.allusers.topDepositsA);
@@ -165,24 +163,18 @@ const AllUsers = () => {
     for (var i in users.timestamp) {
       datetime.push(users.timestamp[i] * 1000);
     }
-    let tvl = tvlSupply.tvl.slice(0, active.length);
-    let supply = tvlSupply.supply.slice(0, active.length);
     datetime = datetime.slice(0, active.length);
     switch (selectedBtn) {
       case 1:
         active = active.slice(-24);
         jdeposit = jdeposit.slice(-24);
         db = db.slice(-24);
-        tvl = tvl.slice(-24);
-        supply = supply.slice(-24);
         datetime = datetime.slice(-24);
         break;
       case 2:
         active = active.slice(-168);
         jdeposit = jdeposit.slice(-168);
         db = db.slice(-168);
-        tvl = tvl.slice(-168);
-        supply = supply.slice(-168);
         datetime = datetime.slice(-168);
         break;
       default:
@@ -375,9 +367,6 @@ const AllUsers = () => {
   const handleChangeTop = (event) => {
     setTop(event.target.value);
   };
-  const handleChangeTvlSupply = (event) => {
-    setTvlSupply(event.target.value);
-  };
   async function fetchData() {
     setLoadingAll(false);
     await Promise.all([
@@ -401,7 +390,7 @@ const AllUsers = () => {
   }, []);
   useEffect(() => {
     handleChangeChartOptionsOne();
-  }, [tvl_supply, users, tvlSupply, loadingAll, selectedBtn]);
+  }, [users, loadingAll, selectedBtn]);
   useEffect(() => {
     handleChangeChartOptionsTwo();
   }, [topA, loadingAll]);
