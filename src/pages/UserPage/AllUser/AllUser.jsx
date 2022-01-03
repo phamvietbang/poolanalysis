@@ -189,16 +189,6 @@ const AllUsers = () => {
                 data: db,
                 type: 'line'
             },
-                // {
-                //     name: 'Total value lock',
-                //     data: tvl,
-                //     type: 'line'
-                // },
-                // {
-                //     name: 'Total supply',
-                //     data: supply,
-                //     type: 'line'
-                // }
             ],
             options: {
                 title: {
@@ -242,72 +232,6 @@ const AllUsers = () => {
                             },
                         }
                     },
-                    // {
-                    //     axisTicks: {
-                    //         show: true
-                    //     },
-                    //     min: findMinRoundNumber(Math.min(...jdeposit)),
-                    //     max: findMaxRoundNumber(Math.max(...jdeposit)),
-                    //     title:{
-                    //         text: 'Just deposit users'
-                    //     },
-                    //     labels: {
-                    //         formatter: function (val, index) {
-                    //             // return val.toFixed(2);
-                    //             return fixedLargeNumber(val.toFixed(2), 1)
-                    //         },
-                    //     }
-                    // },
-                    // {
-                    //     axisTicks: {
-                    //         show: true
-                    //     },
-                    //     min: findMinRoundNumber(Math.min(...db)),
-                    //     max: findMaxRoundNumber(Math.max(...db)),
-                    //     title:{
-                    //         text: 'Deposit and borrow users'
-                    //     },
-                    //     labels: {
-                    //         formatter: function (val, index) {
-                    //             // return val.toFixed(2);
-                    //             return fixedLargeNumber(val.toFixed(2), 1)
-                    //         },
-                    //     }
-                    // },
-                    // {
-                    //     axisTicks: {
-                    //         show: true
-                    //     },
-                    //     opposite:true,
-                    //     min: findMinRoundNumber(Math.min(...tvl)),
-                    //     max: findMaxRoundNumber(Math.max(...tvl)),
-                    //     title:{
-                    //         text: 'Total value lock (USD)'
-                    //     },
-                    //     labels: {
-                    //         formatter: function (val, index) {
-                    //             // return val.toFixed(2);
-                    //             return fixedLargeNumber(val.toFixed(2), 1)
-                    //         },
-                    //     }
-                    // },
-                    // {
-                    //     axisTicks: {
-                    //         show: true
-                    //     },
-                    //     min: findMinRoundNumber(Math.min(...tvl)),
-                    //     max: findMaxRoundNumber(Math.max(...supply)),
-                    //     opposite: true,
-                    //     title:{
-                    //         text: 'Total supply (USD)'
-                    //     },
-                    //     labels: {
-                    //         formatter: function (val, index) {
-                    //             // return val.toFixed(2);
-                    //             return fixedLargeNumber(val.toFixed(2), 1)
-                    //         },
-                    //     }
-                    // },
                 ],
                 chart: {
                     background: 'transparent',
