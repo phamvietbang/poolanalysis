@@ -551,6 +551,9 @@ const User = () => {
   };
   // console.log(optionChartTwo)
   const handleChangeTokenName = (value) => {
+    if (value==null){
+      return
+    }
     setTokenName(value.name);
   };
 

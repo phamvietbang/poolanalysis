@@ -81,20 +81,17 @@ const TvlAndSupply = () => {
                     name: 'Total supply',
                     data: supply
                 }],
-                options: {
-                    
+                options: {      
                     title: {
                         text: 'Total value lock and Total Supply',
                         align: 'center'
                     },
                     color: ['#6ab04c', '#2980b9'],
-                    chart: {
-                        background: 'transparent'
-                    },
                     dataLabels: {
                         enabled: false
                     },
                     chart: {
+                        background: 'transparent',
                         toolbar: {
                             tools: {
                                 download: false,
@@ -117,10 +114,6 @@ const TvlAndSupply = () => {
                     },
                     yaxis: [
                         {
-                            axisTicks: {
-                                show: true
-                            },
-                            
                             min: min_y_left,
                             max: max_y_left,
                             tickAmount: 4,
@@ -135,10 +128,6 @@ const TvlAndSupply = () => {
                             }
                         },
                         {
-                            axisTicks: {
-                                show: true
-                            },
-                            
                             min: min_y_right,
                             max: max_y_right,
                             tickAmount: 4,
