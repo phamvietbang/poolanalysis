@@ -62,12 +62,28 @@ export const seriesDataToken = createAsyncThunk(
         let deposit = await client.get('/stats/deposit_borrow_token_by_time/trava_pool/wallet', config)
         let data_deposit = []
         let data_borrow = []
-        for (var i in deposit.data.timestamp) {
-            data_deposit.push([deposit.data.timestamp[i]*1000, deposit.data.depositTokenChangeLogs[i]])
+        let de = deposit.data.depositTokenChangeLogs[0]
+        let bo = borrow.data.borrowTokenChangeLogs[0]
+        for (var i=deposit.data.timestamp[0]; i<=1640908800; i+=3600){
+            for (var j in deposit.data.timestamp){
+                if(deposit.data.timestamp[j]>=i&&deposit.data.timestamp[j]<=i+3600){
+                    de=deposit.data.depositTokenChangeLogs[j]
+                }
+            }
+            for (var j in borrow.data.timestamp){
+                if(borrow.data.timestamp[j]>=i&&borrow.data.timestamp[j]<=i+3600){
+                    bo=borrow.data.borrowTokenChangeLogs[j]
+                }
+            }
+            data_deposit.push([i*1000, de])
+            data_borrow.push([i*1000, bo])
         }
-        for (var i in borrow.data.timestamp) {
-            data_borrow.push([borrow.data.timestamp[i]*1000, borrow.data.borrowTokenChangeLogs[i]])
-        }
+        // for (var i in deposit.data.timestamp) {
+        //     data_deposit.push([deposit.data.timestamp[i]*1000, deposit.data.depositTokenChangeLogs[i]])
+        // }
+        // for (var i in borrow.data.timestamp) {
+        //     data_borrow.push([borrow.data.timestamp[i]*1000, borrow.data.borrowTokenChangeLogs[i]])
+        // }
         
         let result = {
             'deposit': data_deposit,
