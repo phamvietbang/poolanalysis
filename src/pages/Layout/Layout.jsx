@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import LinkRoutes from './Routes';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateLendingPool } from './../../redux_components/slices/layOutSlice'
 import DesktopHeader from './DesktopHeader'
+import { updateAccInfo } from "../../redux_components/account/account-slice";
+
 
 const drawerWidth = 240;
 
@@ -48,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PermanentDrawerLeft() {
+    const dp =  useDispatch()
     const classes = useStyles();
     const dispatch = useDispatch();
     const lp = useSelector(state => state.layout.lendingpool)
@@ -59,6 +62,14 @@ export default function PermanentDrawerLeft() {
         // debugger
         dispatch(updateLendingPool(t))
     };
+    const connectWallet= async ()=>{
+        const accountAddress = (await window.ethereum.request({ method: "eth_requestAccounts" }))[0];
+        dp(updateAccInfo(accountAddress))
+    }
+
+    useEffect(() => {
+        connectWallet()
+    }, [])
     return (
         <div className={classes.root}>
             <CssBaseline />
