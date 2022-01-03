@@ -62,6 +62,8 @@ const User = () => {
     const tx_amount = useSelector(state => state.user.tx_amount)
     const data_token = useSelector(state => state.user.data_token)
     const series_data_token = useSelector(state => state.user.series_data_token)
+    const lending = useSelector(state=>state.layout.lendingpool)
+    const wallet = useSelector(state=>state.accountSlice.address)
 
     const data_token_list = []
     for (var i in data_token.token) {
@@ -76,11 +78,21 @@ const User = () => {
         if (!loadingAll || Object.keys(totalValue).length === 0) {
             return
         }
-        let tmp = [{ 'name': 'Deposits (USD)', 'amount': totalValue.deposit.toFixed(0) },
-        { 'name': 'Borrows (USD)', 'amount': totalValue.borrow.toFixed(0) },
-        { 'name': 'Liquidation Threshold (%)', 'amount': totalValue.liquidationT.toFixed(0) },
-        { 'name': 'Loan To Value (%)', 'amount': totalValue.ltv.toFixed(0) },
-        { 'name': 'Health Factor', 'amount': totalValue.health_factor.toFixed(2) }]
+        let deposit = ''
+        let borrow = ''
+        let liquit = ''
+        let ltv = ''
+        let health_factor = ''
+        if(totalValue.deposit!==''){deposit=totalValue.deposit.toFixed(2)}
+        if(totalValue.borrow!==''){borrow=totalValue.borrow.toFixed(2)}
+        if(totalValue.liquidationT!==''){liquit=totalValue.liquidationT.toFixed(2)}
+        if(totalValue.ltv!==''){ltv=totalValue.ltv.toFixed(2)}
+        if(totalValue.health_factor!==''){health_factor=totalValue.health_factor.toFixed(2)}
+        let tmp = [{ 'name': 'Deposits (USD)', 'amount': deposit },
+        { 'name': 'Borrows (USD)', 'amount':borrow },
+        { 'name': 'Liquidation Threshold (%)', 'amount':liquit },
+        { 'name': 'Loan To Value (%)', 'amount': ltv },
+        { 'name': 'Health Factor', 'amount': health_factor }]
         setAmount(tmp)
     }
 
@@ -376,6 +388,21 @@ const User = () => {
 
         )
     }
+    console.log(wallet)
+    const setDefaultAddress = ()=>{
+        if (wallet!==null){
+            
+            setAddress(wallet)
+            return
+        }
+        if(lending==='bsc'){
+            setAddress('0x855bfeefaabda356b714fd68d666a7926efd49a6')
+        }
+        if(lending==='ftm'){
+            setAddress('0x8f9276e46036e0a9bb3db46e9bc7e4e3972380b8')
+        }
+    }
+
     const handleChangeAddress = (event) => {
         setAddress(event.target.value)
     }
@@ -452,6 +479,10 @@ const User = () => {
         if (!loadingAll || Object.keys(data_token).length === 0) { return }
         setTokenName(data_token.token[0])
     }
+
+    useEffect(() => {
+        setDefaultAddress()
+    }, [lending,wallet])
 
     useEffect(() => {
         makeAmount()
