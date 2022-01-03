@@ -226,7 +226,7 @@ const User = () => {
           },
           labels: {
             formatter: function (val, index) {
-              return fixedLargeNumber(val.toFixed(2), 1);
+              return fixedLargeNumber(val, 1);
             },
           },
         },
@@ -294,7 +294,7 @@ const User = () => {
           },
           labels: {
             formatter: function (val, index) {
-              return fixedLargeNumber(val.toFixed(2), 1);
+              return fixedLargeNumber(val, 1);
             },
           },
         },
@@ -394,7 +394,7 @@ const User = () => {
           },
           labels: {
             formatter: function (val, index) {
-              return fixedLargeNumber(val.toFixed(2), 1);
+              return fixedLargeNumber(val, 1);
             },
           },
         },

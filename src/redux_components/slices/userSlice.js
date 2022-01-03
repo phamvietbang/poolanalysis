@@ -78,12 +78,6 @@ export const seriesDataToken = createAsyncThunk(
             data_deposit.push([i*1000, de])
             data_borrow.push([i*1000, bo])
         }
-        // for (var i in deposit.data.timestamp) {
-        //     data_deposit.push([deposit.data.timestamp[i]*1000, deposit.data.depositTokenChangeLogs[i]])
-        // }
-        // for (var i in borrow.data.timestamp) {
-        //     data_borrow.push([borrow.data.timestamp[i]*1000, borrow.data.borrowTokenChangeLogs[i]])
-        // }
         
         let result = {
             'deposit': data_deposit,
