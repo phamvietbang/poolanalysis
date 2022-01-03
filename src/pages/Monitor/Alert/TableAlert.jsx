@@ -11,6 +11,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import Paper from '@material-ui/core/Paper';
+import { convertTimestampToDate, formatAddress, numberWithCommas } from '../../../utils/utility';
+import { Typography } from '@material-ui/core';
 
 function stableSort(array) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -57,6 +59,11 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
+  title:{
+    textAlign:"center",
+    fontWeight: "700",
+    marginBottom: "10px"
+  },
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
@@ -94,6 +101,12 @@ export default function EnhancedTable(props) {
     setSelected([]);
   };
 
+  function date(val) {
+    const { year, month, date, hour, min } = convertTimestampToDate(val);
+    if (min < 10) 
+    return `${date} ${month} ${year}`
+    else return `${date} ${month} ${year}`
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -112,6 +125,7 @@ export default function EnhancedTable(props) {
 
   return (
     <div className={classes.root}>
+      <Typography className={classes.title}>Events in the last 24h</Typography>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
@@ -141,13 +155,14 @@ export default function EnhancedTable(props) {
                       tabIndex={-1}
                       key={row.tx_hash}
                       selected={isItemSelected}
+                      style={{backgroundColor: row.amount > 10000 ? "#ed5050a8": ""}}
                     >
                       <TableCell align="center">{row.type}</TableCell>
-                      <TableCell align="center">{row.datetime}</TableCell>
-                      <TableCell align="center">{row.user}</TableCell>
-                      <TableCell align="center">{row.amount}</TableCell>
+                      <TableCell align="center">{date(row.datetime * 1000)}</TableCell>
+                      <TableCell align="center">{formatAddress(row.user)}</TableCell>
+                      <TableCell align="center" >{numberWithCommas(row.amount,2)}</TableCell>
                       <TableCell align="center">{row.token}</TableCell>
-                      <TableCell align="center">{row.transaction}</TableCell>
+                      <TableCell align="center">{formatAddress(row.transaction)}</TableCell>
                     </TableRow>
                   );
                 })}

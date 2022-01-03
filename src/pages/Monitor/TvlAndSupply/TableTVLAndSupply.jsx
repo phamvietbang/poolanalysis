@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import Paper from '@material-ui/core/Paper';
+import { Typography } from '@material-ui/core';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -95,6 +96,11 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
+  title:{
+    textAlign:"center",
+    fontWeight: "700",
+    marginBottom: "10px"
+  },
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
@@ -155,6 +161,7 @@ export default function EnhancedTable(props) {
 
   return (
     <div className={classes.root}>
+      <Typography className={classes.title}>Percentage total supply and total value lock of tokens in TRAVA pool</Typography>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
