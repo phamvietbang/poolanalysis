@@ -72,16 +72,28 @@ const Alert = () => {
         setEventDataTable([...result]);
     }
     const handleChangeEventType = (event) => {
+        if (event.target.value==null){
+            return
+          }
         setEventType(event.target.value)
       };
     const handleChangeEventAmount = (event) => {
+        if (event.target.value==null){
+            return
+          }
         setEventAmount(parseInt(event.target.value))
         
     };
     const handleChangeEventUser = (event) => {
+        if (event.target.value==null){
+            return
+          }
         setEventUser(event.target.value)
     }
     const handleChangeEventToken = (value) => {
+        if (value==null){
+            return
+          }
         setEventToken(value.name)
     }
 

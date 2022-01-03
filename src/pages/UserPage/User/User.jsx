@@ -481,6 +481,9 @@ const User = () => {
   };
 
   const handleChangeAddress = (event) => {
+    if (event.target.value==null){
+      return
+    }
     setAddress(event.target.value);
   };
 
