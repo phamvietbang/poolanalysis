@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -11,6 +11,9 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import Paper from '@material-ui/core/Paper';
+import { Typography } from '@material-ui/core';
+import { convertTimestampToDate, formatAddress, numberWithCommas} from '../../../utils/utility';
+import { useState } from 'react';
 
 function stableSort(array) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -21,7 +24,7 @@ const headCells = [
   { id: 'type', numeric: false, disablePadding: false, label: 'Type' },
   { id: 'datetime', numeric: true, disablePadding: false, label: 'Date time' },
   { id: 'user', numeric: false, disablePadding: false, label: 'User' },
-  { id: 'amount', numeric: true, disablePadding: false, label: 'Amount' },
+  { id: 'amount', numeric: true, disablePadding: false, label: 'Amount(USD)' },
   { id: 'token', numeric: false, disablePadding: false, label: 'Token' },
   { id: 'transaction', numeric: false, disablePadding: false, label: 'Transaction' },
 ];
@@ -57,6 +60,11 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
+  title:{
+    textAlign:"center",
+    fontWeight: "700",
+    marginBottom: "10px"
+  },
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
@@ -83,6 +91,14 @@ export default function EnhancedTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+
+  function date(val) {
+    const { year, month, date, hour, min } = convertTimestampToDate(val);
+    if (min < 10) 
+    return `${date} ${month} ${year}`
+    else return `${date} ${month} ${year}`
+  }
 
 
   const handleSelectAllClick = (event) => {
@@ -112,6 +128,7 @@ export default function EnhancedTable(props) {
 
   return (
     <div className={classes.root}>
+      <Typography className={classes.title}>Events in the last 24h</Typography>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
@@ -132,7 +149,7 @@ export default function EnhancedTable(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.type);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                console.log(row)
                   return (
                     <TableRow
                       hover
@@ -143,11 +160,11 @@ export default function EnhancedTable(props) {
                       selected={isItemSelected}
                     >
                       <TableCell align="center">{row.type}</TableCell>
-                      <TableCell align="center">{row.datetime}</TableCell>
-                      <TableCell align="center">{row.user}</TableCell>
-                      <TableCell align="center">{row.amount}</TableCell>
+                      <TableCell align="center">{date(row.datetime * 1000)}</TableCell>
+                      <TableCell align="center">{formatAddress(row.user)}</TableCell>
+                      <TableCell align="center" style={{color: row.amount > 10000 ? "red": ""}}>{numberWithCommas(row.amount,2)}</TableCell>
                       <TableCell align="center">{row.token}</TableCell>
-                      <TableCell align="center">{row.transaction}</TableCell>
+                      <TableCell align="center">{formatAddress(row.transaction)}</TableCell>
                     </TableRow>
                   );
                 })}
