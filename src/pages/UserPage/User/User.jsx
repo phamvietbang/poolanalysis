@@ -65,6 +65,10 @@ const User = () => {
     series: [],
     options: { xaxis: { type: "datetime" } },
   });
+  const [optionChartTwoZoom, setOptionChartTwoZoom] = React.useState({
+    series: [],
+    options: { xaxis: { type: "datetime" } },
+  });
   const [optionChartThree, setOptionChartThree] = React.useState({});
   const [optionChartFour, setOptionChartFour] = React.useState({});
   const [optionChartFive, setOptionChartFive] = React.useState({
@@ -83,7 +87,7 @@ const User = () => {
   const [openChartFive, setOpenChartFive] = React.useState(false);
   const [loadingAll, setLoadingAll] = React.useState(false);
   const [address, setAddress] = React.useState(
-    "0x8f9276e46036e0a9bb3db46e9bc7e4e3972380b8"
+    ""
   );
   const [selectedBtn, setSelectedBtn] = React.useState(3);
   const [selectedBtn2, setSelectedBtn2] = React.useState(3);
@@ -172,6 +176,7 @@ const User = () => {
     if (!loadingAll || Object.keys(tx_amount).length === 0) {
       return;
     }
+
     let op = {
       series: [
         {
@@ -234,6 +239,158 @@ const User = () => {
     };
 
     setOptionChartTwo(op);
+    let deposit = tx_amount.deposit;
+    let borrow = tx_amount.borrow;
+    let withdraw = tx_amount.withdraw;
+    let repay = tx_amount.repay;
+    let start = 0;
+    let end = 1640908800*1000;
+    if (selectedBtn === 1) {
+      deposit = [];
+      borrow = [];
+      withdraw = [];
+      repay = [];
+      start = end - 24 * 3600*1000;
+      for (var i in tx_amount.deposit) {
+        if (
+          tx_amount.deposit[i][0] >= start &&
+          tx_amount.deposit[i][0] <= end
+        ) {
+          deposit.push(tx_amount.deposit[i]);
+        }
+      }
+      for (var i in tx_amount.borrow) {
+        if (
+          tx_amount.borrow[i][0] >= start &&
+          tx_amount.borrow[i][0] <= end
+        ) {
+          borrow.push(tx_amount.borrow[i]);
+        }
+      }
+
+      for (var i in tx_amount.repay) {
+        if (
+          tx_amount.repay[i][0] >= start &&
+          tx_amount.repay[i][0] <= end
+        ) {
+          repay.push(tx_amount.borrow[i]);
+        }
+      }
+
+      for (var i in tx_amount.withdraw) {
+        if (
+          tx_amount.withdraw[i][0] >= start &&
+          tx_amount.withdraw[i][0] <= end
+        ) {
+          withdraw.push(tx_amount.withdraw[i]);
+        }
+      }
+
+    }
+
+    if (selectedBtn === 2) {
+      deposit = [];
+      borrow = [];
+      withdraw = [];
+      repay = [];
+      start = end - 24 * 3600 * 7*1000;
+      for (var i in tx_amount.deposit) {
+        if (
+          tx_amount.deposit[i][0] >= start &&
+          tx_amount.deposit[i][0] <= end
+        ) {
+          deposit.push(tx_amount.deposit[i]);
+        }
+      }
+      for (var i in tx_amount.borrow) {
+        if (
+          tx_amount.borrow[i][0] >= start &&
+          tx_amount.borrow[i][0] <= end
+        ) {
+          borrow.push(tx_amount.borrow[i]);
+        }
+      }
+
+      for (var i in tx_amount.repay) {
+        if (
+          tx_amount.repay[i][0] >= start &&
+          tx_amount.repay[i][0] <= end
+        ) {
+          repay.push(tx_amount.borrow[i]);
+        }
+      }
+
+      for (var i in tx_amount.withdraw) {
+        if (
+          tx_amount.withdraw[i][0] >= start &&
+          tx_amount.withdraw[i][0] <= end
+        ) {
+          withdraw.push(tx_amount.withdraw[i]);
+        }
+      }
+    }
+    op = {
+      series: [
+        {
+          name: "deposit",
+          data: deposit,
+        },
+        {
+          name: "borrow",
+          data: borrow,
+        },
+        {
+          name: "withdraw",
+          data: withdraw,
+        },
+        {
+          name: "repay",
+          data: repay,
+        },
+      ],
+      options: {
+        title: {
+          text: "History transactions of wallet",
+          align: "center",
+        },
+        chart: {
+          background: "transparent",
+          toolbar: {
+            tools: {
+              download: false,
+              pan: false,
+            },
+          },
+        },
+        legend: {
+          position: "top",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        xaxis: {
+          type: "datetime",
+          tickAmount: 6,
+        },
+        tooltip: {
+          x: {
+            format: "dd MMM yyyy hh:mm",
+          },
+        },
+        yaxis: {
+          title: {
+            text: "Amount (USD)",
+          },
+          labels: {
+            formatter: function (val, index) {
+              return fixedLargeNumber(val, 1);
+            },
+          },
+        },
+      },
+    };
+
+    setOptionChartTwoZoom(op);
   };
 
   const makeOptionChartFive = () => {
@@ -481,7 +638,7 @@ const User = () => {
   };
 
   const handleChangeAddress = (event) => {
-    if (event.target.value==null){
+    if (event.target.value == null) {
       return
     }
     setAddress(event.target.value);
@@ -554,7 +711,7 @@ const User = () => {
   };
   // console.log(optionChartTwo)
   const handleChangeTokenName = (value) => {
-    if (value==null){
+    if (value == null) {
       return
     }
     setTokenName(value.name);
@@ -588,7 +745,7 @@ const User = () => {
 
   useEffect(() => {
     makeOptionChartTwo();
-  }, [loadingAll, tx_amount]);
+  }, [loadingAll, tx_amount, selectedBtn]);
 
   useEffect(() => {
     makeSeriesDataToken();
@@ -731,8 +888,8 @@ const User = () => {
                         </ButtonGroup>
                       </Grid>
                       <Chart
-                        options={{ ...optionChartTwo }.options}
-                        series={{ ...optionChartTwo }.series}
+                        options={optionChartTwoZoom.options}
+                        series={optionChartTwoZoom.series}
                         type="scatter"
                         high={500}
                         width={1000}
@@ -827,7 +984,7 @@ const User = () => {
       </Grid>
       <Grid className="row">
         <Grid className="col-6">
-          <Grid className="card" style={{height: "35vw"}}>
+          <Grid className="card" style={{ height: "35vw" }}>
             <Grid
               container
               // direction="row"
@@ -914,7 +1071,7 @@ const User = () => {
           </Grid>
         </Grid>
         <Grid className="col-6">
-          <Grid style={{height: "35vw"}} className="card">
+          <Grid style={{ height: "35vw" }} className="card">
             <UserTable data={data_token_list} />
           </Grid>
         </Grid>
