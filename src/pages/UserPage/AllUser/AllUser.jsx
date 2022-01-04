@@ -25,7 +25,7 @@ import {
 } from "../../../redux_components/slices/allUsersSlice";
 import { totalValueData } from "../../../redux_components/slices/lendingPoolSlice";
 import { useState } from "react";
-import { fixedLargeNumber } from "../../../utils/utility";
+import { fixedLargeNumber, numberWithCommas } from "../../../utils/utility";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -121,6 +121,13 @@ const AllUsers = () => {
             },
           },
         },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return numberWithCommas(val,2) + " USD" ;
+            },
+          }
+        },
         legend: {
           position: "bottom",
         },
@@ -134,6 +141,8 @@ const AllUsers = () => {
           toolbar: {
             tools: {
               download: false,
+              zoomout: false,
+              zoomin: false,
             },
           },
         },
@@ -184,17 +193,17 @@ const AllUsers = () => {
     let op = {
       series: [
         {
-          name: "active users",
+          name: "Active users",
           data: active,
           type: "line",
         },
         {
-          name: "just deposit users",
+          name: "Just deposit users",
           data: jdeposit,
           type: "line",
         },
         {
-          name: "deposit and borrow users",
+          name: "Deposit and borrow users",
           data: db,
           type: "line",
         },
@@ -214,6 +223,9 @@ const AllUsers = () => {
         xaxis: {
           categories: datetime,
           type: "datetime",
+          title: {
+            text: "Date time",
+          },
           labels: {
             datetimeFormatter: {
               year: "yyyy",
@@ -235,18 +247,27 @@ const AllUsers = () => {
             },
             labels: {
               formatter: function (val, index) {
-                // return val.toFixed(2);
-                return fixedLargeNumber(val, 1);
+                return parseInt(val) ;
+                // return fixedLargeNumber(val, 1);
               },
             },
           },
         ],
+        tooltip: {
+          y: {
+            formatter: function (val, index) {
+              return parseInt(val) + " users" ;
+            },
+          }
+        },
         chart: {
           background: "transparent",
           toolbar: {
             tools: {
               download: false,
               pan: false,
+              zoomout: false,
+              zoomin: false,
             },
           },
         },
@@ -293,6 +314,18 @@ const AllUsers = () => {
         },
       ],
       options: {
+        tooltip: {
+          x: {
+            formatter: function (val) {
+              return val + " USD" ;
+            },
+          },
+          y: {
+            formatter: function (val) {
+              return val + " users" ;
+            },
+          }
+        },
         title: {
           text: tit,
           align: "center",
@@ -331,6 +364,8 @@ const AllUsers = () => {
             tools: {
               download: false,
               pan: false,
+              zoomout: false,
+              zoomin: false,
             },
           },
         },
@@ -463,7 +498,7 @@ const AllUsers = () => {
               container
               direction="row"
               justifyContent="space-between"
-              alignItems="baseline"
+              // alignItems="baseline"
             >
               <Grid>
                 <ButtonGroup aria-label="contained primary button group">
@@ -487,6 +522,63 @@ const AllUsers = () => {
                   </Button>
                 </ButtonGroup>
               </Grid>
+              <Grid>
+                <Button variant="outlined" onClick={handleOpenChartOne}>
+                  Full
+                </Button>
+                <Modal
+                  aria-labelledby="transition-modal-title"
+                  aria-describedby="transition-modal-description"
+                  className={classes.modal}
+                  open={openChartOne}
+                  onClose={handleCloseChartOne}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  <Fade in={openChartOne}>
+                    <Grid
+                      className="card"
+                      container
+                      xs={8}
+                      direction="column"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid>
+                        <ButtonGroup aria-label="contained primary button group">
+                          <Button
+                            color={selectedBtn === 1 ? "secondary" : "primary"}
+                            onClick={() => setSelectedBtn(1)}
+                          >
+                            24h
+                          </Button>
+                          <Button
+                            color={selectedBtn === 2 ? "secondary" : "primary"}
+                            onClick={() => setSelectedBtn(2)}
+                          >
+                            1W
+                          </Button>
+                          <Button
+                            color={selectedBtn === 3 ? "secondary" : "primary"}
+                            onClick={() => setSelectedBtn(3)}
+                          >
+                            1M
+                          </Button>
+                        </ButtonGroup>
+                      </Grid>
+                      <Chart
+                        options={{ ...chartOptionsOne }.options}
+                        series={{ ...chartOptionsOne }.series}
+                        height="500"
+                        width={1000}
+                      />
+                    </Grid>
+                  </Fade>
+                </Modal>
+              </Grid>
             </Grid>
             {/* chart */}
             <Chart
@@ -494,63 +586,6 @@ const AllUsers = () => {
               series={chartOptionsOne.series}
               height="400"
             />
-            <Grid>
-              <Button variant="outlined" onClick={handleOpenChartOne}>
-                Full
-              </Button>
-              <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={openChartOne}
-                onClose={handleCloseChartOne}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                  timeout: 500,
-                }}
-              >
-                <Fade in={openChartOne}>
-                  <Grid
-                    className="card"
-                    container
-                    xs={8}
-                    direction="column"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Grid>
-                      <ButtonGroup aria-label="contained primary button group">
-                        <Button
-                          color={selectedBtn === 1 ? "secondary" : "primary"}
-                          onClick={() => setSelectedBtn(1)}
-                        >
-                          24h
-                        </Button>
-                        <Button
-                          color={selectedBtn === 2 ? "secondary" : "primary"}
-                          onClick={() => setSelectedBtn(2)}
-                        >
-                          1W
-                        </Button>
-                        <Button
-                          color={selectedBtn === 3 ? "secondary" : "primary"}
-                          onClick={() => setSelectedBtn(3)}
-                        >
-                          1M
-                        </Button>
-                      </ButtonGroup>
-                    </Grid>
-                    <Chart
-                      options={{ ...chartOptionsOne }.options}
-                      series={{ ...chartOptionsOne }.series}
-                      height="500"
-                      width={1000}
-                    />
-                  </Grid>
-                </Fade>
-              </Modal>
-            </Grid>
           </Grid>
         </Grid>
         <Grid className="col-6">
@@ -559,7 +594,7 @@ const AllUsers = () => {
               container
               direction="row"
               justifyContent="space-between"
-              alignItems="baseline"
+              // alignItems="baseline"
             >
               <Grid>
                 <ButtonGroup aria-label="contained primary button group">
@@ -577,6 +612,58 @@ const AllUsers = () => {
                   </Button>
                 </ButtonGroup>
               </Grid>
+              <Grid>
+                <Button variant="outlined" onClick={handleOpenChartThree}>
+                  Full
+                </Button>
+                <Modal
+                  aria-labelledby="transition-modal-title"
+                  aria-describedby="transition-modal-description"
+                  className={classes.modal}
+                  open={openChartThree}
+                  onClose={handleCloseChartThree}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  <Fade in={openChartThree}>
+                    <Grid
+                      className="card"
+                      container
+                      xs={8}
+                      direction="column"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid>
+                        <ButtonGroup aria-label="contained primary button group">
+                          <Button
+                            color={selectedType === 1 ? "secondary" : "primary"}
+                            onClick={() => setSelectedType(1)}
+                          >
+                            Amount of deposit
+                          </Button>
+                          <Button
+                            color={selectedType === 2 ? "secondary" : "primary"}
+                            onClick={() => setSelectedType(2)}
+                          >
+                            Total value lock
+                          </Button>
+                        </ButtonGroup>
+                      </Grid>
+                      <Chart
+                        options={{ ...chartOptionsThree }.options}
+                        series={{ ...chartOptionsThree }.series}
+                        type="bar"
+                        height="500"
+                        width={1000}
+                      />
+                    </Grid>
+                  </Fade>
+                </Modal>
+              </Grid>
             </Grid>
             {/* chart */}
             <Chart
@@ -585,58 +672,6 @@ const AllUsers = () => {
               type="bar"
               height="400"
             />
-            <Grid>
-              <Button variant="outlined" onClick={handleOpenChartThree}>
-                Full
-              </Button>
-              <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={openChartThree}
-                onClose={handleCloseChartThree}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                  timeout: 500,
-                }}
-              >
-                <Fade in={openChartThree}>
-                  <Grid
-                    className="card"
-                    container
-                    xs={8}
-                    direction="column"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Grid>
-                      <ButtonGroup aria-label="contained primary button group">
-                        <Button
-                          color={selectedType === 1 ? "secondary" : "primary"}
-                          onClick={() => setSelectedType(1)}
-                        >
-                          Amount of deposit
-                        </Button>
-                        <Button
-                          color={selectedType === 2 ? "secondary" : "primary"}
-                          onClick={() => setSelectedType(2)}
-                        >
-                          Total value lock
-                        </Button>
-                      </ButtonGroup>
-                    </Grid>
-                    <Chart
-                      options={{ ...chartOptionsThree }.options}
-                      series={{ ...chartOptionsThree }.series}
-                      type="bar"
-                      height="500"
-                      width={1000}
-                    />
-                  </Grid>
-                </Fade>
-              </Modal>
-            </Grid>
           </Grid>
         </Grid>
       </Grid>
