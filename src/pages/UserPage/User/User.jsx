@@ -20,6 +20,7 @@ import {
   dataToken,
   seriesDataToken,
 } from "../../../redux_components/slices/userSlice";
+import { events_data_wallet } from "../../../redux_components/slices/eventsSlice";
 import StatusCard from "./../../../components/status-card/StatusCard";
 import {
   ZoomChartOneSeries,
@@ -32,6 +33,7 @@ import {
 } from "../../../components/charts/Options";
 import { fixedLargeNumber } from "../../../utils/utility";
 import UserTable from "./UserTable";
+import HistoryTable from './HistoryTable'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -91,7 +93,6 @@ const User = () => {
   );
   const [selectedBtn, setSelectedBtn] = React.useState(3);
   const [selectedBtn2, setSelectedBtn2] = React.useState(3);
-  const [type, setType] = React.useState("deposits");
   const [tokenName, setTokenName] = React.useState("");
   const totalValue = useSelector((state) => state.user.totalValue);
   const value = useSelector((state) => state.user.value);
@@ -102,7 +103,7 @@ const User = () => {
   );
   const lending = useSelector((state) => state.layout.lendingpool);
   const wallet = useSelector((state) => state.accountSlice.address);
-
+  const event = useSelector((state)=>state.events.event_wallet)
   const data_token_list = [];
   for (var i in data_token.token) {
     data_token_list.push(
@@ -171,7 +172,6 @@ const User = () => {
     ];
     setAmount(tmp);
   };
-
   const makeOptionChartTwo = () => {
     if (!loadingAll || Object.keys(tx_amount).length === 0) {
       return;
@@ -623,7 +623,6 @@ const User = () => {
       title_one: "Health factor",
     });
   };
-  console.log(wallet);
   const setDefaultAddress = () => {
     if (wallet !== null) {
       setAddress(wallet);
@@ -706,10 +705,11 @@ const User = () => {
       dispatch(valueOfUser(address));
       dispatch(transactionAmount(address));
       dispatch(dataToken(address));
+      dispatch(events_data_wallet(address))
       setLoadingAll(true);
     }
   };
-  // console.log(optionChartTwo)
+  console.log(event)
   const handleChangeTokenName = (value) => {
     if (value == null) {
       return
@@ -745,6 +745,7 @@ const User = () => {
 
   useEffect(() => {
     makeOptionChartTwo();
+    // makeHistoricalData();
   }, [loadingAll, tx_amount, selectedBtn]);
 
   useEffect(() => {
@@ -1074,6 +1075,11 @@ const User = () => {
           <Grid style={{ height: "35vw" }} className="card">
             <UserTable data={data_token_list} />
           </Grid>
+        </Grid>
+      </Grid>
+      <Grid className="row">
+        <Grid className="col-12 card">
+              <HistoryTable data={event}/>
         </Grid>
       </Grid>
     </Container>
