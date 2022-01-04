@@ -9,13 +9,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-
+import { formatAddress } from "../../../utils/utility";
 import Paper from "@material-ui/core/Paper";
 import { Typography } from "@material-ui/core";
 import { numberWithCommas } from "../../../utils/utility";
 
 function descendingComparator(a, b, orderBy) {
-  debugger
   if (parseFloat(b[orderBy])  < parseFloat(a[orderBy])) {
     return -1;
   }
@@ -226,7 +225,9 @@ export default function EnhancedTable(props) {
                       key={row.token}
                       selected={isItemSelected}
                     >
-                      <TableCell align="center">{row.token}</TableCell>
+                      <TableCell align="left">
+                          {formatAddress(row.token)+' ('+row.name+')'}
+                      </TableCell>
                       <TableCell align="center">
                         {numberWithCommas(row.tvl, 2)}
                       </TableCell>

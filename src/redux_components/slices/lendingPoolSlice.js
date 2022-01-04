@@ -10,8 +10,8 @@ const initialState = {
     tokenAddress:[],
     depositBorrow: {},
 }
-function createData(token, tvl, tvl_p, supply, supply_p) {
-    return { token, tvl, tvl_p, supply, supply_p };
+function createData(token, name,tvl, tvl_p, supply, supply_p) {
+    return { token, name,tvl, tvl_p, supply, supply_p };
 }
 function toFix2Float(number){
     let arr = []
@@ -85,6 +85,7 @@ export const tvlSupplyTokensData = createAsyncThunk(
         const tvl_supply_tokens = []
         for (var i in totalTvlAndSupply.name) {
             tvl_supply_tokens.push(createData(
+                totalTvlAndSupply.address[i],
                 totalTvlAndSupply.name[i],
                 totalTvlAndSupply.tvl_value[i],
                 totalTvlAndSupply.tvl_per[i],

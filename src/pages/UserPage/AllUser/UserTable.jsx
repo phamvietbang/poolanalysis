@@ -41,7 +41,11 @@ export default function BasicTable(props) {
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.wallet}>
-                <TableCell>{formatAddress(row.wallet)}</TableCell>
+                <TableCell>
+                  <a href={'https://bscscan.com/address/'+row.wallet}>
+                  {formatAddress(row.wallet)}
+                  </a>
+                </TableCell>
                 <TableCell align="center">{row.number_of_deposits}</TableCell>
                 <TableCell align="center">
                   {numberWithCommas(row.amount_of_deposits, 2)}
