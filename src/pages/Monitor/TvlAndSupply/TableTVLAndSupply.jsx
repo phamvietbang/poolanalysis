@@ -13,9 +13,10 @@ import { formatAddress } from "../../../utils/utility";
 import Paper from "@material-ui/core/Paper";
 import { Typography } from "@material-ui/core";
 import { numberWithCommas } from "../../../utils/utility";
+import {useSelector} from "react-redux"
 
 function descendingComparator(a, b, orderBy) {
-  if (parseFloat(b[orderBy])  < parseFloat(a[orderBy])) {
+  if (parseFloat(b[orderBy]) < parseFloat(a[orderBy])) {
     return -1;
   }
   if (parseFloat(b[orderBy]) > parseFloat(a[orderBy])) {
@@ -33,7 +34,7 @@ function getComparator(order, orderBy) {
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0],b[0] );
+    const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
@@ -157,6 +158,9 @@ export default function EnhancedTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [scan, setScan] = React.useState('bscscan')
+  const lending = useSelector((state) => state.layout.lendingpool)
+
   const rows = props.data;
 
   const handleRequestSort = (event, property) => {
@@ -188,6 +192,18 @@ export default function EnhancedTable(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  const handleScan = () => {
+    if (lending === 'ftm') {
+      setScan('ftmscan')
+    }
+    if (lending === 'bsc') {
+      setScan('bscscan')
+    }
+  }
+
+  React.useEffect(() => {
+    handleScan()
+  }, [lending])
   return (
     <div className={classes.root}>
       <Typography className={classes.title}>
@@ -226,7 +242,9 @@ export default function EnhancedTable(props) {
                       selected={isItemSelected}
                     >
                       <TableCell align="left">
-                          {formatAddress(row.token)+' ('+row.name+')'}
+                      <a href={'https://' + scan + '.com/token/' + row.token}>
+                        {formatAddress(row.token) + ' (' + row.name + ')'}
+                      </a>
                       </TableCell>
                       <TableCell align="center">
                         {numberWithCommas(row.tvl, 2)}
