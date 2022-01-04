@@ -128,16 +128,16 @@ const User = () => {
     let ltv = "";
     let health_factor = "";
     if (totalValue.deposit !== "") {
-      deposit = totalValue.deposit.toFixed(2);
+      deposit = totalValue.deposit.toFixed(0);
     }
     if (totalValue.borrow !== "") {
-      borrow = totalValue.borrow.toFixed(2);
+      borrow = totalValue.borrow.toFixed(0);
     }
     if (totalValue.liquidationT !== "") {
-      liquit = totalValue.liquidationT.toFixed(2);
+      liquit = totalValue.liquidationT.toFixed(0);
     }
     if (totalValue.ltv !== "") {
-      ltv = totalValue.ltv.toFixed(2);
+      ltv = totalValue.ltv.toFixed(0);
     }
     if (totalValue.health_factor !== "") {
       health_factor = totalValue.health_factor.toFixed(2);
