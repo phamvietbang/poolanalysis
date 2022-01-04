@@ -46,6 +46,7 @@ export const totalValueTokenData = createAsyncThunk(
             tvl.push(supplyInUSD[i]-borrowInUSD[i])
             
         }
+        console.log(supply)
         return {'token':token, 'timestamp': timestamp,'supply': supplyInUSD,'borrow': borrowInUSD,'tvl': tvl}
     }
     )
