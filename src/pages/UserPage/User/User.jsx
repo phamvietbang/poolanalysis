@@ -30,8 +30,10 @@ import {
   setUpOptions,
   setUpOptionChartNormal,
   setUpOptionChartOneSeries,
+  setUpOptionChartOne,
+  setUpOptionChartThree,
 } from "../../../components/charts/Options";
-import { fixedLargeNumber } from "../../../utils/utility";
+import { fixedLargeNumber, numberWithCommas } from "../../../utils/utility";
 import UserTable from "./UserTable";
 import HistoryTable from './HistoryTable'
 
@@ -69,7 +71,9 @@ const User = () => {
   });
   const [optionChartTwoZoom, setOptionChartTwoZoom] = React.useState({
     series: [],
-    options: { xaxis: { type: "datetime" } },
+    options: {
+      xaxis: { type: "datetime" },
+    },
   });
   const [optionChartThree, setOptionChartThree] = React.useState({});
   const [optionChartFour, setOptionChartFour] = React.useState({});
@@ -88,9 +92,7 @@ const User = () => {
   const [openChartFour, setOpenChartFour] = React.useState(false);
   const [openChartFive, setOpenChartFive] = React.useState(false);
   const [loadingAll, setLoadingAll] = React.useState(false);
-  const [address, setAddress] = React.useState(
-    ""
-  );
+  const [address, setAddress] = React.useState("");
   const [selectedBtn, setSelectedBtn] = React.useState(3);
   const [selectedBtn2, setSelectedBtn2] = React.useState(3);
   const [tokenName, setTokenName] = React.useState("");
@@ -180,19 +182,19 @@ const User = () => {
     let op = {
       series: [
         {
-          name: "deposit",
+          name: "Deposit",
           data: tx_amount.deposit,
         },
         {
-          name: "borrow",
+          name: "Borrow",
           data: tx_amount.borrow,
         },
         {
-          name: "withdraw",
+          name: "Withdraw",
           data: tx_amount.withdraw,
         },
         {
-          name: "repay",
+          name: "Repay",
           data: tx_amount.repay,
         },
       ],
@@ -207,6 +209,8 @@ const User = () => {
             tools: {
               download: false,
               pan: false,
+              zoomout: false,
+              zoomin: false,
             },
           },
         },
@@ -217,6 +221,9 @@ const User = () => {
           enabled: false,
         },
         xaxis: {
+          title: {
+            text: "Date time",
+          },
           type: "datetime",
           tickAmount: 6,
         },
@@ -224,6 +231,11 @@ const User = () => {
           x: {
             format: "dd MMM yyyy hh:mm",
           },
+          y: {
+            formatter: function (val) {
+              return numberWithCommas(val, 2) + " USD" ;
+            },
+          }
         },
         yaxis: {
           title: {
@@ -244,13 +256,13 @@ const User = () => {
     let withdraw = tx_amount.withdraw;
     let repay = tx_amount.repay;
     let start = 0;
-    let end = 1640908800*1000;
+    let end = 1640908800 * 1000;
     if (selectedBtn === 1) {
       deposit = [];
       borrow = [];
       withdraw = [];
       repay = [];
-      start = end - 24 * 3600*1000;
+      start = end - 24 * 3600 * 1000;
       for (var i in tx_amount.deposit) {
         if (
           tx_amount.deposit[i][0] >= start &&
@@ -260,19 +272,13 @@ const User = () => {
         }
       }
       for (var i in tx_amount.borrow) {
-        if (
-          tx_amount.borrow[i][0] >= start &&
-          tx_amount.borrow[i][0] <= end
-        ) {
+        if (tx_amount.borrow[i][0] >= start && tx_amount.borrow[i][0] <= end) {
           borrow.push(tx_amount.borrow[i]);
         }
       }
 
       for (var i in tx_amount.repay) {
-        if (
-          tx_amount.repay[i][0] >= start &&
-          tx_amount.repay[i][0] <= end
-        ) {
+        if (tx_amount.repay[i][0] >= start && tx_amount.repay[i][0] <= end) {
           repay.push(tx_amount.borrow[i]);
         }
       }
@@ -285,7 +291,6 @@ const User = () => {
           withdraw.push(tx_amount.withdraw[i]);
         }
       }
-
     }
 
     if (selectedBtn === 2) {
@@ -293,7 +298,7 @@ const User = () => {
       borrow = [];
       withdraw = [];
       repay = [];
-      start = end - 24 * 3600 * 7*1000;
+      start = end - 24 * 3600 * 7 * 1000;
       for (var i in tx_amount.deposit) {
         if (
           tx_amount.deposit[i][0] >= start &&
@@ -303,19 +308,13 @@ const User = () => {
         }
       }
       for (var i in tx_amount.borrow) {
-        if (
-          tx_amount.borrow[i][0] >= start &&
-          tx_amount.borrow[i][0] <= end
-        ) {
+        if (tx_amount.borrow[i][0] >= start && tx_amount.borrow[i][0] <= end) {
           borrow.push(tx_amount.borrow[i]);
         }
       }
 
       for (var i in tx_amount.repay) {
-        if (
-          tx_amount.repay[i][0] >= start &&
-          tx_amount.repay[i][0] <= end
-        ) {
+        if (tx_amount.repay[i][0] >= start && tx_amount.repay[i][0] <= end) {
           repay.push(tx_amount.borrow[i]);
         }
       }
@@ -359,6 +358,8 @@ const User = () => {
             tools: {
               download: false,
               pan: false,
+              zoomout: false,
+              zoomin: false,
             },
           },
         },
@@ -404,11 +405,11 @@ const User = () => {
     let op = {
       series: [
         {
-          name: "deposit",
+          name: "Deposit",
           data: deposit,
         },
         {
-          name: "borrow",
+          name: "Borrow",
           data: borrow,
         },
       ],
@@ -423,6 +424,8 @@ const User = () => {
             tools: {
               download: false,
               pan: false,
+              zoomout: false,
+              zoomin: false,
             },
           },
         },
@@ -433,6 +436,11 @@ const User = () => {
           enabled: false,
         },
         xaxis: {
+          title: {
+            text: "Date time",
+            style: {},
+          },
+
           type: "datetime",
           tickAmount: 6,
         },
@@ -523,6 +531,8 @@ const User = () => {
             tools: {
               download: false,
               pan: false,
+              zoomout: false,
+              zoomin: false,
             },
           },
         },
@@ -616,7 +626,7 @@ const User = () => {
     let hf = value.hf;
     setOptionChartFour({
       type: "line",
-      name_one: "health factor",
+      name_one: "Health factor",
       data_one: hf,
       datetime: datetime,
       title: "Health factor of wallet",
@@ -638,7 +648,7 @@ const User = () => {
 
   const handleChangeAddress = (event) => {
     if (event.target.value == null) {
-      return
+      return;
     }
     setAddress(event.target.value);
   };
@@ -712,7 +722,7 @@ const User = () => {
   console.log(event)
   const handleChangeTokenName = (value) => {
     if (value == null) {
-      return
+      return;
     }
     setTokenName(value.name);
   };
@@ -791,8 +801,8 @@ const User = () => {
           <Grid className="card_phu">
             {/* chart */}
             <Chart
-              options={setUpOptionChartNormal(optionChartOne).options}
-              series={setUpOptionChartNormal(optionChartOne).series}
+              options={setUpOptionChartOne(optionChartOne).options}
+              series={setUpOptionChartOne(optionChartOne).series}
               type="line"
               height="400"
             />
@@ -908,8 +918,8 @@ const User = () => {
           <Grid className="card">
             {/* chart */}
             <Chart
-              options={setUpOptionChartNormal(optionChartThree).options}
-              series={setUpOptionChartNormal(optionChartThree).series}
+              options={setUpOptionChartThree(optionChartThree).options}
+              series={setUpOptionChartThree(optionChartThree).series}
               type="line"
               height="400"
             />

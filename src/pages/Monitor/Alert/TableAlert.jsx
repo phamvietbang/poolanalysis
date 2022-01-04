@@ -121,14 +121,14 @@ export default function EnhancedTable(props) {
     const { year, month, date, hour, min, sec } = convertTimestampToDate(val);
     if (min < 10) {
       if (sec < 10) {
-        return `${hour}:0${min}:0${sec}`;
-      } else return `${hour}:0${min}:${sec}`;
+        return `${month}/${date} ${hour}:0${min}:0${sec}`;
+      } else return `${month}/${date} ${hour}:0${min}:${sec}`;
     } else {
       if (sec < 10) {
-        return `${hour}:${min}:0${sec}`;
+        return `${month}/${date} ${hour}:${min}:0${sec}`;
       }
     }
-    return `${hour}:${min}:${sec}`;
+    return `${month}/${date} ${hour}:${min}:${sec}`;
   }
 
   const handleChangePage = (event, newPage) => {
