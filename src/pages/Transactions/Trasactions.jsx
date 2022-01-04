@@ -513,7 +513,7 @@ const Transactions = () => {
             onChange={(event, value) => handleChangeTokenName(value)}
             style={{ width: 300 }}
             renderInput={(params) => (
-              <TextField {...params} label="Coin" variant="outlined" />
+              <TextField {...params} label="Token" variant="outlined" />
             )}
           />
         </Grid>

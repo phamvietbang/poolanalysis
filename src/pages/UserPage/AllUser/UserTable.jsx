@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { formatAddress, numberWithCommas } from "../../../utils/utility";
 import { Container, Typography } from "@material-ui/core";
-
+import { useSelector } from "react-redux";
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -24,7 +24,20 @@ const useStyles = makeStyles({
 
 export default function BasicTable(props) {
   const classes = useStyles();
+  const lending = useSelector((state)=>state.layout.lendingpool)
+  const [scan, setScan] = React.useState('bscscan')
+  const handleScan=()=>{
+    if (lending==='ftm'){
+      setScan('ftmscan')
+    }
+    if (lending==='bsc'){
+      setScan('bscscan')
+    }
+  }
   const rows = props.data;
+  React.useEffect(() => {
+    handleScan()
+  }, [lending])
   return (
     <Container>
       <Typography className={classes.title}>Top making deposit transactions wallet</Typography>
@@ -42,7 +55,7 @@ export default function BasicTable(props) {
             {rows.map((row) => (
               <TableRow key={row.wallet}>
                 <TableCell>
-                  <a href={'https://bscscan.com/address/'+row.wallet}>
+                  <a href={'https://'+scan+'.com/address/'+row.wallet}>
                   {formatAddress(row.wallet)}
                   </a>
                 </TableCell>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Grid, Container, Select, InputLabel, FormControl,MenuItem, makeStyles, TextField } from '@material-ui/core'
+import { Grid, Container, Select, InputLabel, FormControl, MenuItem, makeStyles, TextField } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab';
 import TableAlert from './TableAlert'
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(4),
         minWidth: 120,
     },
-    selectControl:{
+    selectControl: {
         "& .MuiSelect-select:focus": {
             backgroundColor: "transparent"
         }
@@ -21,7 +21,7 @@ function createData(type, datetime, user, amount, token, transaction) {
 }
 const Alert = () => {
     const event_data = useSelector(state => state.events.data)
-    const coin = useSelector(state=>state.events.listTokens)
+    const coin = useSelector(state => state.events.listTokens)
     const classes = useStyles();
     const [loading, setLoading] = useState(false)
     const [eventType, setEventType] = useState('All')
@@ -30,40 +30,40 @@ const Alert = () => {
     const [eventDataTable, setEventDataTable] = useState([])
     const [eventToken, setEventToken] = useState('None')
     const dispatch = useDispatch()
-    function getEventData(){
+    function getEventData() {
         let result = event_data || []
         let events = []
-        if (eventUser!=''){
+        if (eventUser != '') {
             events = []
-            for(var i in event_data){
-                if(event_data[i].user==eventUser){
+            for (var i in event_data) {
+                if (event_data[i].user == eventUser) {
                     events.push(event_data[i])
                 }
             }
             result = events
         }
-        if(result && eventAmount>0){
+        if (result && eventAmount > 0) {
             events = []
-            for (var i in result){
-                if(result[i].amount>=eventAmount){
-                    events.push(result[i])
-                }
-            }
-            result=events
-        }
-        if(result&&eventToken!='None'){
-            events = []
-            for (var i in result){
-                if(result[i].token==eventToken){
+            for (var i in result) {
+                if (result[i].amount >= eventAmount) {
                     events.push(result[i])
                 }
             }
             result = events
         }
-        if (result&&eventType!='All'){
+        if (result && eventToken != 'None') {
             events = []
-            for (var i in result){
-                if(result[i].type==eventType){
+            for (var i in result) {
+                if (result[i].token == eventToken) {
+                    events.push(result[i])
+                }
+            }
+            result = events
+        }
+        if (result && eventType != 'All') {
+            events = []
+            for (var i in result) {
+                if (result[i].type == eventType) {
                     events.push(result[i])
                 }
             }
@@ -72,28 +72,28 @@ const Alert = () => {
         setEventDataTable([...result]);
     }
     const handleChangeEventType = (event) => {
-        if (event.target.value==null){
+        if (event.target.value == null) {
             return
-          }
+        }
         setEventType(event.target.value)
-      };
+    };
     const handleChangeEventAmount = (event) => {
-        if (event.target.value==null){
+        if (event.target.value == null) {
             return
-          }
+        }
         setEventAmount(parseInt(event.target.value))
-        
+
     };
     const handleChangeEventUser = (event) => {
-        if (event.target.value==null){
+        if (event.target.value == null) {
             return
-          }
+        }
         setEventUser(event.target.value)
     }
     const handleChangeEventToken = (value) => {
-        if (value==null){
+        if (value == null) {
             return
-          }
+        }
         setEventToken(value.name)
     }
 
@@ -108,8 +108,8 @@ const Alert = () => {
     if (!loading) {
         return <div></div>;
     }
-    
-    
+
+
     return (
 
         <Container
@@ -141,24 +141,16 @@ const Alert = () => {
                     options={coin}
                     getOptionLabel={(option) => option.name}
                     style={{ width: 200 }}
-                    value={{'name':eventToken}}
-                    renderInput={(params) => <TextField {...params} label="Coin" variant="outlined" />}
-                    onChange={(event, value)=>handleChangeEventToken(value)}
+                    value={{ 'name': eventToken }}
+                    renderInput={(params) => <TextField {...params} label="Token" variant="outlined" />}
+                    onChange={(event, value) => handleChangeEventToken(value)}
                 />
                 <TextField label="Amount (>=)" variant="outlined" onChange={handleChangeEventAmount} />
-                <TextField label="Wallet" variant="outlined" onChange={handleChangeEventUser}/>
-            </Grid>
-            <Grid
-                className='card'
-                container
-                direction="row"
-                justifyContent="space-evenly"
-                alignItems="center"
-                >
-                <Grid item xs={12}>
-                    <TableAlert data={eventDataTable} />
+                <TextField label="Wallet" variant="outlined" onChange={handleChangeEventUser} />
+                <Grid className='col-12'>
+                <TableAlert data={eventDataTable} />
                 </Grid>
-
+                
             </Grid>
         </Container>
     )

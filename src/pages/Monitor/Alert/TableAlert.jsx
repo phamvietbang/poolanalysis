@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { lighten, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -8,7 +8,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
+import { useSelector } from "react-redux";
 
 import Paper from "@material-ui/core/Paper";
 import {
@@ -27,7 +27,7 @@ const headCells = [
   { id: "type", numeric: false, disablePadding: false, label: "Type" },
   { id: "datetime", numeric: true, disablePadding: false, label: "Date time" },
   { id: "user", numeric: false, disablePadding: false, label: "User" },
-  { id: "amount", numeric: true, disablePadding: false, label: "Amount" },
+  { id: "amount", numeric: true, disablePadding: false, label: "Amount (USD)" },
   { id: "token", numeric: false, disablePadding: false, label: "Token" },
   {
     id: "transaction",
@@ -107,6 +107,17 @@ export default function EnhancedTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [scan, setScan] = React.useState('bscscan')
+  const lending = useSelector((state) => state.layout.lendingpool)
+
+  const handleScan = () => {
+    if (lending === 'ftm') {
+      setScan('ftmscan')
+    }
+    if (lending === 'bsc') {
+      setScan('bscscan')
+    }
+  }
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -121,14 +132,14 @@ export default function EnhancedTable(props) {
     const { year, month, date, hour, min, sec } = convertTimestampToDate(val);
     if (min < 10) {
       if (sec < 10) {
-        return `${month}/${date} ${hour}:0${min}:0${sec}`;
-      } else return `${month}/${date} ${hour}:0${min}:${sec}`;
+        return `${date} ${month} ${hour}:0${min}:0${sec}`;
+      } else return `${date} ${month} ${hour}:0${min}:${sec}`;
     } else {
       if (sec < 10) {
-        return `${month}/${date} ${hour}:${min}:0${sec}`;
+        return `${date} ${month} ${hour}:${min}:0${sec}`;
       }
     }
-    return `${month}/${date} ${hour}:${min}:${sec}`;
+    return `${date} ${month} ${hour}:${min}:${sec}`;
   }
 
   const handleChangePage = (event, newPage) => {
@@ -146,6 +157,21 @@ export default function EnhancedTable(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  function transformType(type) {
+    switch (type) {
+      case 'DEPOSIT': return 'Deposit'
+      case 'WITHDRAW': return 'Withdraw'
+      case 'BORROW': return 'Borrow'
+      case 'REPAY': return 'Repay'
+      case 'RESERVEUSEDASCOLLATERALDISABLED': return 'Reserve used as collateral disabled'
+      case 'RESERVEUSEDASCOLLATERALENABLED': return 'Reserve used as collateral enabled'
+      default:
+        return type
+    }
+  }
+  React.useEffect(() => {
+    handleScan()
+  }, [lending])
   return (
     <div className={classes.root}>
       <Typography className={classes.title}>Events in the last 7 days</Typography>
@@ -181,19 +207,23 @@ export default function EnhancedTable(props) {
                         backgroundColor: row.amount > 10000 ? "#ed5050a8" : "",
                       }}
                     >
-                      <TableCell align="center">{row.type}</TableCell>
+                      <TableCell align="left">{transformType(row.type)}</TableCell>
                       <TableCell align="center">
                         {date(row.datetime * 1000)}
                       </TableCell>
                       <TableCell align="center">
-                        {formatAddress(row.user)}
+                        <a href={'https://' + scan + '.com/address/' + row.user}>
+                          {formatAddress(row.user)}
+                        </a>
                       </TableCell>
                       <TableCell align="center">
                         {numberWithCommas(row.amount, 2)}
                       </TableCell>
                       <TableCell align="center">{row.token}</TableCell>
                       <TableCell align="center">
-                        {formatAddress(row.transaction)}
+                        <a href={'https://' + scan + '.com/tx/' + row.transaction}>
+                          {formatAddress(row.transaction)}
+                        </a>
                       </TableCell>
                     </TableRow>
                   );

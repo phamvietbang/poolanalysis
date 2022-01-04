@@ -105,7 +105,7 @@ const User = () => {
   );
   const lending = useSelector((state) => state.layout.lendingpool);
   const wallet = useSelector((state) => state.accountSlice.address);
-  const event = useSelector((state)=>state.events.event_wallet)
+  const event = useSelector((state) => state.events.event_wallet)
   const data_token_list = [];
   for (var i in data_token.token) {
     data_token_list.push(
@@ -233,7 +233,7 @@ const User = () => {
           },
           y: {
             formatter: function (val) {
-              return numberWithCommas(val, 2) + " USD" ;
+              return numberWithCommas(val, 2) + " USD";
             },
           }
         },
@@ -1010,7 +1010,7 @@ const User = () => {
                 onChange={(event, value) => handleChangeTokenName(value)}
                 style={{ width: 300 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Coin" variant="outlined" />
+                  <TextField {...params} label="Token" variant="outlined" />
                 )}
               />
               <Grid>
@@ -1088,8 +1088,10 @@ const User = () => {
         </Grid>
       </Grid>
       <Grid className="row">
-        <Grid className="col-12 card">
-              <HistoryTable data={event}/>
+        <Grid className="col-12">
+          <Grid className="card">
+            <HistoryTable data={event} />
+          </Grid>
         </Grid>
       </Grid>
     </Container>

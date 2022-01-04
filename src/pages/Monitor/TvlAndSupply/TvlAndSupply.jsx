@@ -197,7 +197,7 @@ const TvlAndSupply = () => {
   useEffect(() => {
     dispatch(tvlSupplyTokensData()).then(() => setLoadingTokens(true));
   }, []);
-
+  
   if (!loadingLp || !loadingTokens) {
     return <div></div>;
   }
@@ -208,6 +208,7 @@ const TvlAndSupply = () => {
   const handleChangeTokenName = (value) => {
     setTokenName(value.name);
   };
+  
   return (
     <Container fixed={true} maxWidth={"lg"}>
       <Grid
