@@ -153,7 +153,8 @@ const Alert = () => {
                 container
                 direction="row"
                 justifyContent="space-evenly"
-                alignItems="center">
+                alignItems="center"
+                >
                 <Grid item xs={12}>
                     <TableAlert data={eventDataTable} />
                 </Grid>

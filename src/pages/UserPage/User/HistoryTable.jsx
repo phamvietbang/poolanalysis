@@ -16,7 +16,7 @@ import {
   formatAddress,
   numberWithCommas,
 } from "../../../utils/utility";
-import { Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 
 function stableSort(array) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -27,7 +27,7 @@ const headCells = [
   { id: "type", numeric: false, disablePadding: false, label: "Type" },
   { id: "datetime", numeric: true, disablePadding: false, label: "Date time" },
   { id: "user", numeric: false, disablePadding: false, label: "User" },
-  { id: "amount", numeric: true, disablePadding: false, label: "Amount" },
+  { id: "amount", numeric: true, disablePadding: false, label: "Amount (USD)" },
   { id: "token", numeric: false, disablePadding: false, label: "Token" },
   {
     id: "transaction",
@@ -121,14 +121,14 @@ export default function EnhancedTable(props) {
     const { year, month, date, hour, min, sec } = convertTimestampToDate(val);
     if (min < 10) {
       if (sec < 10) {
-        return `${hour}:0${min}:0${sec}`;
-      } else return `${hour}:0${min}:${sec}`;
+        return `${date} ${month} ${hour}:0${min}:0${sec}`;
+      } else return `${date} ${month} ${hour}:0${min}:${sec}`;
     } else {
       if (sec < 10) {
-        return `${hour}:${min}:0${sec}`;
+        return `${date} ${month} ${hour}:${min}:0${sec}`;
       }
     }
-    return `${hour}:${min}:${sec}`;
+    return `${date} ${month} ${hour}:${min}:${sec}`;
   }
 
   const handleChangePage = (event, newPage) => {
@@ -148,74 +148,79 @@ export default function EnhancedTable(props) {
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.title}>Events in the last 7 days</Typography>
-      <Paper className={classes.paper}>
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              onSelectAllClick={handleSelectAllClick}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows)
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.type);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+      <Grid>
+        <Typography className={classes.title}>
+          Events in the last 7 days
+        </Typography>
+        <Paper className={classes.paper}>
+          <TableContainer>
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              aria-label="enhanced table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                numSelected={selected.length}
+                onSelectAllClick={handleSelectAllClick}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {stableSort(rows)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.type);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.tx_hash}
-                      selected={isItemSelected}
-                      style={{
-                        backgroundColor: row.amount > 10000 ? "#ed5050a8" : "",
-                      }}
-                    >
-                      <TableCell align="center">{row.type}</TableCell>
-                      <TableCell align="center">
-                        {date(row.datetime * 1000)}
-                      </TableCell>
-                      <TableCell align="center">
-                        {formatAddress(row.user)}
-                      </TableCell>
-                      <TableCell align="center">
-                        {numberWithCommas(row.amount, 2)}
-                      </TableCell>
-                      <TableCell align="center">{row.token}</TableCell>
-                      <TableCell align="center">
-                        {formatAddress(row.transaction)}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.tx_hash}
+                        selected={isItemSelected}
+                        style={{
+                          backgroundColor:
+                            row.amount > 10000 ? "#ed5050a8" : "",
+                        }}
+                      >
+                        <TableCell align="center">{row.type}</TableCell>
+                        <TableCell align="center">
+                          {date(row.datetime * 1000)}
+                        </TableCell>
+                        <TableCell align="center">
+                          {formatAddress(row.user)}
+                        </TableCell>
+                        <TableCell align="center">
+                          {numberWithCommas(row.amount, 2)}
+                        </TableCell>
+                        <TableCell align="center">{row.token}</TableCell>
+                        <TableCell align="center">
+                          {formatAddress(row.transaction)}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </Grid>
     </div>
   );
 }
