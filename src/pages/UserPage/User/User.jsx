@@ -641,7 +641,7 @@ const User = () => {
     if (lending === "bsc") {
       setAddress("0x855bfeefaabda356b714fd68d666a7926efd49a6");
     }
-    if (lending === "ftm") {
+    if (lending === "ftm"||lending==='geist_ftm') {
       setAddress("0x8f9276e46036e0a9bb3db46e9bc7e4e3972380b8");
     }
   };

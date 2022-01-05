@@ -111,7 +111,10 @@ const TvlAndSupply = () => {
           width: 2,
         },
         xaxis: {
-          categories: datetime.slice(time),
+          title: {
+            text: "Date time",
+          },
+          categories: datetime.slice(time,),
           type: "datetime",
         },
         tooltip: {
@@ -120,7 +123,7 @@ const TvlAndSupply = () => {
           },
           y: {
             formatter: function (val, index) {
-                return numberWithCommas(val,2) + " USD";
+              return numberWithCommas(val, 2) + " USD";
             },
           },
         },
@@ -197,7 +200,7 @@ const TvlAndSupply = () => {
   useEffect(() => {
     dispatch(tvlSupplyTokensData()).then(() => setLoadingTokens(true));
   }, []);
-  
+
   if (!loadingLp || !loadingTokens) {
     return <div></div>;
   }
@@ -208,7 +211,7 @@ const TvlAndSupply = () => {
   const handleChangeTokenName = (value) => {
     setTokenName(value.name);
   };
-  
+
   return (
     <Container fixed={true} maxWidth={"lg"}>
       <Grid

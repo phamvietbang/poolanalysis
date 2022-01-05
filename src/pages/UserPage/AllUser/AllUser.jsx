@@ -108,6 +108,9 @@ const AllUsers = () => {
     let baroption = {
       options: {
         xaxis: {
+          title: {
+            text: "Wallet address",
+          },
           categories: wallets,
         },
         yaxis: {
@@ -189,7 +192,9 @@ const AllUsers = () => {
       default:
         break;
     }
-
+    let mindb = Math.min(...db)
+    let minjd = Math.min(...jdeposit)
+    let min_ = minjd<mindb? minjd:mindb
     let op = {
       series: [
         {
@@ -240,7 +245,7 @@ const AllUsers = () => {
             // axisTicks: {
             //     show: true
             // },
-            min: findMinRoundNumber(Math.min(...db)),
+            min: findMinRoundNumber(min_),
             max: findMaxRoundNumber(Math.max(...active)),
             title: {
               text: "Number of users",
