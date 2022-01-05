@@ -1,9 +1,11 @@
-import React from 'react'
-import AllUsers from './AllUser'
+import React from "react";
+import AllUsers from "./AllUser";
 const index = () => {
-    return (
-        <AllUsers/>
-    )
-}
+  return (
+    <div>
+      <AllUsers />
+    </div>
+  );
+};
 
-export default index
+export default index;

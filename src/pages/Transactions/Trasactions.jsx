@@ -10,6 +10,7 @@ import {
   Fade,
   Container,
   TextField,
+  CircularProgress,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useSelector, useDispatch } from "react-redux";
@@ -38,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  loading:{
+    height: "90vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }
 }));
 
 // const chartOptions = setUpOptions(op)
@@ -486,7 +493,7 @@ const Transactions = () => {
     dispatch(tvlSupplyTokensData()).then(() => setLoadingTokens(true));
   }, []);
   if (!loadingLp || !loadingTokens || !loadingDBLp) {
-    return <div></div>;
+    return <div className={classes.loading}><CircularProgress disableShrink /></div>;
   }
   const coin = [{ name: "ALL" }];
   for (var i in tokens) {

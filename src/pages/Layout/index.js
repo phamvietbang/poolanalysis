@@ -1,9 +1,12 @@
-import React from 'react'
-import Layout from './Layout'
-const index = () => {
-    return (
-        <Layout/>
-    )
-}
+import React from "react";
+import Layout from "./Layout";
 
-export default index
+const index = () => {
+  return (
+    <div>
+      <Layout />
+    </div>
+  );
+};
+
+export default index;

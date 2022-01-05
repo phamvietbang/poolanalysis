@@ -10,29 +10,48 @@ import { FS } from "./constance";
 
 const RESPONSE_TIME_LOWER_BOUND = 1250;
 
-export const fetchConfig = (poolAddress, enqueueSnackbar) => async (dp, getState) => {
-  try {
-    dp(startFetchConfig());
-    const network = getCurrentNetwork();
-    const addresses = getCurrentContractAddresses();
-    const assets = getCurrentAssets();
-    let poolConfig = null;
-    if (poolAddress === null) poolConfig = getPoolConfig();
-    else poolConfig = getPoolConfigWithAddress(poolAddress);
-    const hardCodePoolAddress = poolConfig["address"];
-    const poolName = poolConfig["name"];
-    window.localStorage.setItem("poolAddress", hardCodePoolAddress);
-    window.localStorage.setItem("currentChainId", poolConfig["networkConfig"].chainId);
-    const creditScoreAddress = poolConfig["creditScoreAddress"];
+export const fetchConfig =
+  (poolAddress, enqueueSnackbar) => async (dp, getState) => {
+    try {
+      dp(startFetchConfig());
+      const network = getCurrentNetwork();
+      const addresses = getCurrentContractAddresses();
+      const assets = getCurrentAssets();
+      let poolConfig = null;
+      if (poolAddress === null) poolConfig = getPoolConfig();
+      else poolConfig = getPoolConfigWithAddress(poolAddress);
+      const hardCodePoolAddress = poolConfig["address"];
+      const poolName = poolConfig["name"];
+      window.localStorage.setItem("poolAddress", hardCodePoolAddress);
+      window.localStorage.setItem(
+        "currentChainId",
+        poolConfig["networkConfig"].chainId
+      );
+      const creditScoreAddress = poolConfig["creditScoreAddress"];
 
-    const start = Date.now();
-    await initWeb3Reader();
-    const factoriesAddress = await fetchFactoriesAddress(addresses.FACTOR_REGISTRY_ADDRESS);
-    const end = Date.now();
-    const delta = end - start;
+      const start = Date.now();
+      await initWeb3Reader();
+      const factoriesAddress = await fetchFactoriesAddress(
+        addresses.FACTOR_REGISTRY_ADDRESS
+      );
+      const end = Date.now();
+      const delta = end - start;
 
-    if (delta < RESPONSE_TIME_LOWER_BOUND) {
-      setTimeout(() => {
+      if (delta < RESPONSE_TIME_LOWER_BOUND) {
+        setTimeout(() => {
+          dp(
+            fetchConfigSuccess({
+              factoriesAddress,
+              network,
+              addresses,
+              assets,
+              hardCodePoolAddress,
+              creditScoreAddress,
+              poolName,
+            })
+          );
+        }, RESPONSE_TIME_LOWER_BOUND - delta);
+      } else {
         dp(
           fetchConfigSuccess({
             factoriesAddress,
@@ -44,37 +63,41 @@ export const fetchConfig = (poolAddress, enqueueSnackbar) => async (dp, getState
             poolName,
           })
         );
-      }, RESPONSE_TIME_LOWER_BOUND - delta);
-    } else {
-      dp(
-        fetchConfigSuccess({
-          factoriesAddress,
-          network,
-          addresses,
-          assets,
-          hardCodePoolAddress,
-          creditScoreAddress,
-          poolName,
-        })
-      );
+      }
+    } catch (error) {
+      console.error(error);
+      dp(fetchConfigFail());
+      enqueueSnackbar(JSON.stringify(error.message), ERR_TOP_CENTER);
     }
-  } catch (error) {
-    console.error(error);
-    dp(fetchConfigFail());
-    enqueueSnackbar(JSON.stringify(error.message), ERR_TOP_CENTER);
-  }
-};
+  };
 
 async function fetchFactoriesAddress(factoryRegistryAddress) {
-  const factoryRegistryContract = new web3Reader.eth.Contract(FactoryRegistry.abi, factoryRegistryAddress);
-  const addressesProviderFactoryAddress = await factoryRegistryContract.methods.getAddressesProviderFactory().call();
-  const interestRateStrategyFactoryAddress = await factoryRegistryContract.methods.getInterestRateFactory().call();
+  const factoryRegistryContract = new web3Reader.eth.Contract(
+    FactoryRegistry.abi,
+    factoryRegistryAddress
+  );
+  const addressesProviderFactoryAddress = await factoryRegistryContract.methods
+    .getAddressesProviderFactory()
+    .call();
+  const interestRateStrategyFactoryAddress =
+    await factoryRegistryContract.methods.getInterestRateFactory().call();
 
   return {
     addressesProviderFactoryAddress,
     interestRateStrategyFactoryAddress,
   };
 }
+
+export const reloadConfig = () => async (dp, getState) => {
+  // dp(startFetchConfig());
+  dp(startLoadingConfig());
+  const network = getCurrentNetwork();
+  const addresses = getCurrentContractAddresses();
+  const assets = getCurrentAssets();
+  setTimeout(() => {
+    dp(updateConfig({ network, addresses }));
+  }, 1250);
+};
 
 const configSlice = createSlice({
   name: "configSlice",
@@ -87,6 +110,7 @@ const configSlice = createSlice({
     hardCodePoolAddress: null,
     creditScoreAddress: null,
     poolName: null,
+    loading: null,
   },
   reducers: {
     startFetchConfig: (state, action) => {
@@ -99,8 +123,21 @@ const configSlice = createSlice({
     fetchConfigFail: (state, action) => {
       state.fetchingStatus = FS.FAIL;
     },
+    startLoadingConfig: (state, action) => {
+      state.loading = true;
+    },
+    updateConfig: (state, action) => {
+      Object.assign(state, action.payload);
+      state.loading = false;
+    },
   },
 });
 
 export default configSlice.reducer;
-export const { fetchConfigSuccess, startFetchConfig, fetchConfigFail } = configSlice.actions;
+export const {
+  fetchConfigSuccess,
+  startFetchConfig,
+  fetchConfigFail,
+  updateConfig,
+  startLoadingConfig,
+} = configSlice.actions;

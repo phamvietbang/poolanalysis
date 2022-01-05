@@ -9,7 +9,8 @@ import { Link, NavLink } from "react-router-dom";
 import DISCONNECT from "./disconnect.svg";
 import CONNECT from "./connect.svg";
 import { mergeClasses } from "@material-ui/styles";
-import { makeStyles } from "@material-ui/core";
+import { Box, makeStyles, useMediaQuery } from "@material-ui/core";
+import MobileHeader from "./MobileHeader";
 
 const menu = [
   {
@@ -47,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
   active: {
     color: "rgb(0, 143, 251)",
   },
+  loader: {
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 const SingleLevel = ({ item }) => {
@@ -65,7 +72,7 @@ const SingleLevel = ({ item }) => {
   return (
     <NavLink
       to={item.to}
-      className={({isActive}) => (!isActive ? "" : classes.active)}
+      className={({ isActive }) => (!isActive ? "" : classes.active)}
     >
       <ListItem button>
         <ListItemText className={className} primary={item.title} />
@@ -119,5 +126,15 @@ const MenuItem = ({ item }) => {
   return <Component item={item} />;
 };
 export default function App() {
-  return menu.map((item, key) => <MenuItem key={key} item={item} />);
+  const isMobile = useMediaQuery("@media screen and (max-width: 750px)");
+  return (
+    <Box id="header">
+      {isMobile ? <MobileHeader /> :
+      <div>
+        {menu.map((item, key) => (
+          <MenuItem key={key} item={item} />
+        ))}
+      </div>}
+    </Box>
+  );
 }
