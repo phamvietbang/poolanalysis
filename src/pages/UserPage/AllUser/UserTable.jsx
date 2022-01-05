@@ -27,7 +27,7 @@ export default function BasicTable(props) {
   const lending = useSelector((state)=>state.layout.lendingpool)
   const [scan, setScan] = React.useState('bscscan')
   const handleScan=()=>{
-    if (lending==='ftm'){
+    if (lending==='ftm' || lending ==='geist_ftm'){
       setScan('ftmscan')
     }
     if (lending==='bsc'){
@@ -40,7 +40,7 @@ export default function BasicTable(props) {
   }, [lending])
   return (
     <Container>
-      <Typography className={classes.title}>Top making deposit transactions wallet</Typography>
+      <Typography className={classes.title}>Top making deposit transactions wallets</Typography>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>

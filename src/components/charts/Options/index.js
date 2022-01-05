@@ -183,7 +183,7 @@ export function setNumberUserOptions(props) {
         y: {
           formatter: function (val, index) {
             if (index.seriesIndex === 0)
-              return numberWithCommas(val) + " users";
+              return numberWithCommas(val) + " Transactions";
             else {
               return numberWithCommas(val) + " USD";
             }
