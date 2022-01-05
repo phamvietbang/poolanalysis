@@ -70,9 +70,10 @@ export const countUsersData = createAsyncThunk(
     "allUsers/count_users",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'timestamp': 1640908800,
+                'timestamp': now,
                 'days': 10,
                 'lending':state_.layout.lendingpool,
             },
@@ -86,10 +87,11 @@ export const seriesUsers = createAsyncThunk(
     "allUsers/users",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending':state_.layout.lendingpool,
                 'type': "totalNumberOfActiveUserChangeLogs",
             },
@@ -97,8 +99,8 @@ export const seriesUsers = createAsyncThunk(
         let active = await client.get('/stats/histogram_of_users/trava_pool',config)
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending':state_.layout.lendingpool,
                 'type': "totalNumberOfDepositingOnlyUserChangeLogs",
             },
@@ -106,8 +108,8 @@ export const seriesUsers = createAsyncThunk(
         let jdeposit = await client.get('/stats/histogram_of_users/trava_pool',config)
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending':state_.layout.lendingpool,
                 'type': "totalNumberOfBorrowingUserChangeLogs",
             },
