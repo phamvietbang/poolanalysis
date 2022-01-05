@@ -12,6 +12,7 @@ import {
   Grid,
   Select,
   Container,
+  CircularProgress,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import BasicTable from "./UserTable";
@@ -49,6 +50,12 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
+  loading:{
+    height: "90vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }
 }));
 
 function findMinRoundNumber(number) {
@@ -73,6 +80,8 @@ const AllUsers = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [top, setTop] = React.useState(5);
+  const loading = useSelector(state => state.allusers.isLoading)
+  // console.log("🚀 ~ file: AllUser.jsx ~ line 77 ~ AllUsers ~ loading", loading)
   const [openChartOne, setOpenChartOne] = React.useState(false);
   const [openChartTwo, setOpenChartTwo] = React.useState(false);
   const [openChartThree, setOpenChartThree] = React.useState(false);
@@ -291,7 +300,7 @@ const AllUsers = () => {
     if (!loadingAll) {
       return;
     }
-    console.log(tvlDeposit);
+    // console.log(tvlDeposit);
     let amount = tvlDeposit.amount;
     let count = [];
     let tit = "";
@@ -436,7 +445,7 @@ const AllUsers = () => {
   }, [topA, loadingAll]);
 
   if (!loadingAll) {
-    return <div></div>;
+    return <div className={classes.loading}><CircularProgress disableShrink /></div>;
   }
   const type_amount = [
     {
@@ -476,6 +485,7 @@ const AllUsers = () => {
       )
     );
   }
+
   return (
     <Container fixed={true} maxWidth={"lg"}>
       <Grid

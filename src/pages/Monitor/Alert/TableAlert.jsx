@@ -75,6 +75,7 @@ EnhancedTableHead.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    marginTop: "3vw"
   },
   title: {
     textAlign: "center",

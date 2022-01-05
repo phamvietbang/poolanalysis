@@ -59,7 +59,7 @@ export const clusteringUsersData = createAsyncThunk(
             'deposit':cluster_deposit,
             'tvl':cluster_tvl
         }
-        console.log(result)
+        // console.log(result)
         return result
     }
 )
@@ -79,7 +79,7 @@ export const countUsersData = createAsyncThunk(
             },
         }
         let result = await client.get('/stats/number_of_users/trava_pool',config)
-        console.log(result)
+        // console.log(result)
         return result.data
     } 
 )
@@ -121,7 +121,7 @@ export const seriesUsers = createAsyncThunk(
             'justDeposits': jdeposit.data.users,
             'depositBorrows':dp.data.users
         }
-        console.log(result)
+        // console.log(result)
         return result
     }
 )
@@ -137,7 +137,7 @@ export const topDepositsAmount = createAsyncThunk(
             },
         }
         let result = await client.get('/stats/top_deposit/trava_pool',config)
-        console.log(result)
+        // console.log(result)
         return result.data
     }
 )
@@ -153,7 +153,7 @@ export const topDepositsTransact = createAsyncThunk(
             },
         }
         let result = await client.get('/stats/top_users_transacting/trava_pool',config)
-        console.log(result)
+        // console.log(result)
         return result.data
     }
 )

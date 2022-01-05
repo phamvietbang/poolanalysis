@@ -10,6 +10,7 @@ import {
   Modal,
   Backdrop,
   Fade,
+  CircularProgress,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete } from "@material-ui/lab";
@@ -49,6 +50,12 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  loading:{
+    height: "90vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }
 }));
 const type_amount = [
   { name: "Deposits (USD)", amount: 0 },
@@ -766,7 +773,7 @@ const User = () => {
     makeTokenName();
   }, [loadingAll, data_token]);
   if (!loadingAll) {
-    return <div></div>;
+    return <div className={classes.loading}><CircularProgress disableShrink /></div>;
   }
   return (
     <Container fixed={true} maxWidth={"lg"}>

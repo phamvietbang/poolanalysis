@@ -7,6 +7,8 @@ import {
   Grid,
   Container,
   TextField,
+  CircularProgress,
+  makeStyles,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useSelector } from "react-redux";
@@ -19,7 +21,18 @@ import { totalValueTokenData } from "../../../redux_components/slices/tokenSlice
 import { useDispatch } from "react-redux";
 import { fixedLargeNumber, numberWithCommas } from "../../../utils/utility";
 
+const useStyles = makeStyles((theme) => ({
+  loading:{
+    height: "90vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }
+}))
+
 const TvlAndSupply = () => {
+
+  const classes = useStyles()
   const dispatch = useDispatch();
   const [loadingLp, setLoadingLp] = useState(false);
   const [loadingTokens, setLoadingTokens] = useState(false);
@@ -202,7 +215,7 @@ const TvlAndSupply = () => {
   }, []);
 
   if (!loadingLp || !loadingTokens) {
-    return <div></div>;
+    return <div className={classes.loading}><CircularProgress disableShrink /></div>;
   }
   const coin = [{ name: "ALL" }];
   for (var i in tokens) {
