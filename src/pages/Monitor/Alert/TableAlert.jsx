@@ -112,7 +112,7 @@ export default function EnhancedTable(props) {
   const lending = useSelector((state) => state.layout.lendingpool)
 
   const handleScan = () => {
-    if (lending === 'ftm') {
+    if (lending === 'ftm'|| lending ==='geist_ftm') {
       setScan('ftmscan')
     }
     if (lending === 'bsc') {

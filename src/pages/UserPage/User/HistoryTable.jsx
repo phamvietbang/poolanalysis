@@ -110,7 +110,7 @@ export default function EnhancedTable(props) {
   const [scan, setScan] = React.useState('bscscan')
 
   const handleScan=()=>{
-    if (lending==='ftm'){
+    if (lending==='ftm'|| lending ==='geist_ftm'){
       setScan('ftmscan')
     }
     if (lending==='bsc'){

@@ -184,7 +184,7 @@ const Transactions = () => {
       name_two: "Amount of borrows",
       name_one: "Number of borrow transactions",
       data_two: borrow_amount,
-      data_one: borrow_tx ,
+      data_one: borrow_tx,
       datetime: datetime,
       title: "Amount and Number Of Borrow Transactions",
       title_two: "Amount (USD)",
@@ -272,6 +272,9 @@ const Transactions = () => {
           width: 2,
         },
         xaxis: {
+          title: {
+            text: "Date time",
+          },
           categories: datetime,
           type: "datetime",
         },
@@ -297,7 +300,7 @@ const Transactions = () => {
           },
           y: {
             formatter: function (val) {
-              return numberWithCommas(val, 2) + "%" ;
+              return numberWithCommas(val, 2) + "%";
             },
           }
         },
@@ -384,6 +387,9 @@ const Transactions = () => {
           width: 2,
         },
         xaxis: {
+          title: {
+            text: "Date time",
+          },
           categories: datetime,
           type: "datetime",
         },

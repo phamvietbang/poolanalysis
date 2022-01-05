@@ -88,7 +88,6 @@ export default function PermanentDrawerLeft() {
 
   const loading = useSelector((state) => state.configSlice.loading);
   console.log("🚀 ~ file: NavBar.jsx ~ line 136 ~ App ~ loading", loading);
-
   return (
     <div >
       {loading === false ? (
@@ -115,8 +114,9 @@ export default function PermanentDrawerLeft() {
                     icon: classes.whiteColor,
                   }}
                 >
-                  <MenuItem value="bsc">BSC</MenuItem>
-                  <MenuItem value="ftm">FTM</MenuItem>
+                  <MenuItem value='bsc'>TRAVA IN BSC</MenuItem>
+                  <MenuItem value='ftm'>TRAVA IN FTM</MenuItem>
+                  <MenuItem value='geist_ftm'>GEIST IN FTM</MenuItem>
                 </Select>
                 {/* <Button variant="contained" color="primary">Connect Wallet</Button> */}
                 <DesktopHeader />

@@ -24,10 +24,11 @@ export const totalValueData = createAsyncThunk(
     "lendingpool/total_borrow",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'type': "borrows",
             },
@@ -37,8 +38,8 @@ export const totalValueData = createAsyncThunk(
         const borrowInUSD = toFix2Float(borrow.data.totalBorrowChangeLogs)
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'type': "supply",
             },
@@ -55,9 +56,10 @@ export const tvlSupplyTokensData = createAsyncThunk(
     "lendingpool/tvl_tokens",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'timestamp': 1640908800,
+                'timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'type': "tvl",
             },
@@ -69,7 +71,7 @@ export const tvlSupplyTokensData = createAsyncThunk(
         const tvl_per = toFix2Float(tvl.data.percentage)
         config = {
             params: {
-                'timestamp': 1640908800,
+                'timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'type': "total_supply",
             },
@@ -100,10 +102,11 @@ export const depositBorrowData = createAsyncThunk(
     "lendingpool/deposit_borrow",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'type': "deposits",
             },
@@ -113,8 +116,8 @@ export const depositBorrowData = createAsyncThunk(
         let d_a = toFix2Float(deposit_amount.data.deposits)
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'type': "deposits",
             },
@@ -123,8 +126,8 @@ export const depositBorrowData = createAsyncThunk(
         let d_tx = toFix2Float(deposit_tx.data.deposits)
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'type': "borrows",
             },
@@ -133,8 +136,8 @@ export const depositBorrowData = createAsyncThunk(
         let b_a = toFix2Float(borrow_amount.data.borrows)
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'type': "borrows",
             },

@@ -13,10 +13,11 @@ export const totalValueTokenData = createAsyncThunk(
     "token/total_borrow",
     async (token, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'token': token,
                 'lending': state_.layout.lendingpool,
                 'type': "borrows",
@@ -27,8 +28,8 @@ export const totalValueTokenData = createAsyncThunk(
         const borrowInUSD = borrow.data.totalBorrowOfTokenChangeLogs
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'token': token,
                 'lending': state_.layout.lendingpool,
                 'type': "supply",
@@ -54,10 +55,11 @@ export const depositBorrowTokenData = createAsyncThunk(
     "token/deposit_borrow",
     async (token, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'token': token,
                 'lending': state_.layout.lendingpool,
                 'type': "deposits",
@@ -67,8 +69,8 @@ export const depositBorrowTokenData = createAsyncThunk(
         let d_a_time = deposit_amount.data.timestamp
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'token': token,
                 'type': "deposits",
@@ -78,8 +80,8 @@ export const depositBorrowTokenData = createAsyncThunk(
         let timestamp =deposit_tx.data.timestamp
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'token': token,
                 'lending': state_.layout.lendingpool,
                 'type': "borrows",
@@ -90,8 +92,8 @@ export const depositBorrowTokenData = createAsyncThunk(
         let b_a_time = borrow_amount.data.timestamp
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'token': token,
                 'lending': state_.layout.lendingpool,
                 'type': "borrows",
@@ -131,10 +133,11 @@ export const interestRateTokenData = createAsyncThunk(
     "token/interest_rate",
     async (token, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'token': token,
                 'lending': state_.layout.lendingpool,
                 'type': "deposits",
@@ -143,8 +146,8 @@ export const interestRateTokenData = createAsyncThunk(
         let deposit_rate = await client.get('/stats/interest_rate/trava_pool/token', config)
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'token': token,
                 'lending': state_.layout.lendingpool,
                 'type': "borrows",
@@ -153,8 +156,8 @@ export const interestRateTokenData = createAsyncThunk(
         let borrow_rate = await client.get('/stats/interest_rate/trava_pool/token', config)
         config = {
             params: {
-                'start_timestamp': 1638316800,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now-3600*24*30,
+                'end_timestamp': now,
                 'token': token,
                 'lending': state_.layout.lendingpool,
                 'type': "utilization",
