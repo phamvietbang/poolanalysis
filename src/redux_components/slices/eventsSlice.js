@@ -15,10 +15,11 @@ export const events_data = createAsyncThunk(
     "events/events_data",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'start_timestamp': 1640908800 - 24 * 3600 * 7,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now - 24 * 3600 * 7,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool
             },
         }
@@ -35,7 +36,7 @@ export const events_data = createAsyncThunk(
         for (var i in uniqueTokens) {
             coin.push({ 'name': uniqueTokens[i] })
         }
-        // console.log(coin)
+        console.log(now)
         return { eventData, coin }
     }
 )
@@ -43,10 +44,11 @@ export const events_data_wallet = createAsyncThunk(
     "events/events_data_wallet",
     async (wallet, thunkAPI) => {
         let state_ = thunkAPI.getState()
+        let now = Math.floor(Date.now()/1000)
         let config = {
             params: {
-                'start_timestamp': 1640908800 - 24 * 3600 * 7,
-                'end_timestamp': 1640908800,
+                'start_timestamp': now - 24 * 3600 * 7,
+                'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'address': wallet
             },
