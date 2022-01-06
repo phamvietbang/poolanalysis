@@ -175,7 +175,7 @@ export default function EnhancedTable(props) {
   }, [lending])
   return (
     <div className={classes.root}>
-      <Typography className={classes.title}>Events in the last 7 days</Typography>
+      <Typography className={classes.title}>Events in the last 72 hours</Typography>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table

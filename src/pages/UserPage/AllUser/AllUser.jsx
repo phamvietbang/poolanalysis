@@ -5,7 +5,6 @@ import {
   Modal,
   makeStyles,
   Backdrop,
-  FormControl,
   Fade,
   MenuItem,
   ButtonGroup,
@@ -13,6 +12,8 @@ import {
   Select,
   Container,
   CircularProgress,
+  Typography,
+  TextField
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import BasicTable from "./UserTable";
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
-  loading:{
+  loading: {
     height: "90vh",
     display: "flex",
     justifyContent: "center",
@@ -76,15 +77,37 @@ function createData(wallet, number_of_deposits, amount_of_deposits, tvl) {
   return { wallet, number_of_deposits, amount_of_deposits, tvl };
 }
 
+function averageAmount(a, b, c, d, e, f) {
+  return Math.floor((500 * a + 1000 * b + 5000 * c + 10000 * d + 15000 * e + 20000 * f) / (a + b + c + d + e + f))
+}
 const AllUsers = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [top, setTop] = React.useState(5);
-  const loading = useSelector(state => state.allusers.isLoading)
-  // console.log("🚀 ~ file: AllUser.jsx ~ line 77 ~ AllUsers ~ loading", loading)
+  // initial variant for advice
+  const [deA, setDeA] = React.useState(0)
+  const [deB, setDeB] = React.useState(0)
+  const [deC, setDeC] = React.useState(0)
+  const [deD, setDeD] = React.useState(0)
+  const [deE, setDeE] = React.useState(0)
+  const [deF, setDeF] = React.useState(0)
+
+  const [tvlA, setTvlA] = React.useState(0)
+  const [tvlB, setTvlB] = React.useState(0)
+  const [tvlC, setTvlC] = React.useState(0)
+  const [tvlD, setTvlD] = React.useState(0)
+  const [tvlE, setTvlE] = React.useState(0)
+  const [tvlF, setTvlF] = React.useState(0)
+
+  const [value, setValue] = React.useState({
+    'deposit': 0,
+    'tvl': 0
+  })
+
   const [openChartOne, setOpenChartOne] = React.useState(false);
   const [openChartTwo, setOpenChartTwo] = React.useState(false);
   const [openChartThree, setOpenChartThree] = React.useState(false);
+  const [openAdvice, setOpenAdvice] = React.useState(false);
   const [selectedType, setSelectedType] = useState(1);
   const [loadingAll, setLoadingAll] = useState(false);
   const [chartOptionsOne, setChartOptionsOne] = useState({
@@ -105,6 +128,44 @@ const AllUsers = () => {
   const topA = useSelector((state) => state.allusers.topDepositsA);
   const topT = useSelector((state) => state.allusers.topDepositsT);
   const tvlDeposit = useSelector((state) => state.allusers.clusteringUsers);
+
+  const handleCalculate = () => {
+    let amountDp = averageAmount(parseInt(deA), parseInt(deB), parseInt(deC), parseInt(deD), parseInt(deE), parseInt(deF))
+    let amountTvl = averageAmount(parseInt(tvlA), parseInt(tvlB), parseInt(tvlC), parseInt(tvlD), parseInt(tvlE), parseInt(tvlF))
+    let calculate = {
+      'deposit': amountDp,
+      'tvl': amountTvl,
+    }
+    setValue(calculate)
+  }
+
+  function handleSetDefaultValue() {
+    if (!loadingAll) {
+      return;
+    }
+    setDeA(tvlDeposit.deposit[0])
+    setDeB(tvlDeposit.deposit[1])
+    setDeC(tvlDeposit.deposit[2])
+    setDeD(tvlDeposit.deposit[3])
+    setDeE(tvlDeposit.deposit[4])
+    setDeF(tvlDeposit.deposit[5])
+
+    setTvlA(tvlDeposit.tvl[0])
+    setTvlB(tvlDeposit.tvl[1])
+    setTvlC(tvlDeposit.tvl[2])
+    setTvlD(tvlDeposit.tvl[3])
+    setTvlE(tvlDeposit.tvl[4])
+    setTvlF(tvlDeposit.tvl[5])
+
+    let amountDp = averageAmount(tvlDeposit.deposit[0], tvlDeposit.deposit[1], tvlDeposit.deposit[2], tvlDeposit.deposit[3], tvlDeposit.deposit[4], tvlDeposit.deposit[5])
+    let amountTvl = averageAmount(tvlDeposit.tvl[0], tvlDeposit.tvl[1], tvlDeposit.tvl[2], tvlDeposit.tvl[3], tvlDeposit.tvl[4], tvlDeposit.tvl[5])
+    let calculate = {
+      'deposit': amountDp,
+      'tvl': amountTvl,
+    }
+    setValue(calculate)
+  }
+
   function handleChangeChartOptionsTwo() {
     if (!loadingAll) {
       return;
@@ -136,7 +197,7 @@ const AllUsers = () => {
         tooltip: {
           y: {
             formatter: function (val) {
-              return numberWithCommas(val,2) + " USD" ;
+              return numberWithCommas(val, 2) + " USD";
             },
           }
         },
@@ -172,6 +233,8 @@ const AllUsers = () => {
     };
     setChartOptionsTwo(baroption);
   }
+
+
   function handleChangeChartOptionsOne() {
     if (!loadingAll) {
       return;
@@ -203,7 +266,7 @@ const AllUsers = () => {
     }
     let mindb = Math.min(...db)
     let minjd = Math.min(...jdeposit)
-    let min_ = minjd<mindb? minjd:mindb
+    let min_ = minjd < mindb ? minjd : mindb
     let op = {
       series: [
         {
@@ -261,7 +324,7 @@ const AllUsers = () => {
             },
             labels: {
               formatter: function (val, index) {
-                return parseInt(val) ;
+                return parseInt(val);
                 // return fixedLargeNumber(val, 1);
               },
             },
@@ -270,7 +333,7 @@ const AllUsers = () => {
         tooltip: {
           y: {
             formatter: function (val, index) {
-              return parseInt(val) + " users" ;
+              return parseInt(val) + " users";
             },
           }
         },
@@ -296,6 +359,8 @@ const AllUsers = () => {
 
     setChartOptionsOne(op);
   }
+
+
   function handleChangeChartOptionThree() {
     if (!loadingAll) {
       return;
@@ -331,12 +396,12 @@ const AllUsers = () => {
         tooltip: {
           x: {
             formatter: function (val) {
-              return val + " USD" ;
+              return val + " USD";
             },
           },
           y: {
             formatter: function (val) {
-              return val + " users" ;
+              return val + " users";
             },
           }
         },
@@ -412,7 +477,32 @@ const AllUsers = () => {
   const handleCloseChartThree = () => {
     setOpenChartThree(false);
   };
+  const handleOpenAdvice = () => {
+    setOpenAdvice(true);
+  };
+  const handleCloseAdvice = () => {
+    setDeA(tvlDeposit.deposit[0])
+    setDeB(tvlDeposit.deposit[1])
+    setDeC(tvlDeposit.deposit[2])
+    setDeD(tvlDeposit.deposit[3])
+    setDeE(tvlDeposit.deposit[4])
+    setDeF(tvlDeposit.deposit[5])
 
+    setTvlA(tvlDeposit.tvl[0])
+    setTvlB(tvlDeposit.tvl[1])
+    setTvlC(tvlDeposit.tvl[2])
+    setTvlD(tvlDeposit.tvl[3])
+    setTvlE(tvlDeposit.tvl[4])
+    setTvlF(tvlDeposit.tvl[5])
+    let amountDp = averageAmount(tvlDeposit.deposit[0], tvlDeposit.deposit[1], tvlDeposit.deposit[2], tvlDeposit.deposit[3], tvlDeposit.deposit[4], tvlDeposit.deposit[5])
+    let amountTvl = averageAmount(tvlDeposit.tvl[0], tvlDeposit.tvl[1], tvlDeposit.tvl[2], tvlDeposit.tvl[3], tvlDeposit.tvl[4], tvlDeposit.tvl[5])
+    let calculate = {
+      'deposit': amountDp,
+      'tvl': amountTvl,
+    }
+    setValue(calculate)
+    setOpenAdvice(false);
+  };
   const handleChangeTop = (event) => {
     setTop(event.target.value);
   };
@@ -433,6 +523,7 @@ const AllUsers = () => {
   }, [top]);
   useEffect(() => {
     handleChangeChartOptionThree();
+    handleSetDefaultValue()
   }, [loadingAll, selectedType, tvlDeposit]);
   useEffect(() => {
     fetchData();
@@ -513,7 +604,7 @@ const AllUsers = () => {
               container
               direction="row"
               justifyContent="space-between"
-              // alignItems="baseline"
+            // alignItems="baseline"
             >
               <Grid>
                 <ButtonGroup aria-label="contained primary button group">
@@ -609,7 +700,7 @@ const AllUsers = () => {
               container
               direction="row"
               justifyContent="space-between"
-              // alignItems="baseline"
+            // alignItems="baseline"
             >
               <Grid>
                 <ButtonGroup aria-label="contained primary button group">
@@ -626,6 +717,104 @@ const AllUsers = () => {
                     Total value lock
                   </Button>
                 </ButtonGroup>
+              </Grid>
+              <Grid>
+                <Button variant="outlined" onClick={handleOpenAdvice}>
+                  Advice
+                </Button>
+                <Modal
+                  aria-labelledby="transition-modal-title"
+                  aria-describedby="transition-modal-description"
+                  className={classes.modal}
+                  open={openAdvice}
+                  onClose={handleCloseAdvice}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  <Fade in={openAdvice}>
+                    <Grid
+                      className="card"
+                      container
+                      xs={8}
+                      direction="column"
+                      justifyContent="space-between"
+                      alignItems="center"
+                    >
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="space-evenly"
+                        alignItems="center"
+                      >
+                        <Grid
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <h3>Number of users having total value of deposit</h3>
+                          <Typography>Less than 1000 USD</Typography>
+                          <TextField id="outlined-basic" value={deA} onChange={(event) => setDeA(event.target.value)} variant="outlined" />
+                          <Typography>From 1000 to 5000 USD</Typography>
+                          <TextField id="outlined-basic" value={deB} onChange={(event) => setDeB(event.target.value)} variant="outlined" />
+                          <Typography>From 5000 to 10000 USD</Typography>
+                          <TextField id="outlined-basic" value={deC} onChange={(event) => setDeC(event.target.value)} variant="outlined" />
+                          <Typography >From 10000 to 15000 USD</Typography>
+                          <TextField id="outlined-basic" value={deD} onChange={(event) => setDeD(event.target.value)} variant="outlined" />
+                          <Typography >From 15000 to 20000 USD</Typography>
+                          <TextField id="outlined-basic" value={deE} onChange={(event) => setDeE(event.target.value)} variant="outlined" />
+                          <Typography >More than 20000 USD</Typography>
+                          <TextField id="outlined-basic" value={deF} onChange={(event) => setDeF(event.target.value)} variant="outlined" />
+                          <Grid>
+                            <Button variant="outlined" color="primary" onClick={handleCalculate}>
+                              Calculate
+                            </Button>
+                          </Grid>
+                          <Grid
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                          >
+                            <h2>You should deposit more than {value['deposit']} USD</h2>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          direction="column"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <h3>Number of users having total Value lock</h3>
+                          <Typography >Less than 1000 USD</Typography>
+                          <TextField id="outlined-basic" value={tvlA} onChange={(event) => setTvlA(event.target.value)} variant="outlined" />
+                          <Typography >From 1000 to 5000 USD</Typography>
+                          <TextField id="outlined-basic" value={tvlB} onChange={(event) => setTvlB(event.target.value)} variant="outlined" />
+                          <Typography >From 5000 to 10000 USD</Typography>
+                          <TextField id="outlined-basic" value={tvlC} onChange={(event) => setTvlC(event.target.value)} variant="outlined" />
+                          <Typography >From 10000 to 15000 USD</Typography>
+                          <TextField id="outlined-basic" value={tvlD} onChange={(event) => setTvlD(event.target.value)} variant="outlined" />
+                          <Typography >From 15000 to 20000 USD</Typography>
+                          <TextField id="outlined-basic" value={tvlE} onChange={(event) => setTvlE(event.target.value)} variant="outlined" />
+                          <Typography >More than 20000 USD</Typography>
+                          <TextField id="outlined-basic" value={tvlF} onChange={(event) => setTvlF(event.target.value)} variant="outlined" />
+                          <Grid>
+                            <Button variant="outlined" color="primary" onClick={handleCalculate}>
+                              Calculate
+                            </Button>
+                          </Grid>
+                          <Grid
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                          >
+                            <h2>You should hold less than {value['tvl']} USD</h2>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Fade>
+                </Modal>
               </Grid>
               <Grid>
                 <Button variant="outlined" onClick={handleOpenChartThree}>
