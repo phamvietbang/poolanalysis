@@ -48,6 +48,7 @@ const Alert = () => {
   const dispatch = useDispatch();
   function getEventData() {
     let result = event_data || [];
+    console.log("🚀 ~ file: Alert.jsx ~ line 51 ~ getEventData ~ event_data", event_data)
     let events = [];
     if (eventUser != "") {
       events = [];
