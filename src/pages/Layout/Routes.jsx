@@ -11,9 +11,9 @@ import User from '../UserPage/User'
 const LinkRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<AllUser />} />
+            <Route path="/" element={<Transactions />} />
             <Route path="/user" element={<User />} />
-            <Route path="/transactions-volumn" element={<Transactions />} />
+            <Route path="/all-users" element={<AllUser />} />
             <Route path="/alert" element={<Alert />} />
             <Route path="/tvl-and-total-supply" element={<TvlAndSupply />} />
         </Routes>

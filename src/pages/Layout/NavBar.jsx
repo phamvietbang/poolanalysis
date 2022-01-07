@@ -14,11 +14,15 @@ import MobileHeader from "./MobileHeader";
 
 const menu = [
   {
+    title: "Transactions-Volumn",
+    to: "/",
+  },
+  {
     title: "User Page",
     items: [
       {
         title: "All Users",
-        to: "/",
+        to: "/all-users",
       },
       {
         title: "User",
@@ -38,10 +42,6 @@ const menu = [
         to: "/alert",
       },
     ],
-  },
-  {
-    title: "Transactions-Volumn",
-    to: "/transactions-volumn",
   },
 ];
 const useStyles = makeStyles((theme) => ({
