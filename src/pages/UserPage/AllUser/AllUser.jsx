@@ -28,6 +28,7 @@ import {
 import { totalValueData } from "../../../redux_components/slices/lendingPoolSlice";
 import { useState } from "react";
 import { fixedLargeNumber, numberWithCommas } from "../../../utils/utility";
+import Advice from "./Advice";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -56,6 +57,16 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  adviceTitle: {
+    marginTop: "13px"
+  },
+  adviceContent: {
+
+  },
+  adviceButton:{
+    marginTop: "20px",
+    marginBottom: "10px"
   }
 }));
 
@@ -719,7 +730,8 @@ const AllUsers = () => {
                 </ButtonGroup>
               </Grid>
               <Grid>
-                <Button variant="outlined" onClick={handleOpenAdvice}>
+                <Advice />
+                {/* <Button variant="outlined" onClick={handleOpenAdvice}>
                   Advice
                 </Button>
                 <Modal
@@ -755,20 +767,20 @@ const AllUsers = () => {
                           alignItems="center"
                         >
                           <h3>Number of users having total value of deposit</h3>
-                          <Typography>Less than 1000 USD</Typography>
-                          <TextField id="outlined-basic" value={deA} onChange={(event) => setDeA(event.target.value)} variant="outlined" />
-                          <Typography>From 1000 to 5000 USD</Typography>
-                          <TextField id="outlined-basic" value={deB} onChange={(event) => setDeB(event.target.value)} variant="outlined" />
-                          <Typography>From 5000 to 10000 USD</Typography>
-                          <TextField id="outlined-basic" value={deC} onChange={(event) => setDeC(event.target.value)} variant="outlined" />
-                          <Typography >From 10000 to 15000 USD</Typography>
-                          <TextField id="outlined-basic" value={deD} onChange={(event) => setDeD(event.target.value)} variant="outlined" />
-                          <Typography >From 15000 to 20000 USD</Typography>
-                          <TextField id="outlined-basic" value={deE} onChange={(event) => setDeE(event.target.value)} variant="outlined" />
-                          <Typography >More than 20000 USD</Typography>
-                          <TextField id="outlined-basic" value={deF} onChange={(event) => setDeF(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>Less than 1000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={deA} onChange={(event) => setDeA(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>From 1000 to 5000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={deB} onChange={(event) => setDeB(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>From 5000 to 10000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={deC} onChange={(event) => setDeC(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>From 10000 to 15000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={deD} onChange={(event) => setDeD(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>From 15000 to 20000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={deE} onChange={(event) => setDeE(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>More than 20000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={deF} onChange={(event) => setDeF(event.target.value)} variant="outlined" />
                           <Grid>
-                            <Button variant="outlined" color="primary" onClick={handleCalculate}>
+                            <Button className={classes.adviceButton} variant="outlined" color="primary" onClick={handleCalculate}>
                               Calculate
                             </Button>
                           </Grid>
@@ -786,20 +798,20 @@ const AllUsers = () => {
                           alignItems="center"
                         >
                           <h3>Number of users having total Value lock</h3>
-                          <Typography >Less than 1000 USD</Typography>
-                          <TextField id="outlined-basic" value={tvlA} onChange={(event) => setTvlA(event.target.value)} variant="outlined" />
-                          <Typography >From 1000 to 5000 USD</Typography>
-                          <TextField id="outlined-basic" value={tvlB} onChange={(event) => setTvlB(event.target.value)} variant="outlined" />
-                          <Typography >From 5000 to 10000 USD</Typography>
-                          <TextField id="outlined-basic" value={tvlC} onChange={(event) => setTvlC(event.target.value)} variant="outlined" />
-                          <Typography >From 10000 to 15000 USD</Typography>
-                          <TextField id="outlined-basic" value={tvlD} onChange={(event) => setTvlD(event.target.value)} variant="outlined" />
-                          <Typography >From 15000 to 20000 USD</Typography>
-                          <TextField id="outlined-basic" value={tvlE} onChange={(event) => setTvlE(event.target.value)} variant="outlined" />
-                          <Typography >More than 20000 USD</Typography>
-                          <TextField id="outlined-basic" value={tvlF} onChange={(event) => setTvlF(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>Less than 1000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={tvlA} onChange={(event) => setTvlA(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>From 1000 to 5000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={tvlB} onChange={(event) => setTvlB(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>From 5000 to 10000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={tvlC} onChange={(event) => setTvlC(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>From 10000 to 15000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={tvlD} onChange={(event) => setTvlD(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>From 15000 to 20000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={tvlE} onChange={(event) => setTvlE(event.target.value)} variant="outlined" />
+                          <Typography className={classes.adviceTitle}>More than 20000 USD</Typography>
+                          <TextField size='small' fullWidth id="outlined-basic" value={tvlF} onChange={(event) => setTvlF(event.target.value)} variant="outlined" />
                           <Grid>
-                            <Button variant="outlined" color="primary" onClick={handleCalculate}>
+                            <Button className={classes.adviceButton} variant="outlined" color="primary" onClick={handleCalculate}>
                               Calculate
                             </Button>
                           </Grid>
@@ -814,7 +826,7 @@ const AllUsers = () => {
                       </Grid>
                     </Grid>
                   </Fade>
-                </Modal>
+                </Modal> */}
               </Grid>
               <Grid>
                 <Button variant="outlined" onClick={handleOpenChartThree}>
