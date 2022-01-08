@@ -26,7 +26,7 @@ function stableSort(array) {
 const headCells = [
   { id: "type", numeric: false, disablePadding: false, label: "Type" },
   { id: "datetime", numeric: true, disablePadding: false, label: "Date time" },
-  { id: "user", numeric: false, disablePadding: false, label: "User" },
+  { id: "user", numeric: false, disablePadding: false, label: "From Address" },
   { id: "amount", numeric: true, disablePadding: false, label: "Amount (USD)" },
   { id: "token", numeric: false, disablePadding: false, label: "Token" },
   {
@@ -103,14 +103,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EnhancedTable(props) {
-  const rows = props.data;
+  const rows = props.data
   const classes = useStyles();
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [scan, setScan] = React.useState('bscscan')
   const lending = useSelector((state) => state.layout.lendingpool)
-
   const handleScan = () => {
     if (lending === 'ftm'|| lending ==='geist_ftm') {
       setScan('ftmscan')
@@ -142,7 +141,6 @@ export default function EnhancedTable(props) {
     }
     return `${date} ${month} ${hour}:${min}:${sec}`;
   }
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -164,8 +162,6 @@ export default function EnhancedTable(props) {
       case 'WITHDRAW': return 'Withdraw'
       case 'BORROW': return 'Borrow'
       case 'REPAY': return 'Repay'
-      case 'RESERVEUSEDASCOLLATERALDISABLED': return 'Reserve used as collateral disabled'
-      case 'RESERVEUSEDASCOLLATERALENABLED': return 'Reserve used as collateral enabled'
       default:
         return type
     }
@@ -175,7 +171,7 @@ export default function EnhancedTable(props) {
   }, [lending])
   return (
     <div className={classes.root}>
-      <Typography className={classes.title}>Events in the last 72 hours</Typography>
+      <Typography className={classes.title}>Events in the last 7 days</Typography>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
@@ -220,7 +216,11 @@ export default function EnhancedTable(props) {
                       <TableCell align="center">
                         {numberWithCommas(row.amount, 2)}
                       </TableCell>
-                      <TableCell align="center">{row.token}</TableCell>
+                      <TableCell align="center">
+                      <a href={'https://' + scan + '.com/token/' + row.token}>
+                        {formatAddress(row.token)}
+                      </a>
+                        </TableCell>
                       <TableCell align="center">
                         <a href={'https://' + scan + '.com/tx/' + row.transaction}>
                           {formatAddress(row.transaction)}

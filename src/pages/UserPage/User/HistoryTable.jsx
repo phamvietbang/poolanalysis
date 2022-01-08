@@ -161,8 +161,6 @@ export default function EnhancedTable(props) {
       case 'WITHDRAW': return 'Withdraw'
       case 'BORROW': return 'Borrow'
       case 'REPAY': return 'Repay'
-      case 'RESERVEUSEDASCOLLATERALDISABLED': return 'Reserve used as collateral disabled'
-      case 'RESERVEUSEDASCOLLATERALENABLED': return 'Reserve used as collateral enabled'
       default:
         return type
     }
@@ -216,7 +214,7 @@ export default function EnhancedTable(props) {
                         <TableCell align="center">
                           {numberWithCommas(row.amount, 2)}
                         </TableCell>
-                        <TableCell align="center">{row.token}</TableCell>
+                        <TableCell align="center"><a href={'https://'+scan+'.com/token/' + row.token}>{formatAddress(row.token)}</a></TableCell>
                         <TableCell align="center">
                           <a href={'https://'+scan+'.com/tx/' + row.transaction}>
                             {formatAddress(row.transaction)}

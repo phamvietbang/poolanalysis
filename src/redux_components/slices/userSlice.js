@@ -38,8 +38,8 @@ export const seriesDataToken = createAsyncThunk(
     "user/series_data_token",
     async (data, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        // let now = Math.floor(Date.now()/1000)
-        let now = 1639432800
+        let now = Math.floor(Date.now()/1000)
+        // let now = 1639432800
         let config = {
             params: {
                 'address': data["wallet"],
@@ -109,8 +109,8 @@ export const transactionAmount = createAsyncThunk(
     "user/transactions",
     async (wallet, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        // let now = Math.floor(Date.now()/1000)
-        let now = 1639432800
+        let now = Math.floor(Date.now()/1000)
+        // let now = 1639432800
         let config = {
             params: {
                 'start_timestamp': now-24*3600*30,
@@ -167,8 +167,8 @@ export const valueOfUser = createAsyncThunk(
     "user/deposit_borrow",
     async (wallet, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        // let now = Math.floor(Date.now()/1000)
-        let now = 1639432800
+        let now = Math.floor(Date.now()/1000)
+        // let now = 1639432800
         let config = {
             params: {
                 'start_timestamp': now-24*3600*30,
