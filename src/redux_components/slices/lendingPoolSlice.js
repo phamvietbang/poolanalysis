@@ -24,8 +24,8 @@ export const totalValueData = createAsyncThunk(
     "lendingpool/total_borrow",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        // let now = Math.floor(Date.now()/1000)
-        let now = 1639432800
+        let now = Math.floor(Date.now()/1000)
+        // let now = 1639432800
         let config = {
             params: {
                 'start_timestamp': now-3600*24*30,
@@ -57,8 +57,8 @@ export const tvlSupplyTokensData = createAsyncThunk(
     "lendingpool/tvl_tokens",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        // let now = Math.floor(Date.now()/1000)
-        let now = 1639432800
+        let now = Math.floor(Date.now()/1000)
+        // let now = 1639432800
         let config = {
             params: {
                 'timestamp': now,
@@ -104,8 +104,8 @@ export const depositBorrowData = createAsyncThunk(
     "lendingpool/deposit_borrow",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        // let now = Math.floor(Date.now()/1000)
-        let now = 1639432800
+        let now = Math.floor(Date.now()/1000)
+        // let now = 1639432800
         let config = {
             params: {
                 'start_timestamp': now-3600*24*30,

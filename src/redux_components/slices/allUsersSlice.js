@@ -70,8 +70,8 @@ export const countUsersData = createAsyncThunk(
     "allUsers/count_users",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        // let now = Math.floor(Date.now()/1000)
-        let now = 1639432800
+        let now = Math.floor(Date.now()/1000)
+        // let now = 1639432800
         let config = {
             params: {
                 'timestamp': now,
@@ -88,8 +88,8 @@ export const seriesUsers = createAsyncThunk(
     "allUsers/users",
     async (_, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        // let now = Math.floor(Date.now()/1000)
-        let now = 1639432800
+        let now = Math.floor(Date.now()/1000)
+        // let now = 1639432800
         let config = {
             params: {
                 'start_timestamp': now-3600*24*30,
