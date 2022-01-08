@@ -26,7 +26,7 @@ function stableSort(array) {
 const headCells = [
   { id: "type", numeric: false, disablePadding: false, label: "Type" },
   { id: "datetime", numeric: true, disablePadding: false, label: "Date time" },
-  { id: "user", numeric: false, disablePadding: false, label: "From Address" },
+  { id: "user", numeric: false, disablePadding: false, label: "User" },
   { id: "amount", numeric: true, disablePadding: false, label: "Amount (USD)" },
   { id: "token", numeric: false, disablePadding: false, label: "Token" },
   {

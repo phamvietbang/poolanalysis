@@ -169,7 +169,7 @@ const Alert = () => {
           onChange={handleChangeEventAmount}
         />
         <TextField
-          label="Wallet"
+          label="User"
           variant="outlined"
           onChange={handleChangeEventUser}
         />
