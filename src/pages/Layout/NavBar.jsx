@@ -5,10 +5,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import { Link, NavLink } from "react-router-dom";
-import DISCONNECT from "./disconnect.svg";
-import CONNECT from "./connect.svg";
-import { mergeClasses } from "@material-ui/styles";
+import { NavLink } from "react-router-dom";
 import { Box, makeStyles, useMediaQuery } from "@material-ui/core";
 import MobileHeader from "./MobileHeader";
 
@@ -83,11 +80,17 @@ const SingleLevel = ({ item }) => {
 const MultiLevel = ({ item }) => {
   const { items: children } = item;
   const [open, setOpen] = useState(false);
-
+  const checkOpen = ()=>{
+    if(children[0]['to']==window.location.pathname){
+      setOpen(true)
+    }
+  }
   const handleClick = () => {
     setOpen((prev) => !prev);
   };
-
+  React.useEffect(()=>{
+    checkOpen()
+  },[children])
   return (
     <React.Fragment>
       <ListItem button onClick={handleClick}>
