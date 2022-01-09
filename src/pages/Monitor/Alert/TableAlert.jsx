@@ -119,6 +119,12 @@ export default function EnhancedTable(props) {
     }
   }
 
+  const resetPage = () =>{
+    if(rows.length!==props.check_data.length){
+      setPage(0)
+    }
+  }
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n.name);
@@ -146,7 +152,6 @@ export default function EnhancedTable(props) {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    console.log(event.target.value);
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -169,6 +174,9 @@ export default function EnhancedTable(props) {
   React.useEffect(() => {
     handleScan()
   }, [lending])
+  React.useEffect(()=>{
+    resetPage()
+  },[rows, props])
   return (
     <div className={classes.root}>
       <Typography className={classes.title}>Events in the last 7 days</Typography>
