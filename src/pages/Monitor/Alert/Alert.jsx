@@ -174,7 +174,7 @@ const Alert = () => {
           onChange={handleChangeEventUser}
         />
         <Grid className="col-12">
-          <TableAlert data={eventDataTable} />
+          <TableAlert data={eventDataTable} check_data={event_data}/>
         </Grid>
       </Grid>
     </Container>
