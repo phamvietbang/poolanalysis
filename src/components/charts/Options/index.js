@@ -284,6 +284,9 @@ export function setUpOptionChartOneSeries(props) {
         },
         categories: props.datetime,
         type: "datetime",
+        axisTicks: {
+          show: false,
+        },
       },
       tooltip: {
         x: {
@@ -434,6 +437,9 @@ export function setUpOptionChartOne(props) {
             zoomin: false,
           },
         },
+        zoom: {
+          enabled: true,
+        },
       },
       stroke: {
         curve: "smooth",
@@ -443,8 +449,23 @@ export function setUpOptionChartOne(props) {
         title: {
           text: "Date time",
         },
+        rotate: 0,
         categories: props.datetime,
         type: "datetime",
+        labels: {
+          show: true,
+          style: {
+            fontFamily: "inherit",
+            fontSize: "11px",
+          },
+          rotate: 0,
+        },
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
       },
       tooltip: {
         x: {

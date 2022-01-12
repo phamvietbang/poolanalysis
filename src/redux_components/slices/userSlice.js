@@ -29,7 +29,6 @@ export const dataToken = createAsyncThunk(
             }
         }
         let result = await client.get('/stats/deposit_borrow_token/trava_pool/wallet', config)
-        // console.log(result)
         return result.data
     }
 )
@@ -39,7 +38,6 @@ export const seriesDataToken = createAsyncThunk(
     async (data, thunkAPI) => {
         let state_ = thunkAPI.getState()
         let now = Math.floor(Date.now()/1000)
-        // let now = 1639432800
         let config = {
             params: {
                 'address': data["wallet"],
@@ -85,7 +83,6 @@ export const seriesDataToken = createAsyncThunk(
             'deposit': data_deposit,
             'borrow': data_borrow
         }
-        // console.log(result)
         return result
     }
 )
@@ -157,8 +154,6 @@ export const transactionAmount = createAsyncThunk(
             "withdraw": createTxData(withdraw.data),
             "repay": createTxData(repay.data)
         }
-        // console.log(result)
-        // console.log(deposit)
         return result
     }
 )
@@ -227,7 +222,6 @@ export const valueOfUser = createAsyncThunk(
             'ltv': ltv.data.value,
             'hf': hf.data.value
         }
-        // console.log(result)
         return result
     }
 )
