@@ -187,7 +187,7 @@ const User = () => {
     setAmount(tmp);
   };
   const makeOptionChartTwo = () => {
-    if (!loadingAll || event.length === 0) {
+    if (!loadingAll || event === []) {
       return;
     }
     let deposit_ = [];
@@ -233,7 +233,7 @@ const User = () => {
       ],
       options: {
         title: {
-          text: "History transactions of wallet",
+          text: "Transaction history of wallet",
           align: "center",
         },
         chart: {
