@@ -18,7 +18,6 @@ import { Autocomplete } from "@material-ui/lab";
 import {
   totalValueOfUser,
   valueOfUser,
-  transactionAmount,
   dataToken,
   seriesDataToken,
 } from "../../../redux_components/slices/userSlice";
@@ -291,7 +290,7 @@ const User = () => {
     let withdraw = withdraw_;
     let repay = repay_;
     let start = 0;
-    let end = 1640908800 * 1000;
+    let end = Date.now();
     if (selectedBtn === 1) {
       deposit = [];
       borrow = [];
