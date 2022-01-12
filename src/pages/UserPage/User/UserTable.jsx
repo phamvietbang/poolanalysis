@@ -65,7 +65,7 @@ export default function BasicTable(props) {
   return (
     <Container className={classes.root}>
       <Typography className={classes.title}>
-        Deposit and borrow amount of tokens in wallet
+        Deposit amount and borrow amount in tokens of wallet right now
       </Typography>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">

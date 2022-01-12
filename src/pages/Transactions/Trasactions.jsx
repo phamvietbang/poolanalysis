@@ -115,7 +115,7 @@ const Transactions = () => {
       data_one: borrow,
       data_two: supply,
       datetime: datetime,
-      title: "Total borrow and supply",
+      title: "Total borrow and total supply",
       title_one: "Total borrow (USD)",
       title_two: "Total supply (USD)",
       min_y_left: min_y_left,

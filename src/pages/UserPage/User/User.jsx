@@ -433,23 +433,23 @@ const User = () => {
       return;
     }
     let start = 0;
-    let end = 1640908800;
+    let end = Date.now();
     let deposit = series_data_token.deposit;
     let borrow = series_data_token.borrow;
     let op = {
       series: [
         {
-          name: "Deposit",
+          name: "Amount of deposit",
           data: deposit,
         },
         {
-          name: "Borrow",
+          name: "Amount of borrow",
           data: borrow,
         },
       ],
       options: {
         title: {
-          text: "Deposit and borrow change of token",
+          text: "Deposit amount and borrow amount in token of wallet",
           align: "center",
         },
         chart: {
@@ -504,7 +504,7 @@ const User = () => {
     if (selectedBtn2 === 1) {
       deposit = [];
       borrow = [];
-      start = end - 24 * 3600;
+      start = end - 24 * 3600 * 1000;
       for (var i in series_data_token.deposit) {
         if (
           series_data_token.deposit[i][0] >= start &&
@@ -525,7 +525,7 @@ const User = () => {
     if (selectedBtn2 === 2) {
       deposit = [];
       borrow = [];
-      start = end - 24 * 3600 * 7;
+      start = end - 24 * 3600 * 7 * 1000;
       for (var i in series_data_token.deposit) {
         if (
           series_data_token.deposit[i][0] >= start &&
@@ -546,17 +546,17 @@ const User = () => {
     op = {
       series: [
         {
-          name: "deposit",
+          name: "Amount of deposit",
           data: deposit,
         },
         {
-          name: "borrow",
+          name: "Amount of borrow",
           data: borrow,
         },
       ],
       options: {
         title: {
-          text: "Deposit and borrow change of token",
+          text: "Deposit amount and borrow amount in token of wallet",
           align: "center",
         },
         chart: {
@@ -622,7 +622,7 @@ const User = () => {
       data_one: borrow,
       data_two: deposit,
       datetime: datetime,
-      title: "Amount of borrow and deposit",
+      title: "Amount of borrow and amount of deposit",
       title_one: "Amount (USD)",
     });
   };
