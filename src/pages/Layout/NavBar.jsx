@@ -127,8 +127,6 @@ function hasChildren(item) {
 }
 const MenuItem = ({ item, key }) => {
   const Component = hasChildren(item) ? MultiLevel : SingleLevel;
-  console.log(item)
-          // setId(child)
   return <Component item={item} key={key} />;
 };
 export default function App() {

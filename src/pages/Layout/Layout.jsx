@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
   whiteColor: {
     color: "white",
   },
-  // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
@@ -64,14 +63,21 @@ export default function PermanentDrawerLeft() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const lp = useSelector((state) => state.layout.lendingpool);
-  // console.log(lp)
   const [type, setType] = useState(lp);
+  useEffect(() => {
+    connectWallet();
+  }, []);
+
+  useEffect(() => {
+    dp(reloadConfig());
+  }, []);
+
   const handleSetType = (e) => {
     var t = e.target.value;
     setType(t);
-    // debugger
     dispatch(updateLendingPool(t));
   };
+
   const connectWallet = async () => {
     const accountAddress = (
       await window.ethereum.request({ method: "eth_requestAccounts" })
@@ -79,17 +85,10 @@ export default function PermanentDrawerLeft() {
     dp(updateAccInfo(accountAddress));
   };
 
-  useEffect(() => {
-    connectWallet();
-  }, []);
-  useEffect(() => {
-    dp(reloadConfig());
-  }, []);
-
   const loading = useSelector((state) => state.configSlice.loading);
-  console.log("🚀 ~ file: NavBar.jsx ~ line 136 ~ App ~ loading", loading);
+
   return (
-    <div >
+    <div>
       {loading === false ? (
         <div className={classes.root}>
           <CssBaseline />
@@ -102,8 +101,6 @@ export default function PermanentDrawerLeft() {
                 alignItems="center"
                 xs={12}
               >
-                {/* <div className={classes.button}> */}
-                {/* <Button variant="contained" color="primary" onClick={handleClick}>{type}</Button> */}
                 <Select
                   variant="outlined"
                   id="simple-menu"
@@ -114,13 +111,11 @@ export default function PermanentDrawerLeft() {
                     icon: classes.whiteColor,
                   }}
                 >
-                  <MenuItem value='bsc'>TRAVA IN BSC</MenuItem>
-                  <MenuItem value='ftm'>TRAVA IN FTM</MenuItem>
-                  <MenuItem value='geist_ftm'>GEIST IN FTM</MenuItem>
+                  <MenuItem value="bsc">TRAVA IN BSC</MenuItem>
+                  <MenuItem value="ftm">TRAVA IN FTM</MenuItem>
+                  <MenuItem value="geist_ftm">GEIST IN FTM</MenuItem>
                 </Select>
-                {/* <Button variant="contained" color="primary">Connect Wallet</Button> */}
                 <DesktopHeader />
-                {/* </div> */}
               </Grid>
             </Toolbar>
           </AppBar>

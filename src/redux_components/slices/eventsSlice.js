@@ -37,7 +37,6 @@ export const events_data = createAsyncThunk(
         for (var i in uniqueTokens) {
             coin.push({ 'name': uniqueTokens[i] })
         }
-        console.log(now)
         return { eventData, coin }
     }
 )
@@ -49,7 +48,7 @@ export const events_data_wallet = createAsyncThunk(
         // let now = 1639432800
         let config = {
             params: {
-                'start_timestamp': now - 24 * 3600 * 7,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'lending': state_.layout.lendingpool,
                 'address': wallet
