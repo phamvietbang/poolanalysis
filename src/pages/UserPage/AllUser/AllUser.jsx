@@ -13,7 +13,7 @@ import {
   Container,
   CircularProgress,
   Typography,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import BasicTable from "./UserTable";
@@ -59,15 +59,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   adviceTitle: {
-    marginTop: "13px"
+    marginTop: "13px",
   },
-  adviceContent: {
-
-  },
-  adviceButton:{
+  adviceContent: {},
+  adviceButton: {
     marginTop: "20px",
-    marginBottom: "10px"
-  }
+    marginBottom: "10px",
+  },
 }));
 
 function findMinRoundNumber(number) {
@@ -89,31 +87,34 @@ function createData(wallet, number_of_deposits, amount_of_deposits, tvl) {
 }
 
 function averageAmount(a, b, c, d, e, f) {
-  return Math.floor((500 * a + 1000 * b + 5000 * c + 10000 * d + 15000 * e + 20000 * f) / (a + b + c + d + e + f))
+  return Math.floor(
+    (500 * a + 1000 * b + 5000 * c + 10000 * d + 15000 * e + 20000 * f) /
+      (a + b + c + d + e + f)
+  );
 }
 const AllUsers = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [top, setTop] = React.useState(5);
   // initial variant for advice
-  const [deA, setDeA] = React.useState(0)
-  const [deB, setDeB] = React.useState(0)
-  const [deC, setDeC] = React.useState(0)
-  const [deD, setDeD] = React.useState(0)
-  const [deE, setDeE] = React.useState(0)
-  const [deF, setDeF] = React.useState(0)
+  const [deA, setDeA] = React.useState(0);
+  const [deB, setDeB] = React.useState(0);
+  const [deC, setDeC] = React.useState(0);
+  const [deD, setDeD] = React.useState(0);
+  const [deE, setDeE] = React.useState(0);
+  const [deF, setDeF] = React.useState(0);
 
-  const [tvlA, setTvlA] = React.useState(0)
-  const [tvlB, setTvlB] = React.useState(0)
-  const [tvlC, setTvlC] = React.useState(0)
-  const [tvlD, setTvlD] = React.useState(0)
-  const [tvlE, setTvlE] = React.useState(0)
-  const [tvlF, setTvlF] = React.useState(0)
+  const [tvlA, setTvlA] = React.useState(0);
+  const [tvlB, setTvlB] = React.useState(0);
+  const [tvlC, setTvlC] = React.useState(0);
+  const [tvlD, setTvlD] = React.useState(0);
+  const [tvlE, setTvlE] = React.useState(0);
+  const [tvlF, setTvlF] = React.useState(0);
 
   const [value, setValue] = React.useState({
-    'deposit': 0,
-    'tvl': 0
-  })
+    deposit: 0,
+    tvl: 0,
+  });
 
   const [openChartOne, setOpenChartOne] = React.useState(false);
   const [openChartTwo, setOpenChartTwo] = React.useState(false);
@@ -141,40 +142,68 @@ const AllUsers = () => {
   const tvlDeposit = useSelector((state) => state.allusers.clusteringUsers);
 
   const handleCalculate = () => {
-    let amountDp = averageAmount(parseInt(deA), parseInt(deB), parseInt(deC), parseInt(deD), parseInt(deE), parseInt(deF))
-    let amountTvl = averageAmount(parseInt(tvlA), parseInt(tvlB), parseInt(tvlC), parseInt(tvlD), parseInt(tvlE), parseInt(tvlF))
+    let amountDp = averageAmount(
+      parseInt(deA),
+      parseInt(deB),
+      parseInt(deC),
+      parseInt(deD),
+      parseInt(deE),
+      parseInt(deF)
+    );
+    let amountTvl = averageAmount(
+      parseInt(tvlA),
+      parseInt(tvlB),
+      parseInt(tvlC),
+      parseInt(tvlD),
+      parseInt(tvlE),
+      parseInt(tvlF)
+    );
     let calculate = {
-      'deposit': amountDp,
-      'tvl': amountTvl,
-    }
-    setValue(calculate)
-  }
+      deposit: amountDp,
+      tvl: amountTvl,
+    };
+    setValue(calculate);
+  };
 
   function handleSetDefaultValue() {
     if (!loadingAll) {
       return;
     }
-    setDeA(tvlDeposit.deposit[0])
-    setDeB(tvlDeposit.deposit[1])
-    setDeC(tvlDeposit.deposit[2])
-    setDeD(tvlDeposit.deposit[3])
-    setDeE(tvlDeposit.deposit[4])
-    setDeF(tvlDeposit.deposit[5])
+    setDeA(tvlDeposit.deposit[0]);
+    setDeB(tvlDeposit.deposit[1]);
+    setDeC(tvlDeposit.deposit[2]);
+    setDeD(tvlDeposit.deposit[3]);
+    setDeE(tvlDeposit.deposit[4]);
+    setDeF(tvlDeposit.deposit[5]);
 
-    setTvlA(tvlDeposit.tvl[0])
-    setTvlB(tvlDeposit.tvl[1])
-    setTvlC(tvlDeposit.tvl[2])
-    setTvlD(tvlDeposit.tvl[3])
-    setTvlE(tvlDeposit.tvl[4])
-    setTvlF(tvlDeposit.tvl[5])
+    setTvlA(tvlDeposit.tvl[0]);
+    setTvlB(tvlDeposit.tvl[1]);
+    setTvlC(tvlDeposit.tvl[2]);
+    setTvlD(tvlDeposit.tvl[3]);
+    setTvlE(tvlDeposit.tvl[4]);
+    setTvlF(tvlDeposit.tvl[5]);
 
-    let amountDp = averageAmount(tvlDeposit.deposit[0], tvlDeposit.deposit[1], tvlDeposit.deposit[2], tvlDeposit.deposit[3], tvlDeposit.deposit[4], tvlDeposit.deposit[5])
-    let amountTvl = averageAmount(tvlDeposit.tvl[0], tvlDeposit.tvl[1], tvlDeposit.tvl[2], tvlDeposit.tvl[3], tvlDeposit.tvl[4], tvlDeposit.tvl[5])
+    let amountDp = averageAmount(
+      tvlDeposit.deposit[0],
+      tvlDeposit.deposit[1],
+      tvlDeposit.deposit[2],
+      tvlDeposit.deposit[3],
+      tvlDeposit.deposit[4],
+      tvlDeposit.deposit[5]
+    );
+    let amountTvl = averageAmount(
+      tvlDeposit.tvl[0],
+      tvlDeposit.tvl[1],
+      tvlDeposit.tvl[2],
+      tvlDeposit.tvl[3],
+      tvlDeposit.tvl[4],
+      tvlDeposit.tvl[5]
+    );
     let calculate = {
-      'deposit': amountDp,
-      'tvl': amountTvl,
-    }
-    setValue(calculate)
+      deposit: amountDp,
+      tvl: amountTvl,
+    };
+    setValue(calculate);
   }
 
   function handleChangeChartOptionsTwo() {
@@ -210,7 +239,7 @@ const AllUsers = () => {
             formatter: function (val) {
               return numberWithCommas(val, 2) + " USD";
             },
-          }
+          },
         },
         legend: {
           position: "bottom",
@@ -245,7 +274,6 @@ const AllUsers = () => {
     setChartOptionsTwo(baroption);
   }
 
-
   function handleChangeChartOptionsOne() {
     if (!loadingAll) {
       return;
@@ -275,9 +303,9 @@ const AllUsers = () => {
       default:
         break;
     }
-    let mindb = Math.min(...db)
-    let minjd = Math.min(...jdeposit)
-    let min_ = minjd < mindb ? minjd : mindb
+    let mindb = Math.min(...db);
+    let minjd = Math.min(...jdeposit);
+    let min_ = minjd < mindb ? minjd : mindb;
     let op = {
       series: [
         {
@@ -346,7 +374,7 @@ const AllUsers = () => {
             formatter: function (val, index) {
               return parseInt(val) + " users";
             },
-          }
+          },
         },
         chart: {
           background: "transparent",
@@ -371,12 +399,11 @@ const AllUsers = () => {
     setChartOptionsOne(op);
   }
 
-
   function handleChangeChartOptionThree() {
     if (!loadingAll) {
       return;
     }
-    // console.log(tvlDeposit);
+
     let amount = tvlDeposit.amount;
     let count = [];
     let tit = "";
@@ -414,7 +441,7 @@ const AllUsers = () => {
             formatter: function (val) {
               return val + " users";
             },
-          }
+          },
         },
         title: {
           text: tit,
@@ -492,26 +519,40 @@ const AllUsers = () => {
     setOpenAdvice(true);
   };
   const handleCloseAdvice = () => {
-    setDeA(tvlDeposit.deposit[0])
-    setDeB(tvlDeposit.deposit[1])
-    setDeC(tvlDeposit.deposit[2])
-    setDeD(tvlDeposit.deposit[3])
-    setDeE(tvlDeposit.deposit[4])
-    setDeF(tvlDeposit.deposit[5])
+    setDeA(tvlDeposit.deposit[0]);
+    setDeB(tvlDeposit.deposit[1]);
+    setDeC(tvlDeposit.deposit[2]);
+    setDeD(tvlDeposit.deposit[3]);
+    setDeE(tvlDeposit.deposit[4]);
+    setDeF(tvlDeposit.deposit[5]);
 
-    setTvlA(tvlDeposit.tvl[0])
-    setTvlB(tvlDeposit.tvl[1])
-    setTvlC(tvlDeposit.tvl[2])
-    setTvlD(tvlDeposit.tvl[3])
-    setTvlE(tvlDeposit.tvl[4])
-    setTvlF(tvlDeposit.tvl[5])
-    let amountDp = averageAmount(tvlDeposit.deposit[0], tvlDeposit.deposit[1], tvlDeposit.deposit[2], tvlDeposit.deposit[3], tvlDeposit.deposit[4], tvlDeposit.deposit[5])
-    let amountTvl = averageAmount(tvlDeposit.tvl[0], tvlDeposit.tvl[1], tvlDeposit.tvl[2], tvlDeposit.tvl[3], tvlDeposit.tvl[4], tvlDeposit.tvl[5])
+    setTvlA(tvlDeposit.tvl[0]);
+    setTvlB(tvlDeposit.tvl[1]);
+    setTvlC(tvlDeposit.tvl[2]);
+    setTvlD(tvlDeposit.tvl[3]);
+    setTvlE(tvlDeposit.tvl[4]);
+    setTvlF(tvlDeposit.tvl[5]);
+    let amountDp = averageAmount(
+      tvlDeposit.deposit[0],
+      tvlDeposit.deposit[1],
+      tvlDeposit.deposit[2],
+      tvlDeposit.deposit[3],
+      tvlDeposit.deposit[4],
+      tvlDeposit.deposit[5]
+    );
+    let amountTvl = averageAmount(
+      tvlDeposit.tvl[0],
+      tvlDeposit.tvl[1],
+      tvlDeposit.tvl[2],
+      tvlDeposit.tvl[3],
+      tvlDeposit.tvl[4],
+      tvlDeposit.tvl[5]
+    );
     let calculate = {
-      'deposit': amountDp,
-      'tvl': amountTvl,
-    }
-    setValue(calculate)
+      deposit: amountDp,
+      tvl: amountTvl,
+    };
+    setValue(calculate);
     setOpenAdvice(false);
   };
   const handleChangeTop = (event) => {
@@ -534,7 +575,7 @@ const AllUsers = () => {
   }, [top]);
   useEffect(() => {
     handleChangeChartOptionThree();
-    handleSetDefaultValue()
+    handleSetDefaultValue();
   }, [loadingAll, selectedType, tvlDeposit]);
   useEffect(() => {
     fetchData();
@@ -547,7 +588,11 @@ const AllUsers = () => {
   }, [topA, loadingAll]);
 
   if (!loadingAll) {
-    return <div className={classes.loading}><CircularProgress disableShrink /></div>;
+    return (
+      <div className={classes.loading}>
+        <CircularProgress disableShrink />
+      </div>
+    );
   }
   const type_amount = [
     {
@@ -615,7 +660,7 @@ const AllUsers = () => {
               container
               direction="row"
               justifyContent="space-between"
-            // alignItems="baseline"
+              // alignItems="baseline"
             >
               <Grid>
                 <ButtonGroup aria-label="contained primary button group">
@@ -711,7 +756,7 @@ const AllUsers = () => {
               container
               direction="row"
               justifyContent="space-between"
-            // alignItems="baseline"
+              // alignItems="baseline"
             >
               <Grid>
                 <ButtonGroup aria-label="contained primary button group">

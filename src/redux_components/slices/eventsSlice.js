@@ -37,7 +37,6 @@ export const events_data = createAsyncThunk(
         for (var i in uniqueTokens) {
             coin.push({ 'name': uniqueTokens[i] })
         }
-        console.log(now)
         return { eventData, coin }
     }
 )

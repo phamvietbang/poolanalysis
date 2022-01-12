@@ -36,7 +36,7 @@ import {
 } from "../../../components/charts/Options";
 import { fixedLargeNumber, numberWithCommas } from "../../../utils/utility";
 import UserTable from "./UserTable";
-import HistoryTable from './HistoryTable'
+import HistoryTable from "./HistoryTable";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   alertConnect: {
-    marginTop: "5vw"
+    marginTop: "5vw",
   },
 }));
 const type_amount = [
@@ -73,7 +73,7 @@ function createData(token, token_address, deposit, borrow) {
 
 const User = () => {
   const dispatch = useDispatch();
-  const accountAddress = useSelector((state) => state.accountSlice.address)
+  const accountAddress = useSelector((state) => state.accountSlice.address);
   const classes = useStyles();
   const [optionChartOne, setOptionChartOne] = React.useState({});
   const [optionChartTwo, setOptionChartTwo] = React.useState({
@@ -117,8 +117,7 @@ const User = () => {
 
   const lending = useSelector((state) => state.layout.lendingpool);
   const wallet = useSelector((state) => state.accountSlice.address);
-  const event = useSelector((state) => state.events.event_wallet)
-  console.log(event)
+  const event = useSelector((state) => state.events.event_wallet);
   const data_token_list = [];
   for (var i in data_token.token) {
     data_token_list.push(
@@ -191,26 +190,26 @@ const User = () => {
     if (!loadingAll || event.length === 0) {
       return;
     }
-    let deposit_ = []
-    let withdraw_ = []
-    let repay_ = []
-    let borrow_ = []
+    let deposit_ = [];
+    let withdraw_ = [];
+    let repay_ = [];
+    let borrow_ = [];
     for (var i in event) {
-      switch (event[i]['type']) {
-        case 'DEPOSIT':
-          deposit_.push([event[i]['datetime']*1000, event[i]['amount']])
-          break
-        case 'BORROW':
-          borrow_.push([event[i]['datetime']*1000, event[i]['amount']])
-          break
-        case 'REPAY':
-          repay_.push([event[i]['datetime']*1000, event[i]['amount']])
-          break
-        case 'WITHDRAW':
-          withdraw_.push([event[i]['datetime']*1000, event[i]['amount']])
-          break
+      switch (event[i]["type"]) {
+        case "DEPOSIT":
+          deposit_.push([event[i]["datetime"] * 1000, event[i]["amount"]]);
+          break;
+        case "BORROW":
+          borrow_.push([event[i]["datetime"] * 1000, event[i]["amount"]]);
+          break;
+        case "REPAY":
+          repay_.push([event[i]["datetime"] * 1000, event[i]["amount"]]);
+          break;
+        case "WITHDRAW":
+          withdraw_.push([event[i]["datetime"] * 1000, event[i]["amount"]]);
+          break;
         default:
-          break
+          break;
       }
     }
     let op = {
@@ -269,7 +268,7 @@ const User = () => {
             formatter: function (val) {
               return numberWithCommas(val, 2) + " USD";
             },
-          }
+          },
         },
         yaxis: {
           title: {
@@ -298,10 +297,7 @@ const User = () => {
       repay = [];
       start = end - 24 * 3600 * 1000;
       for (var i in deposit_) {
-        if (
-          deposit_[i][0] >= start &&
-          deposit_[i][0] <= end
-        ) {
+        if (deposit_[i][0] >= start && deposit_[i][0] <= end) {
           deposit.push(deposit_[i]);
         }
       }
@@ -318,10 +314,7 @@ const User = () => {
       }
 
       for (var i in withdraw_) {
-        if (
-          withdraw_[i][0] >= start &&
-          withdraw_[i][0] <= end
-        ) {
+        if (withdraw_[i][0] >= start && withdraw_[i][0] <= end) {
           withdraw.push(withdraw_[i]);
         }
       }
@@ -334,10 +327,7 @@ const User = () => {
       repay = [];
       start = end - 24 * 3600 * 7 * 1000;
       for (var i in deposit_) {
-        if (
-          deposit_[i][0] >= start &&
-          deposit_[i][0] <= end
-        ) {
+        if (deposit_[i][0] >= start && deposit_[i][0] <= end) {
           deposit.push(deposit_[i]);
         }
       }
@@ -354,10 +344,7 @@ const User = () => {
       }
 
       for (var i in withdraw_) {
-        if (
-          withdraw_[i][0] >= start &&
-          withdraw_[i][0] <= end
-        ) {
+        if (withdraw_[i][0] >= start && withdraw_[i][0] <= end) {
           withdraw.push(withdraw_[i]);
         }
       }
@@ -630,7 +617,6 @@ const User = () => {
     if (!loadingAll || Object.keys(value).length === 0) {
       return;
     }
-    // console.log(value)
     let datetime = [];
     for (var i in value.timestamp) {
       datetime.push(value.timestamp[i] * 1000);
@@ -652,7 +638,6 @@ const User = () => {
     if (!loadingAll || Object.keys(value).length === 0) {
       return;
     }
-    // console.log(value)
     let datetime = [];
     for (var i in value.timestamp) {
       datetime.push(value.timestamp[i] * 1000);
@@ -747,13 +732,11 @@ const User = () => {
       setLoadingAll(false);
       dispatch(totalValueOfUser(address));
       dispatch(valueOfUser(address));
-      // dispatch(transactionAmount(address));
       dispatch(dataToken(address));
-      dispatch(events_data_wallet(address))
+      dispatch(events_data_wallet(address));
       setLoadingAll(true);
     }
   };
-  // console.log(event)
   const handleChangeTokenName = (value) => {
     if (value == null) {
       return;
@@ -790,7 +773,7 @@ const User = () => {
   useEffect(() => {
     makeOptionChartTwo();
     // makeHistoricalData();
-  }, [loadingAll,event, selectedBtn]);
+  }, [loadingAll, event, selectedBtn]);
 
   useEffect(() => {
     makeSeriesDataToken();
@@ -800,13 +783,17 @@ const User = () => {
     makeTokenName();
   }, [loadingAll, data_token]);
   if (!loadingAll) {
-    return <div className={classes.loading}><CircularProgress disableShrink /></div>;
+    return (
+      <div className={classes.loading}>
+        <CircularProgress disableShrink />
+      </div>
+    );
   } else if (loadingAll && !accountAddress) {
     return (
       <Box className={classes.alertConnect}>
         You must connect to wallet for using this function
       </Box>
-    )
+    );
   }
   return (
     <Container fixed={true} maxWidth={"lg"}>
