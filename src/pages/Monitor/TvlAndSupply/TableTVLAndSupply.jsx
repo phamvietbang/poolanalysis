@@ -207,7 +207,7 @@ export default function EnhancedTable(props) {
   return (
     <div className={classes.root}>
       <Typography className={classes.title}>
-        Percentage total supply and total value lock of tokens in TRAVA pool
+        Percentage of total supply and total value lock of tokens in lending pool
       </Typography>
       <Paper className={classes.paper}>
         <TableContainer>
