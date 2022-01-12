@@ -11,6 +11,7 @@ import {
   Backdrop,
   Fade,
   CircularProgress,
+  Box,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete } from "@material-ui/lab";
@@ -55,7 +56,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
+  alertConnect: {
+    marginTop: "5vw"
+  },
 }));
 const type_amount = [
   { name: "Deposits (USD)", amount: 0 },
@@ -70,6 +74,7 @@ function createData(token, token_address, deposit, borrow) {
 
 const User = () => {
   const dispatch = useDispatch();
+  const accountAddress = useSelector((state) => state.accountSlice.address)
   const classes = useStyles();
   const [optionChartOne, setOptionChartOne] = React.useState({});
   const [optionChartTwo, setOptionChartTwo] = React.useState({
@@ -774,6 +779,12 @@ const User = () => {
   }, [loadingAll, data_token]);
   if (!loadingAll) {
     return <div className={classes.loading}><CircularProgress disableShrink /></div>;
+  } else if(loadingAll && !accountAddress){
+    return (
+      <Box className={classes.alertConnect}>
+       You must connect to wallet for using this function
+      </Box>
+    )
   }
   return (
     <Container fixed={true} maxWidth={"lg"}>

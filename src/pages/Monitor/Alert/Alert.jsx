@@ -9,6 +9,7 @@ import {
   makeStyles,
   TextField,
   CircularProgress,
+  Box
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import TableAlert from "./TableAlert";
@@ -29,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  alertConnect: {
+    marginTop: "5vw",
+
   }
 }));
 
@@ -45,10 +50,10 @@ const Alert = () => {
   const [eventAmount, setEventAmount] = useState(0);
   const [eventDataTable, setEventDataTable] = useState([]);
   const [eventToken, setEventToken] = useState("None");
+  const address = useSelector((state) => state.accountSlice.address)
   const dispatch = useDispatch();
   function getEventData() {
     let result = event_data || [];
-    console.log("🚀 ~ file: Alert.jsx ~ line 51 ~ getEventData ~ event_data", event_data)
     let events = [];
     if (eventUser != "") {
       events = [];
@@ -127,6 +132,12 @@ const Alert = () => {
         <CircularProgress disableShrink />
       </div>
     );
+  } else if(loading && !address){
+    return(
+      <Box className={classes.alertConnect}>
+       You must connect to wallet for using this function
+      </Box>
+    )
   }
 
   return (
