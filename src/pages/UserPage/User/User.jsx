@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  loading:{
+  loading: {
     height: "90vh",
     display: "flex",
     justifyContent: "center",
@@ -110,14 +110,16 @@ const User = () => {
   const [tokenName, setTokenName] = React.useState("");
   const totalValue = useSelector((state) => state.user.totalValue);
   const value = useSelector((state) => state.user.value);
-  const tx_amount = useSelector((state) => state.user.tx_amount);
+  // const tx_amount = useSelector((state) => state.user.tx_amount);
   const data_token = useSelector((state) => state.user.data_token);
   const series_data_token = useSelector(
     (state) => state.user.series_data_token
   );
+
   const lending = useSelector((state) => state.layout.lendingpool);
   const wallet = useSelector((state) => state.accountSlice.address);
   const event = useSelector((state) => state.events.event_wallet)
+  console.log(event)
   const data_token_list = [];
   for (var i in data_token.token) {
     data_token_list.push(
@@ -187,27 +189,48 @@ const User = () => {
     setAmount(tmp);
   };
   const makeOptionChartTwo = () => {
-    if (!loadingAll || Object.keys(tx_amount).length === 0) {
+    if (!loadingAll || event.length === 0) {
       return;
     }
-
+    let deposit_ = []
+    let withdraw_ = []
+    let repay_ = []
+    let borrow_ = []
+    for (var i in event) {
+      switch (event[i]['type']) {
+        case 'DEPOSIT':
+          deposit_.push([event[i]['datetime']*1000, event[i]['amount']])
+          break
+        case 'BORROW':
+          borrow_.push([event[i]['datetime']*1000, event[i]['amount']])
+          break
+        case 'REPAY':
+          repay_.push([event[i]['datetime']*1000, event[i]['amount']])
+          break
+        case 'WITHDRAW':
+          withdraw_.push([event[i]['datetime']*1000, event[i]['amount']])
+          break
+        default:
+          break
+      }
+    }
     let op = {
       series: [
         {
           name: "Deposit",
-          data: tx_amount.deposit,
+          data: deposit_,
         },
         {
           name: "Borrow",
-          data: tx_amount.borrow,
+          data: borrow_,
         },
         {
           name: "Withdraw",
-          data: tx_amount.withdraw,
+          data: withdraw_,
         },
         {
           name: "Repay",
-          data: tx_amount.repay,
+          data: repay_,
         },
       ],
       options: {
@@ -263,10 +286,10 @@ const User = () => {
     };
 
     setOptionChartTwo(op);
-    let deposit = tx_amount.deposit;
-    let borrow = tx_amount.borrow;
-    let withdraw = tx_amount.withdraw;
-    let repay = tx_amount.repay;
+    let deposit = deposit_;
+    let borrow = borrow_;
+    let withdraw = withdraw_;
+    let repay = repay_;
     let start = 0;
     let end = 1640908800 * 1000;
     if (selectedBtn === 1) {
@@ -275,32 +298,32 @@ const User = () => {
       withdraw = [];
       repay = [];
       start = end - 24 * 3600 * 1000;
-      for (var i in tx_amount.deposit) {
+      for (var i in deposit_) {
         if (
-          tx_amount.deposit[i][0] >= start &&
-          tx_amount.deposit[i][0] <= end
+          deposit_[i][0] >= start &&
+          deposit_[i][0] <= end
         ) {
-          deposit.push(tx_amount.deposit[i]);
+          deposit.push(deposit_[i]);
         }
       }
-      for (var i in tx_amount.borrow) {
-        if (tx_amount.borrow[i][0] >= start && tx_amount.borrow[i][0] <= end) {
-          borrow.push(tx_amount.borrow[i]);
+      for (var i in borrow_) {
+        if (borrow_[i][0] >= start && borrow_[i][0] <= end) {
+          borrow.push(borrow_[i]);
         }
       }
 
-      for (var i in tx_amount.repay) {
-        if (tx_amount.repay[i][0] >= start && tx_amount.repay[i][0] <= end) {
-          repay.push(tx_amount.borrow[i]);
+      for (var i in repay_) {
+        if (repay_[i][0] >= start && repay_[i][0] <= end) {
+          repay.push(repay_[i]);
         }
       }
 
-      for (var i in tx_amount.withdraw) {
+      for (var i in withdraw_) {
         if (
-          tx_amount.withdraw[i][0] >= start &&
-          tx_amount.withdraw[i][0] <= end
+          withdraw_[i][0] >= start &&
+          withdraw_[i][0] <= end
         ) {
-          withdraw.push(tx_amount.withdraw[i]);
+          withdraw.push(withdraw_[i]);
         }
       }
     }
@@ -311,32 +334,32 @@ const User = () => {
       withdraw = [];
       repay = [];
       start = end - 24 * 3600 * 7 * 1000;
-      for (var i in tx_amount.deposit) {
+      for (var i in deposit_) {
         if (
-          tx_amount.deposit[i][0] >= start &&
-          tx_amount.deposit[i][0] <= end
+          deposit_[i][0] >= start &&
+          deposit_[i][0] <= end
         ) {
-          deposit.push(tx_amount.deposit[i]);
+          deposit.push(deposit_[i]);
         }
       }
-      for (var i in tx_amount.borrow) {
-        if (tx_amount.borrow[i][0] >= start && tx_amount.borrow[i][0] <= end) {
-          borrow.push(tx_amount.borrow[i]);
+      for (var i in borrow_) {
+        if (borrow_[i][0] >= start && borrow_[i][0] <= end) {
+          borrow.push(borrow_[i]);
         }
       }
 
-      for (var i in tx_amount.repay) {
-        if (tx_amount.repay[i][0] >= start && tx_amount.repay[i][0] <= end) {
-          repay.push(tx_amount.borrow[i]);
+      for (var i in repay_) {
+        if (repay_[i][0] >= start && repay_[i][0] <= end) {
+          repay.push(repay_[i]);
         }
       }
 
-      for (var i in tx_amount.withdraw) {
+      for (var i in withdraw_) {
         if (
-          tx_amount.withdraw[i][0] >= start &&
-          tx_amount.withdraw[i][0] <= end
+          withdraw_[i][0] >= start &&
+          withdraw_[i][0] <= end
         ) {
-          withdraw.push(tx_amount.withdraw[i]);
+          withdraw.push(withdraw_[i]);
         }
       }
     }
@@ -725,13 +748,13 @@ const User = () => {
       setLoadingAll(false);
       dispatch(totalValueOfUser(address));
       dispatch(valueOfUser(address));
-      dispatch(transactionAmount(address));
+      // dispatch(transactionAmount(address));
       dispatch(dataToken(address));
       dispatch(events_data_wallet(address))
       setLoadingAll(true);
     }
   };
-  console.log(event)
+  // console.log(event)
   const handleChangeTokenName = (value) => {
     if (value == null) {
       return;
@@ -768,7 +791,7 @@ const User = () => {
   useEffect(() => {
     makeOptionChartTwo();
     // makeHistoricalData();
-  }, [loadingAll, tx_amount, selectedBtn]);
+  }, [loadingAll,event, selectedBtn]);
 
   useEffect(() => {
     makeSeriesDataToken();
@@ -779,10 +802,10 @@ const User = () => {
   }, [loadingAll, data_token]);
   if (!loadingAll) {
     return <div className={classes.loading}><CircularProgress disableShrink /></div>;
-  } else if(loadingAll && !accountAddress){
+  } else if (loadingAll && !accountAddress) {
     return (
       <Box className={classes.alertConnect}>
-       You must connect to wallet for using this function
+        You must connect to wallet for using this function
       </Box>
     )
   }

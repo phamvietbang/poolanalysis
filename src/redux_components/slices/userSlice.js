@@ -29,7 +29,7 @@ export const dataToken = createAsyncThunk(
             }
         }
         let result = await client.get('/stats/deposit_borrow_token/trava_pool/wallet', config)
-        console.log(result)
+        // console.log(result)
         return result.data
     }
 )
