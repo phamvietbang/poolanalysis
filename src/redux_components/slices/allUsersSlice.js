@@ -80,7 +80,7 @@ export const countUsersData = createAsyncThunk(
             },
         }
         let result = await client.get('/stats/number_of_users/trava_pool',config)
-        // console.log(result)
+        console.log(result)
         return result.data
     } 
 )
