@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const SingleLevel = ({ item }) => {
   const [className, setClassName] = useState("");
   const classes = useStyles();
+  const [id, setId] = useState(null);
   async function getClassName() {
     if (item.title == "Transactions-Volumn") {
       setClassName("");
@@ -77,20 +78,20 @@ const SingleLevel = ({ item }) => {
     </NavLink>
   );
 };
-const MultiLevel = ({ item }) => {
+const MultiLevel = ({ item, key }) => {
   const { items: children } = item;
   const [open, setOpen] = useState(false);
-  const checkOpen = ()=>{
-    if(children[0]['to']==window.location.pathname){
-      setOpen(true)
+  const checkOpen = () => {
+    if (children[0]["to"] === window.location.pathname || children[1]["to"] === window.location.pathname) {
+      setOpen(true);
     }
-  }
+  };
   const handleClick = () => {
     setOpen((prev) => !prev);
   };
-  React.useEffect(()=>{
-    checkOpen()
-  },[children])
+  React.useEffect(() => {
+    checkOpen();
+  }, [children]);
   return (
     <React.Fragment>
       <ListItem button onClick={handleClick}>
@@ -124,20 +125,25 @@ function hasChildren(item) {
 
   return true;
 }
-const MenuItem = ({ item }) => {
+const MenuItem = ({ item, key }) => {
   const Component = hasChildren(item) ? MultiLevel : SingleLevel;
-  return <Component item={item} />;
+  console.log(item)
+          // setId(child)
+  return <Component item={item} key={key} />;
 };
 export default function App() {
   const isMobile = useMediaQuery("@media screen and (max-width: 750px)");
   return (
     <Box id="header">
-      {isMobile ? <MobileHeader /> :
-      <div>
-        {menu.map((item, key) => (
-          <MenuItem key={key} item={item} />
-        ))}
-      </div>}
+      {isMobile ? (
+        <MobileHeader />
+      ) : (
+        <div>
+          {menu.map((item, key) => (
+            <MenuItem key={key} item={item} />
+          ))}
+        </div>
+      )}
     </Box>
   );
 }
