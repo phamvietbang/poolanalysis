@@ -134,12 +134,12 @@ export const depositBorrowTokenData = createAsyncThunk(
       borrow_a[i] = 0;
       for (var j in d_a_time) {
         if (d_a_time[j] < timestamp[i] && d_a_time[j] > timestamp[i - 1]) {
-          deposit_a[i] += deposit_amount.data.value[j];
+          deposit_a[i] += deposit_amount.data.valueInUSD[j];
         }
       }
       for (var j in b_a_time) {
         if (b_a_time[j] < timestamp[i] && b_a_time[j] >= timestamp[i - 1]) {
-          borrow_a[i] += borrow_amount.data.value[j];
+          borrow_a[i] += borrow_amount.data.valueInUSD[j];
         }
       }
     }
