@@ -77,7 +77,7 @@ export const depositBorrowTokenData = createAsyncThunk(
         end_timestamp: now,
         token: token,
         lending: state_.layout.lendingpool,
-        type: "deposits",
+        type: "deposit",
       },
     };
     let deposit_amount = await client.get(
@@ -105,7 +105,7 @@ export const depositBorrowTokenData = createAsyncThunk(
         end_timestamp: now,
         token: token,
         lending: state_.layout.lendingpool,
-        type: "borrows",
+        type: "borrow",
       },
     };
 
