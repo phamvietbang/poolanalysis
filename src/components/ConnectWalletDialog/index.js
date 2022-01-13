@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { getAmin } from "../../redux_components/slices/layOutSlice";
 import { Box, Dialog, List, ListItem, ListItemText, Tooltip, Typography } from "@material-ui/core";
 import ComputerIcon from "@material-ui/icons/Computer";
 import PhoneIphoneIcon from "@material-ui/icons/PhoneIphone";
@@ -49,6 +50,7 @@ export default function ConnectWalletDialog({ hdClosePopup }) {
       setWeb3Sender(Web3.givenProvider);
       setCurrentConnectedWallet(WALLET_IDS.METAMASK);
       dp(updateAccInfo(accountAddress, eq)).then(() => eq("Connect success!", SUCCESS_TOP_CENTER));
+      dp(getAmin(accountAddress))
     } catch (err) {
       console.error(err);
       clearMetaMaskEventListeners();

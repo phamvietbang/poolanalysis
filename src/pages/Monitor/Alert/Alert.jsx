@@ -15,6 +15,7 @@ import { Autocomplete } from "@material-ui/lab";
 import TableAlert from "./TableAlert";
 import { useDispatch, useSelector } from "react-redux";
 import { events_data } from "../../../redux_components/slices/eventsSlice";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginTop: theme.spacing(4),
@@ -47,10 +48,11 @@ const Alert = () => {
   const [loading, setLoading] = useState(false);
   const [eventType, setEventType] = useState("All");
   const [eventUser, setEventUser] = useState("");
-  const [eventAmount, setEventAmount] = useState(0);
+  const [eventAmount, setEventAmount] = useState(10000);
   const [eventDataTable, setEventDataTable] = useState([]);
   const [eventToken, setEventToken] = useState("None");
   const address = useSelector((state) => state.accountSlice.address)
+  const admin = useSelector((state)=>state.layout.admin)
   const dispatch = useDispatch();
   function getEventData() {
     let result = event_data || [];
@@ -100,7 +102,9 @@ const Alert = () => {
     setEventType(event.target.value);
   };
   const handleChangeEventAmount = (event) => {
-    if (event.target.value == null) {
+    console.log(event.target.value)
+    if (event.target.value === '') {
+      setEventAmount(0)
       return;
     }
     setEventAmount(parseInt(event.target.value));
@@ -125,21 +129,22 @@ const Alert = () => {
   useEffect(() => {
     getEventData();
   }, [eventType, eventUser, eventAmount, eventToken, event_data]);
-
+  console.log(address)
+  console.log(admin)
+  if (!address || !admin) {
+    return (
+      <Box className={classes.alertConnect}>
+        You must be admin for using this function
+      </Box>
+    );
+  }
   if (!loading) {
     return (
       <div className={classes.loading}>
         <CircularProgress disableShrink />
       </div>
     );
-  } else if(loading && !address){
-    return(
-      <Box className={classes.alertConnect}>
-       You must connect to wallet for using this function
-      </Box>
-    )
   }
-
   return (
     <Container alignItems="center">
       <Grid
@@ -177,6 +182,7 @@ const Alert = () => {
         <TextField
           label="Amount (>=)"
           variant="outlined"
+          value={''+eventAmount}
           onChange={handleChangeEventAmount}
         />
         <TextField

@@ -74,8 +74,10 @@ function createData(token, token_address, deposit, borrow) {
 const User = () => {
   const dispatch = useDispatch();
   const accountAddress = useSelector((state) => state.accountSlice.address);
+  const admin = useSelector((state)=>state.layout.admin)
   const classes = useStyles();
   const [optionChartOne, setOptionChartOne] = React.useState({});
+  const [optionChartOneAll, setOptionChartOneAll] = React.useState({});
   const [optionChartTwo, setOptionChartTwo] = React.useState({
     series: [],
     options: { xaxis: { type: "datetime" } },
@@ -88,6 +90,8 @@ const User = () => {
   });
   const [optionChartThree, setOptionChartThree] = React.useState({});
   const [optionChartFour, setOptionChartFour] = React.useState({});
+  const [optionChartThreeAll, setOptionChartThreeAll] = React.useState({});
+  const [optionChartFourAll, setOptionChartFourAll] = React.useState({});
   const [optionChartFive, setOptionChartFive] = React.useState({
     series: [],
     options: { xaxis: { type: "datetime" } },
@@ -109,7 +113,6 @@ const User = () => {
   const [tokenName, setTokenName] = React.useState("");
   const totalValue = useSelector((state) => state.user.totalValue);
   const value = useSelector((state) => state.user.value);
-  // const tx_amount = useSelector((state) => state.user.tx_amount);
   const data_token = useSelector((state) => state.user.data_token);
   const series_data_token = useSelector(
     (state) => state.user.series_data_token
@@ -216,19 +219,19 @@ const User = () => {
       series: [
         {
           name: "Deposit",
-          data: deposit_,
+          data: deposit_.slice(-168,),
         },
         {
           name: "Borrow",
-          data: borrow_,
+          data: borrow_.slice(-168,),
         },
         {
           name: "Withdraw",
-          data: withdraw_,
+          data: withdraw_.slice(-168,),
         },
         {
           name: "Repay",
-          data: repay_,
+          data: repay_.slice(-168,),
         },
       ],
       options: {
@@ -427,11 +430,11 @@ const User = () => {
       series: [
         {
           name: "Amount of deposit",
-          data: deposit,
+          data: deposit.slice(-168,),
         },
         {
           name: "Amount of borrow",
-          data: borrow,
+          data: borrow.slice(-168,),
         },
       ],
       options: {
@@ -606,6 +609,16 @@ const User = () => {
       type: "line",
       name_one: "Amount of borrow",
       name_two: "Amount of deposit",
+      data_one: borrow.slice(-168,),
+      data_two: deposit.slice(-168,),
+      datetime: datetime.slice(-168,),
+      title: "Amount of borrow and amount of deposit",
+      title_one: "Amount (USD)",
+    });
+    setOptionChartOneAll({
+      type: "line",
+      name_one: "Amount of borrow",
+      name_two: "Amount of deposit",
       data_one: borrow,
       data_two: deposit,
       datetime: datetime,
@@ -627,6 +640,16 @@ const User = () => {
       type: "line",
       name_one: "Liquidation threshold",
       name_two: "Loan to value",
+      data_one: liquidation.slice(-168,),
+      data_two: ltv.slice(-168,),
+      datetime: datetime.slice(-168,),
+      title: "Liquidation threshold and loan to value",
+      title_one: "Percentage (%)",
+    });
+    setOptionChartThreeAll({
+      type: "line",
+      name_one: "Liquidation threshold",
+      name_two: "Loan to value",
       data_one: liquidation,
       data_two: ltv,
       datetime: datetime,
@@ -644,6 +667,14 @@ const User = () => {
     }
     let hf = value.hf;
     setOptionChartFour({
+      type: "line",
+      name_one: "Health factor",
+      data_one: hf.slice(-168,),
+      datetime: datetime.slice(-168,),
+      title: "Health factor of wallet",
+      title_one: "Health factor",
+    });
+    setOptionChartFourAll({
       type: "line",
       name_one: "Health factor",
       data_one: hf,
@@ -772,7 +803,7 @@ const User = () => {
 
   useEffect(() => {
     makeOptionChartTwo();
-    // makeHistoricalData();
+
   }, [loadingAll, event, selectedBtn]);
 
   useEffect(() => {
@@ -782,17 +813,18 @@ const User = () => {
   useEffect(() => {
     makeTokenName();
   }, [loadingAll, data_token]);
+  if (!accountAddress || !admin) {
+    return (
+      <Box className={classes.alertConnect}>
+        You must be admin for using this function
+      </Box>
+    );
+  }
   if (!loadingAll) {
     return (
       <div className={classes.loading}>
         <CircularProgress disableShrink />
       </div>
-    );
-  } else if (loadingAll && !accountAddress) {
-    return (
-      <Box className={classes.alertConnect}>
-        You must connect to wallet for using this function
-      </Box>
     );
   }
   return (
@@ -856,7 +888,7 @@ const User = () => {
                   }}
                 >
                   <Fade in={openChartOne}>
-                    <ZoomChartNormal data={{ ...optionChartOne }} />
+                    <ZoomChartNormal data={optionChartOneAll} />
                   </Fade>
                 </Modal>
               </Grid>
@@ -973,7 +1005,7 @@ const User = () => {
                   }}
                 >
                   <Fade in={openChartThree}>
-                    <ZoomChartNormal data={{ ...optionChartThree }} />
+                    <ZoomChartNormal data={optionChartThreeAll} />
                   </Fade>
                 </Modal>
               </Grid>
@@ -1012,7 +1044,7 @@ const User = () => {
                   }}
                 >
                   <Fade in={openChartFour}>
-                    <ZoomChartOneSeries data={{ ...optionChartFour }} />
+                    <ZoomChartOneSeries data={optionChartFourAll} />
                   </Fade>
                 </Modal>
               </Grid>

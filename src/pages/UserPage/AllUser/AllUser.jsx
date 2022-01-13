@@ -96,33 +96,16 @@ const AllUsers = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [top, setTop] = React.useState(5);
-  // initial variant for advice
-  const [deA, setDeA] = React.useState(0);
-  const [deB, setDeB] = React.useState(0);
-  const [deC, setDeC] = React.useState(0);
-  const [deD, setDeD] = React.useState(0);
-  const [deE, setDeE] = React.useState(0);
-  const [deF, setDeF] = React.useState(0);
-
-  const [tvlA, setTvlA] = React.useState(0);
-  const [tvlB, setTvlB] = React.useState(0);
-  const [tvlC, setTvlC] = React.useState(0);
-  const [tvlD, setTvlD] = React.useState(0);
-  const [tvlE, setTvlE] = React.useState(0);
-  const [tvlF, setTvlF] = React.useState(0);
-
-  const [value, setValue] = React.useState({
-    deposit: 0,
-    tvl: 0,
-  });
-
   const [openChartOne, setOpenChartOne] = React.useState(false);
   const [openChartTwo, setOpenChartTwo] = React.useState(false);
   const [openChartThree, setOpenChartThree] = React.useState(false);
-  const [openAdvice, setOpenAdvice] = React.useState(false);
   const [selectedType, setSelectedType] = useState(1);
   const [loadingAll, setLoadingAll] = useState(false);
   const [chartOptionsOne, setChartOptionsOne] = useState({
+    series: [],
+    options: { xaxis: { type: "numeric" } },
+  });
+  const [chartOptionsOneAll, setChartOptionsOneAll] = useState({
     series: [],
     options: { xaxis: { type: "numeric" } },
   });
@@ -140,71 +123,6 @@ const AllUsers = () => {
   const topA = useSelector((state) => state.allusers.topDepositsA);
   const topT = useSelector((state) => state.allusers.topDepositsT);
   const tvlDeposit = useSelector((state) => state.allusers.clusteringUsers);
-
-  const handleCalculate = () => {
-    let amountDp = averageAmount(
-      parseInt(deA),
-      parseInt(deB),
-      parseInt(deC),
-      parseInt(deD),
-      parseInt(deE),
-      parseInt(deF)
-    );
-    let amountTvl = averageAmount(
-      parseInt(tvlA),
-      parseInt(tvlB),
-      parseInt(tvlC),
-      parseInt(tvlD),
-      parseInt(tvlE),
-      parseInt(tvlF)
-    );
-    let calculate = {
-      deposit: amountDp,
-      tvl: amountTvl,
-    };
-    setValue(calculate);
-  };
-
-  function handleSetDefaultValue() {
-    if (!loadingAll) {
-      return;
-    }
-    setDeA(tvlDeposit.deposit[0]);
-    setDeB(tvlDeposit.deposit[1]);
-    setDeC(tvlDeposit.deposit[2]);
-    setDeD(tvlDeposit.deposit[3]);
-    setDeE(tvlDeposit.deposit[4]);
-    setDeF(tvlDeposit.deposit[5]);
-
-    setTvlA(tvlDeposit.tvl[0]);
-    setTvlB(tvlDeposit.tvl[1]);
-    setTvlC(tvlDeposit.tvl[2]);
-    setTvlD(tvlDeposit.tvl[3]);
-    setTvlE(tvlDeposit.tvl[4]);
-    setTvlF(tvlDeposit.tvl[5]);
-
-    let amountDp = averageAmount(
-      tvlDeposit.deposit[0],
-      tvlDeposit.deposit[1],
-      tvlDeposit.deposit[2],
-      tvlDeposit.deposit[3],
-      tvlDeposit.deposit[4],
-      tvlDeposit.deposit[5]
-    );
-    let amountTvl = averageAmount(
-      tvlDeposit.tvl[0],
-      tvlDeposit.tvl[1],
-      tvlDeposit.tvl[2],
-      tvlDeposit.tvl[3],
-      tvlDeposit.tvl[4],
-      tvlDeposit.tvl[5]
-    );
-    let calculate = {
-      deposit: amountDp,
-      tvl: amountTvl,
-    };
-    setValue(calculate);
-  }
 
   function handleChangeChartOptionsTwo() {
     if (!loadingAll) {
@@ -295,10 +213,10 @@ const AllUsers = () => {
         datetime = datetime.slice(-24);
         break;
       case 2:
-        active = active.slice(-168);
-        jdeposit = jdeposit.slice(-168);
-        db = db.slice(-168);
-        datetime = datetime.slice(-168);
+        active = active.slice(-100);
+        jdeposit = jdeposit.slice(-100);
+        db = db.slice(-100);
+        datetime = datetime.slice(-100);
         break;
       default:
         break;
@@ -358,6 +276,100 @@ const AllUsers = () => {
             // },
             min: findMinRoundNumber(min_),
             max: findMaxRoundNumber(Math.max(...active)),
+            title: {
+              text: "Number of users",
+            },
+            labels: {
+              formatter: function (val, index) {
+                return parseInt(val);
+                // return fixedLargeNumber(val, 1);
+              },
+            },
+          },
+        ],
+        tooltip: {
+          y: {
+            formatter: function (val, index) {
+              return parseInt(val) + " users";
+            },
+          },
+        },
+        chart: {
+          background: "transparent",
+          toolbar: {
+            tools: {
+              download: false,
+              pan: false,
+              zoomout: false,
+              zoomin: false,
+            },
+          },
+        },
+        legend: {
+          position: "top",
+        },
+        grid: {
+          show: true,
+        },
+      },
+    };
+
+    setChartOptionsOneAll(op);
+    mindb = Math.min(...db.slice(-100,));
+    minjd = Math.min(...jdeposit.slice(-100,));
+    min_ = minjd < mindb ? minjd : mindb;
+    op = {
+      series: [
+        {
+          name: "Active users",
+          data: active.slice(-100,),
+          type: "line",
+        },
+        {
+          name: "Just deposit users",
+          data: jdeposit.slice(-100,),
+          type: "line",
+        },
+        {
+          name: "Deposit and borrow users",
+          data: db.slice(-100,),
+          type: "line",
+        },
+      ],
+      options: {
+        title: {
+          text: "Number of users change in a month",
+          align: "center",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: "smooth",
+          width: 2,
+        },
+        xaxis: {
+          categories: datetime.slice(-100,),
+          type: "datetime",
+          title: {
+            text: "Date time",
+          },
+          labels: {
+            datetimeFormatter: {
+              year: "yyyy",
+              month: "MMM 'yy",
+              day: "dd MMM",
+              hour: "HH:mm",
+            },
+          },
+        },
+        yaxis: [
+          {
+            // axisTicks: {
+            //     show: true
+            // },
+            min: findMinRoundNumber(min_),
+            max: findMaxRoundNumber(Math.max(...active.slice(-100,))),
             title: {
               text: "Number of users",
             },
@@ -515,53 +527,12 @@ const AllUsers = () => {
   const handleCloseChartThree = () => {
     setOpenChartThree(false);
   };
-  const handleOpenAdvice = () => {
-    setOpenAdvice(true);
-  };
-  const handleCloseAdvice = () => {
-    setDeA(tvlDeposit.deposit[0]);
-    setDeB(tvlDeposit.deposit[1]);
-    setDeC(tvlDeposit.deposit[2]);
-    setDeD(tvlDeposit.deposit[3]);
-    setDeE(tvlDeposit.deposit[4]);
-    setDeF(tvlDeposit.deposit[5]);
-
-    setTvlA(tvlDeposit.tvl[0]);
-    setTvlB(tvlDeposit.tvl[1]);
-    setTvlC(tvlDeposit.tvl[2]);
-    setTvlD(tvlDeposit.tvl[3]);
-    setTvlE(tvlDeposit.tvl[4]);
-    setTvlF(tvlDeposit.tvl[5]);
-    let amountDp = averageAmount(
-      tvlDeposit.deposit[0],
-      tvlDeposit.deposit[1],
-      tvlDeposit.deposit[2],
-      tvlDeposit.deposit[3],
-      tvlDeposit.deposit[4],
-      tvlDeposit.deposit[5]
-    );
-    let amountTvl = averageAmount(
-      tvlDeposit.tvl[0],
-      tvlDeposit.tvl[1],
-      tvlDeposit.tvl[2],
-      tvlDeposit.tvl[3],
-      tvlDeposit.tvl[4],
-      tvlDeposit.tvl[5]
-    );
-    let calculate = {
-      deposit: amountDp,
-      tvl: amountTvl,
-    };
-    setValue(calculate);
-    setOpenAdvice(false);
-  };
   const handleChangeTop = (event) => {
     setTop(event.target.value);
   };
   async function fetchData() {
     setLoadingAll(false);
     await Promise.all([
-      dispatch(totalValueData()),
       dispatch(topDepositsTransact(5)),
       dispatch(countUsersData()),
       dispatch(seriesUsers()),
@@ -575,7 +546,6 @@ const AllUsers = () => {
   }, [top]);
   useEffect(() => {
     handleChangeChartOptionThree();
-    handleSetDefaultValue();
   }, [loadingAll, selectedType, tvlDeposit]);
   useEffect(() => {
     fetchData();
@@ -663,28 +633,6 @@ const AllUsers = () => {
               // alignItems="baseline"
             >
               <Grid>
-                <ButtonGroup aria-label="contained primary button group">
-                  <Button
-                    color={selectedBtn === 1 ? "secondary" : "primary"}
-                    onClick={() => setSelectedBtn(1)}
-                  >
-                    24h
-                  </Button>
-                  <Button
-                    color={selectedBtn === 2 ? "secondary" : "primary"}
-                    onClick={() => setSelectedBtn(2)}
-                  >
-                    1W
-                  </Button>
-                  <Button
-                    color={selectedBtn === 3 ? "secondary" : "primary"}
-                    onClick={() => setSelectedBtn(3)}
-                  >
-                    1M
-                  </Button>
-                </ButtonGroup>
-              </Grid>
-              <Grid>
                 <Button variant="outlined" onClick={handleOpenChartOne}>
                   Full
                 </Button>
@@ -732,8 +680,8 @@ const AllUsers = () => {
                         </ButtonGroup>
                       </Grid>
                       <Chart
-                        options={{ ...chartOptionsOne }.options}
-                        series={{ ...chartOptionsOne }.series}
+                        options={{ ...chartOptionsOneAll }.options}
+                        series={{ ...chartOptionsOneAll }.series}
                         height="500"
                         width={1000}
                       />
@@ -775,103 +723,7 @@ const AllUsers = () => {
                 </ButtonGroup>
               </Grid>
               <Grid>
-                <Advice />
-                {/* <Button variant="outlined" onClick={handleOpenAdvice}>
-                  Advice
-                </Button>
-                <Modal
-                  aria-labelledby="transition-modal-title"
-                  aria-describedby="transition-modal-description"
-                  className={classes.modal}
-                  open={openAdvice}
-                  onClose={handleCloseAdvice}
-                  closeAfterTransition
-                  BackdropComponent={Backdrop}
-                  BackdropProps={{
-                    timeout: 500,
-                  }}
-                >
-                  <Fade in={openAdvice}>
-                    <Grid
-                      className="card"
-                      container
-                      xs={8}
-                      direction="column"
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Grid
-                        container
-                        direction="row"
-                        justifyContent="space-evenly"
-                        alignItems="center"
-                      >
-                        <Grid
-                          direction="column"
-                          justifyContent="center"
-                          alignItems="center"
-                        >
-                          <h3>Number of users having total value of deposit</h3>
-                          <Typography className={classes.adviceTitle}>Less than 1000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={deA} onChange={(event) => setDeA(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>From 1000 to 5000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={deB} onChange={(event) => setDeB(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>From 5000 to 10000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={deC} onChange={(event) => setDeC(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>From 10000 to 15000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={deD} onChange={(event) => setDeD(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>From 15000 to 20000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={deE} onChange={(event) => setDeE(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>More than 20000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={deF} onChange={(event) => setDeF(event.target.value)} variant="outlined" />
-                          <Grid>
-                            <Button className={classes.adviceButton} variant="outlined" color="primary" onClick={handleCalculate}>
-                              Calculate
-                            </Button>
-                          </Grid>
-                          <Grid
-                            direction="row"
-                            justifyContent="center"
-                            alignItems="center"
-                          >
-                            <h2>You should deposit more than {value['deposit']} USD</h2>
-                          </Grid>
-                        </Grid>
-                        <Grid
-                          direction="column"
-                          justifyContent="center"
-                          alignItems="center"
-                        >
-                          <h3>Number of users having total Value lock</h3>
-                          <Typography className={classes.adviceTitle}>Less than 1000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={tvlA} onChange={(event) => setTvlA(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>From 1000 to 5000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={tvlB} onChange={(event) => setTvlB(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>From 5000 to 10000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={tvlC} onChange={(event) => setTvlC(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>From 10000 to 15000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={tvlD} onChange={(event) => setTvlD(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>From 15000 to 20000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={tvlE} onChange={(event) => setTvlE(event.target.value)} variant="outlined" />
-                          <Typography className={classes.adviceTitle}>More than 20000 USD</Typography>
-                          <TextField size='small' fullWidth id="outlined-basic" value={tvlF} onChange={(event) => setTvlF(event.target.value)} variant="outlined" />
-                          <Grid>
-                            <Button className={classes.adviceButton} variant="outlined" color="primary" onClick={handleCalculate}>
-                              Calculate
-                            </Button>
-                          </Grid>
-                          <Grid
-                            direction="row"
-                            justifyContent="center"
-                            alignItems="center"
-                          >
-                            <h2>You should hold less than {value['tvl']} USD</h2>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Fade>
-                </Modal> */}
+                {/* <Advice /> */}
               </Grid>
               <Grid>
                 <Button variant="outlined" onClick={handleOpenChartThree}>

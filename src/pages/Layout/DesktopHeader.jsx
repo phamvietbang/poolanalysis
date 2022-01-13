@@ -3,11 +3,12 @@ import DISCONNECT from "./disconnect.svg";
 import CONNECT from "./connect.svg";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import ConnectWalletDialog from "../../components/ConnectWalletDialog";
 import DisconnectWalletDialog from "../../components/DisconnectWalletDialog";
-
+import { getAmin } from "../../redux_components/slices/layOutSlice";
 export default function DesktopHeader() {
+  const dp =useDispatch()
   const accountAddress = useSelector((state) => state.accountSlice.address);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [isOpenDisconnectModal, setIsOpenDisconnectModal] = useState(false);
@@ -16,6 +17,7 @@ export default function DesktopHeader() {
       setIsOpenConnectModal(true);
     } else {
       setIsOpenDisconnectModal(true);
+      dp(getAmin(""))
     }
   }
 
