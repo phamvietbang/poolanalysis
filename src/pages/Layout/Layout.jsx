@@ -6,7 +6,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { Select, Button, Grid, MenuItem } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import App from "./NavBar";
 import LinkRoutes from "./Routes";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +14,9 @@ import DesktopHeader from "./DesktopHeader";
 import { updateAccInfo } from "../../redux_components/account/account-slice";
 import { reloadConfig } from "../../redux_components/other/config-slice";
 import RingLoader from "react-spinners/RingLoader";
-
-const drawerWidth = 240;
+import { formatAddress } from "../../utils/utility";
+import { getAmin } from "./../../redux_components/slices/layOutSlice";
+const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   appBar: {
-    width: `calc(100% - ${drawerWidth}px)`,
+    zIndex: theme.zIndex.drawer + 1,
+    // width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
   },
   drawer: {
@@ -37,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
+  },
+  drawerContainer: {
+    overflow: 'auto',
   },
   whiteColor: {
     color: "white",
@@ -83,6 +87,7 @@ export default function PermanentDrawerLeft() {
       await window.ethereum.request({ method: "eth_requestAccounts" })
     )[0];
     dp(updateAccInfo(accountAddress));
+    dp(getAmin(accountAddress))
   };
 
   const loading = useSelector((state) => state.configSlice.loading);
@@ -97,25 +102,37 @@ export default function PermanentDrawerLeft() {
               <Grid
                 container
                 direction="row"
-                justifyContent="flex-end"
+                justifyContent="space-between"
                 alignItems="center"
                 xs={12}
               >
-                <Select
-                  variant="outlined"
-                  id="simple-menu"
-                  className={classes.whiteColor}
-                  value={type}
-                  onChange={handleSetType}
-                  classes={{
-                    icon: classes.whiteColor,
-                  }}
+                <Grid>
+                  <Typography variant="h6">DeFi Dashboard</Typography>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  xs={3}
                 >
-                  <MenuItem value="bsc">TRAVA IN BSC</MenuItem>
-                  <MenuItem value="ftm">TRAVA IN FTM</MenuItem>
-                  <MenuItem value="geist_ftm">GEIST IN FTM</MenuItem>
-                </Select>
-                <DesktopHeader />
+                  <Grid xs={1}></Grid>
+                  <Select
+                    variant="outlined"
+                    id="simple-menu"
+                    className={classes.whiteColor}
+                    value={type}
+                    onChange={handleSetType}
+                    classes={{
+                      icon: classes.whiteColor,
+                    }}
+                  >
+                    <MenuItem value="bsc">{formatAddress("0x75de5f7c91a89c16714017c7443eca20c7a8c295") + " (BSC)"}</MenuItem>
+                    <MenuItem value="ftm">{formatAddress("0xd98bb590bdfabf18c164056c185fbb6be5ee643f") + " (FTM)"}</MenuItem>
+                    <MenuItem value="geist_ftm">{formatAddress("0x9fad24f572045c7869117160a571b2e50b10d068") + " (FTM)"}</MenuItem>
+                  </Select>
+                  <DesktopHeader />
+                </Grid>
               </Grid>
             </Toolbar>
           </AppBar>
@@ -127,10 +144,7 @@ export default function PermanentDrawerLeft() {
             }}
             anchor="left"
           >
-            <div className="sidebar">
-              <Typography variant="h6">TRAVA</Typography>
-            </div>
-            <Divider />
+            <Toolbar />
             <App />
           </Drawer>
           <Grid

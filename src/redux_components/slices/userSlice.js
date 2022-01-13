@@ -7,7 +7,7 @@ const initialState = {
     value: {},
     tx_amount: {},
     data_token: {},
-    series_data_token: {}
+    series_data_token: {},
 }
 function createTxData(tx) {
     let result = []

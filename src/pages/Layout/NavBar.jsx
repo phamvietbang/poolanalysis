@@ -8,6 +8,8 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { NavLink } from "react-router-dom";
 import { Box, makeStyles, useMediaQuery } from "@material-ui/core";
 import MobileHeader from "./MobileHeader";
+import { useDispatch, useSelector } from "react-redux";
+import { countEvents, updateCountEvent } from "../../redux_components/slices/eventsSlice";
 
 const menu = [
   {
@@ -51,12 +53,20 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
+  loading:{
+    height: "90vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }
 }));
 
 const SingleLevel = ({ item }) => {
+  const dp = useDispatch()
   const [className, setClassName] = useState("");
   const classes = useStyles();
-  const [id, setId] = useState(null);
+  const count = useSelector((state)=>state.events.count_event)
+  const [alert, setAlert] = useState(count)
   async function getClassName() {
     if (item.title == "Transactions-Volumn") {
       setClassName("");
@@ -64,7 +74,19 @@ const SingleLevel = ({ item }) => {
       setClassName("list_item");
     }
   }
+  async function resetAlert() {
+    if (window.location.pathname == "/alert") {
+      setAlert(0)
+    }
+  }
+  const handleClick = () => {
+    if(item.title=='Alert'){
+      setAlert(0)
+      dp(updateCountEvent(0))
+    }
+  }; 
   useEffect(() => {
+    resetAlert()
     getClassName();
   }, []);
   return (
@@ -72,8 +94,9 @@ const SingleLevel = ({ item }) => {
       to={item.to}
       className={({ isActive }) => (!isActive ? "" : classes.active)}
     >
-      <ListItem button>
+      <ListItem button onClick={handleClick}>
         <ListItemText className={className} primary={item.title} />
+        {item.title==='Alert' && alert > 0 ?<div>{alert}</div>:<div></div>}
       </ListItem>
     </NavLink>
   );
@@ -81,21 +104,38 @@ const SingleLevel = ({ item }) => {
 const MultiLevel = ({ item, key }) => {
   const { items: children } = item;
   const [open, setOpen] = useState(false);
+  const count = useSelector((state)=>state.events.count_event)
+  const [alert, setAlert] = useState(count)
+
   const checkOpen = () => {
     if (children[0]["to"] === window.location.pathname || children[1]["to"] === window.location.pathname) {
       setOpen(true);
     }
   };
+
   const handleClick = () => {
+    if(item.title=='Monitor'){
+      setAlert(0)
+    }
     setOpen((prev) => !prev);
   };
+  async function resetAlert() {
+    if (window.location.pathname == "/alert") {
+      setAlert(0)
+    }
+  }
+
   React.useEffect(() => {
+    resetAlert();
     checkOpen();
   }, [children]);
   return (
     <React.Fragment>
       <ListItem button onClick={handleClick}>
         <ListItemText primary={item.title} />
+        {
+          item.title=="Monitor" && alert>0? <div>1</div>:<div></div> 
+        }
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
@@ -130,7 +170,15 @@ const MenuItem = ({ item, key }) => {
   return <Component item={item} key={key} />;
 };
 export default function App() {
+  const dp = useDispatch()
+  const [loading, setLoading] = React.useState(false)
   const isMobile = useMediaQuery("@media screen and (max-width: 750px)");
+  useEffect(() => {
+    dp(countEvents()).then(() => setLoading(true));
+  }, []);
+  if (!loading) {
+    return <div></div>;
+  }
   return (
     <Box id="header">
       {isMobile ? (

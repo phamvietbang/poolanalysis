@@ -76,10 +76,13 @@ const Transactions = () => {
   const [openChartThree, setOpenChartThree] = React.useState(false);
   const [openChartFour, setOpenChartFour] = React.useState(false);
   const [chartOptionsOne, setChartOptionsOne] = React.useState({});
+  const [chartOptionsOneAll, setChartOptionsOneAll] = React.useState({});
   const [chartOptionsTwo, setChartOptionsTwo] = React.useState({});
   const [chartOptionsTwoZoom, setChartOptionsTwoZoom] = React.useState({});
   const [chartOptionsThree, setChartOptionsThree] = React.useState({});
+  const [chartOptionsThreeAll, setChartOptionsThreeAll] = React.useState({});
   const [chartOptionsFour, setChartOptionsFour] = React.useState({});
+  const [chartOptionsFourAll, setChartOptionsFourAll] = React.useState({});
   const totalValue = useSelector((state) => state.lendingpool.totalValue);
   const tokens = useSelector((state) => state.lendingpool.tokenName);
   const totalValueToken = useSelector((state) => state.token.totalValue);
@@ -103,12 +106,22 @@ const Transactions = () => {
     }
     let borrow = tvl_supply.borrow;
     let supply = tvl_supply.supply;
-    let min_y_left = findMinRoundNumber(Math.min(...borrow));
-    let min_y_right = findMinRoundNumber(Math.min(...supply));
-    let max_y_left = findMaxRoundNumber(Math.max(...borrow));
-    let max_y_right = findMaxRoundNumber(Math.max(...supply));
-
     setChartOptionsOne({
+      type: "line",
+      name_one: "Total borrow",
+      name_two: "Total supply",
+      data_one: borrow.slice(-168,),
+      data_two: supply.slice(-168,),
+      datetime: datetime.slice(-168,),
+      title: "Total borrow and total supply",
+      title_one: "Total borrow (USD)",
+      title_two: "Total supply (USD)",
+      min_y_left: findMinRoundNumber(Math.min(...borrow.slice(-168,))),
+      max_y_left: findMaxRoundNumber(Math.max(...borrow.slice(-168,))),
+      min_y_right: findMinRoundNumber(Math.min(...supply.slice(-168,))),
+      max_y_right: findMaxRoundNumber(Math.max(...supply.slice(-168,))),
+    });
+    setChartOptionsOneAll({
       type: "line",
       name_one: "Total borrow",
       name_two: "Total supply",
@@ -118,10 +131,10 @@ const Transactions = () => {
       title: "Total borrow and total supply",
       title_one: "Total borrow (USD)",
       title_two: "Total supply (USD)",
-      min_y_left: min_y_left,
-      max_y_left: max_y_left,
-      min_y_right: min_y_right,
-      max_y_right: max_y_right,
+      min_y_left: findMinRoundNumber(Math.min(...borrow)),
+      max_y_left: findMaxRoundNumber(Math.max(...borrow)),
+      min_y_right: findMinRoundNumber(Math.min(...supply)),
+      max_y_right: findMaxRoundNumber(Math.max(...supply)),
     });
   }
   function makechartOptionsThree() {
@@ -139,12 +152,22 @@ const Transactions = () => {
     }
     let deposit_amount = deposits.deposit_amount;
     let deposit_tx = deposits.deposit_tx;
-    let min_y_right = findMinRoundNumber(Math.min(...deposit_amount));
-    let min_y_left = findMinRoundNumber(Math.min(...deposit_tx));
-    let max_y_right = findMaxRoundNumber(Math.max(...deposit_amount));
-    let max_y_left = findMaxRoundNumber(Math.max(...deposit_tx));
-
     setChartOptionsThree({
+      type: "column",
+      name_two: "Amount of deposits",
+      name_one: "Number of deposit transactions",
+      data_two: deposit_amount.slice(-168,),
+      data_one: deposit_tx.slice(-168,),
+      datetime: datetime.slice(-168,),
+      title: "Amount and Number Of Deposit Transactions",
+      title_two: "Amount (USD)",
+      title_one: "Number",
+      min_y_left: findMinRoundNumber(Math.min(...deposit_tx.slice(-168,))),
+      max_y_left: findMaxRoundNumber(Math.max(...deposit_tx.slice(-168,))),
+      min_y_right: findMinRoundNumber(Math.min(...deposit_amount.slice(-168,))),
+      max_y_right:  findMinRoundNumber(Math.max(...deposit_amount.slice(-168,))),
+    });
+    setChartOptionsThreeAll({
       type: "column",
       name_two: "Amount of deposits",
       name_one: "Number of deposit transactions",
@@ -154,10 +177,10 @@ const Transactions = () => {
       title: "Amount and Number Of Deposit Transactions",
       title_two: "Amount (USD)",
       title_one: "Number",
-      min_y_left: min_y_left,
-      max_y_left: max_y_left,
-      min_y_right: min_y_right,
-      max_y_right: max_y_right,
+      min_y_left: findMinRoundNumber(Math.min(...deposit_tx)),
+      max_y_left: findMaxRoundNumber(Math.max(...deposit_tx)),
+      min_y_right: findMinRoundNumber(Math.min(...deposit_amount)),
+      max_y_right:  findMinRoundNumber(Math.max(...deposit_amount)),
     });
   }
   function makechartOptionsFour() {
@@ -174,12 +197,22 @@ const Transactions = () => {
     }
     let borrow_amount = borrows.borrow_amount;
     let borrow_tx = borrows.borrow_tx;
-    let min_y_right = findMinRoundNumber(Math.min(...borrow_amount));
-    let min_y_left = findMinRoundNumber(Math.min(...borrow_tx));
-    let max_y_right = findMaxRoundNumber(Math.max(...borrow_amount));
-    let max_y_left = findMaxRoundNumber(Math.max(...borrow_tx));
-
     setChartOptionsFour({
+      type: "column",
+      name_two: "Amount of borrows",
+      name_one: "Number of borrow transactions",
+      data_two: borrow_amount.slice(-168,),
+      data_one: borrow_tx.slice(-168,),
+      datetime: datetime.slice(-168,),
+      title: "Amount and Number Of Borrow Transactions",
+      title_two: "Amount (USD)",
+      title_one: "Number",
+      min_y_left: findMinRoundNumber(Math.min(...borrow_tx.slice(-168,))),
+      max_y_left: findMinRoundNumber(Math.max(...borrow_tx.slice(-168,))),
+      min_y_right: findMinRoundNumber(Math.min(...borrow_amount.slice(-168,))),
+      max_y_right: findMinRoundNumber(Math.max(...borrow_amount.slice(-168,))),
+    });
+    setChartOptionsFourAll({
       type: "column",
       name_two: "Amount of borrows",
       name_one: "Number of borrow transactions",
@@ -189,10 +222,10 @@ const Transactions = () => {
       title: "Amount and Number Of Borrow Transactions",
       title_two: "Amount (USD)",
       title_one: "Number",
-      min_y_left: min_y_left,
-      max_y_left: max_y_left,
-      min_y_right: min_y_right,
-      max_y_right: max_y_right,
+      min_y_left: findMinRoundNumber(Math.min(...borrow_tx)),
+      max_y_left: findMinRoundNumber(Math.max(...borrow_tx)),
+      min_y_right: findMinRoundNumber(Math.min(...borrow_amount)),
+      max_y_right: findMinRoundNumber(Math.max(...borrow_amount)),
     });
   }
   function makeChartOptionsTwo() {
@@ -242,9 +275,30 @@ const Transactions = () => {
         },
       ];
     }
-
+    let _series_dup = [
+      {
+        name: "Utilization rate",
+        data: uti_rate.slice(-168,),
+      },
+    ];
+    if (borrow_rate && deposit_rate) {
+      _series_dup = [
+        {
+          name: "Utilization rate",
+          data: uti_rate.slice(-168,),
+        },
+        {
+          name: "Deposit rate",
+          data: deposit_rate.slice(-168,),
+        },
+        {
+          name: "Borrow rate",
+          data: borrow_rate.slice(-168,),
+        },
+      ];
+    }
     let chartOptions = {
-      series: _series,
+      series: _series_dup,
       options: {
         title: {
           text: "Interest Rate",
@@ -275,7 +329,7 @@ const Transactions = () => {
           title: {
             text: "Date time",
           },
-          categories: datetime,
+          categories: datetime.slice(-168,),
           type: "datetime",
         },
         yaxis: [
@@ -570,7 +624,7 @@ const Transactions = () => {
                   }}
                 >
                   <Fade in={openChartOne}>
-                    <ZoomChart data={{ ...chartOptionsOne }} />
+                    <ZoomChart data={{ ...chartOptionsOneAll }} />
                   </Fade>
                 </Modal>
               </Grid>
@@ -694,7 +748,7 @@ const Transactions = () => {
                   }}
                 >
                   <Fade in={openChartThree}>
-                    <ZoomChart data={{ ...chartOptionsThree }} />
+                    <ZoomChart data={chartOptionsThreeAll} />
                   </Fade>
                 </Modal>
               </Grid>
@@ -733,7 +787,7 @@ const Transactions = () => {
                   }}
                 >
                   <Fade in={openChartFour}>
-                    <ZoomChart data={chartOptionsFour} />
+                    <ZoomChart data={chartOptionsFourAll} />
                   </Fade>
                 </Modal>
               </Grid>
