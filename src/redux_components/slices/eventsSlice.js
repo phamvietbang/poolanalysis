@@ -9,8 +9,8 @@ const initialState = {
     event_wallet: [],
     count_event: localStorage.getItem("count") || 0,
 }
-function createData(type, datetime, user, amount, token, transaction) {
-    return { type, datetime, user, amount, token, transaction };
+function createData(type, datetime, user, amount, name, token, transaction) {
+    return { type, datetime, user, amount, name, token, transaction };
 }
 export const events_data = createAsyncThunk(
     "events/events_data",
@@ -32,9 +32,9 @@ export const events_data = createAsyncThunk(
         coin.push({ 'name': 'None' })
         for (var i = 0; i < event_data.amount.length; i++) {
             eventData.push(createData(event_data.type[i], event_data.datetime[i],
-                event_data.user[i], event_data.amount[i], event_data.token[i], event_data.tx_hash[i]))
+                event_data.user[i], event_data.amount[i], event_data.name[i],event_data.token[i], event_data.tx_hash[i]))
         }
-        let uniqueTokens = [...new Set(event_data.token)];
+        let uniqueTokens = [...new Set(event_data.name)];
         for (var i in uniqueTokens) {
             coin.push({ 'name': uniqueTokens[i] })
         }

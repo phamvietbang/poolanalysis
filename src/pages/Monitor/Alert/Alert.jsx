@@ -78,7 +78,7 @@ const Alert = () => {
     if (result && eventToken != "None") {
       events = [];
       for (var i in result) {
-        if (result[i].token == eventToken) {
+        if (result[i].name == eventToken) {
           events.push(result[i]);
         }
       }
@@ -134,7 +134,7 @@ const Alert = () => {
   if (!address || !admin) {
     return (
       <Box className={classes.alertConnect}>
-        You must be admin for using this function
+        You must be admin for using this function. Please contact us to have right for using this function!
       </Box>
     );
   }
