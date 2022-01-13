@@ -8,7 +8,13 @@ const initialState = {
   depositBorrow: {},
   interestRate: {},
 };
-
+function toFix2Float(number){
+  let arr = []
+  for(var i in number){
+      arr.push(number[i].toFixed(2))
+  }
+  return arr
+}
 export const totalValueTokenData = createAsyncThunk(
   "token/total_borrow",
   async (token, thunkAPI) => {
@@ -145,9 +151,9 @@ export const depositBorrowTokenData = createAsyncThunk(
     }
     const result = {
       timestamp: timestamp,
-      deposit_amount: deposit_a,
+      deposit_amount: toFix2Float(deposit_a),
       deposit_tx: deposit_tx.data.deposits,
-      borrow_amount: borrow_a,
+      borrow_amount: toFix2Float(borrow_a),
       borrow_tx: borrow_tx.data.borrows,
     };
     return result;
