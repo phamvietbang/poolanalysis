@@ -78,7 +78,7 @@ const Alert = () => {
     if (result && eventToken != "None") {
       events = [];
       for (var i in result) {
-        if (result[i].token == eventToken) {
+        if (result[i].name == eventToken) {
           events.push(result[i]);
         }
       }
