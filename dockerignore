@@ -1,0 +1,6 @@
+node_modules/
+.husky/
+.vscode/
+build/
+package-lock.json
+resources/
