@@ -43,12 +43,15 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
   },
   whiteColor: {
+    borderRadius:"10px",
     color: "white",
   },
   blackColor: {
-    color: "black",
+    
+    color: "green",
   },
   formControl: {
+    borderRadius:"10px",
     margin: theme.spacing(1),
     minWidth: 120,
   },
@@ -129,7 +132,7 @@ export default function PermanentDrawerLeft() {
                       native
                       id="simple-menu"
                       className={classes.whiteColor}
-                      defaulValue={type}
+                      value={type}
                       onChange={handleSetType}
                       classes={{
                         icon: classes.whiteColor,
@@ -139,15 +142,10 @@ export default function PermanentDrawerLeft() {
                       <optgroup className={classes.blackColor} label="BSC">
                         <option value='bsc'>{formatAddress("0x75de5f7c91a89c16714017c7443eca20c7a8c295")}</option>
                       </optgroup>
-
                       <optgroup className={classes.blackColor} label="FTM">
                         <option value="ftm">{formatAddress("0xd98bb590bdfabf18c164056c185fbb6be5ee643f")}</option>
                         <option value="geist_ftm">{formatAddress("0x9fad24f572045c7869117160a571b2e50b10d068")}</option>
                       </optgroup>
-
-                      {/* <MenuItem value="bsc">{formatAddress("0x75de5f7c91a89c16714017c7443eca20c7a8c295") + " (BSC)"}</MenuItem>
-                      <MenuItem value="ftm">{formatAddress("0xd98bb590bdfabf18c164056c185fbb6be5ee643f") + " (FTM)"}</MenuItem>
-                      <MenuItem value="geist_ftm">{formatAddress("0x9fad24f572045c7869117160a571b2e50b10d068") + " (FTM)"}</MenuItem> */}
                     </Select>
                   </FormControl>
 
