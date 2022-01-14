@@ -54,6 +54,7 @@ const Alert = () => {
   const address = useSelector((state) => state.accountSlice.address)
   const admin = useSelector((state)=>state.layout.admin)
   const dispatch = useDispatch();
+  
   function getEventData() {
     let result = event_data || [];
     let events = [];

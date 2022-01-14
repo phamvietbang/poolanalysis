@@ -7,7 +7,7 @@ const initialState = {
     data: [],
     listTokens: [],
     event_wallet: [],
-    count_event: localStorage.getItem("count") || 0,
+    count_event: 0,
 }
 function createData(type, datetime, user, amount, name, token, transaction) {
     return { type, datetime, user, amount, name, token, transaction };
@@ -41,6 +41,12 @@ export const events_data = createAsyncThunk(
         return { eventData, coin }
     }
 )
+export const updateCountEvent = createAsyncThunk(
+    "events/reset_count",
+    async (count, thunkAPI)=>{
+        return count
+    }
+)
 export const countEvents = createAsyncThunk(
     "events/count_events",
     async (_, thunkAPI) => {
@@ -51,7 +57,8 @@ export const countEvents = createAsyncThunk(
         if (admin['address']==''){
             return 0
         }
-        let end = admin['timestamp'] > now - 3600*24 ? admin['timestamp']:now - 3600*24
+        let end = admin['timestamp'] > now - 3600*24 ? admin['timestamp']-3600*24:now - 3600*24
+        console.log(end)
         let config = {
             params: {
                 'start_timestamp': end,
@@ -99,11 +106,6 @@ export const events_data_wallet = createAsyncThunk(
 const eventSlice = createSlice({
     name: 'events',
     initialState,
-    reducers: {
-        updateCountEvent(state, action) {
-          localStorage.setItem("count", action.payload);
-        },
-      },
     extraReducers: (builder) => {
         builder.addCase(events_data.pending, (state) => {
             // Bật trạng thái loading
@@ -148,7 +150,20 @@ const eventSlice = createSlice({
             // state.errorMessage = action.payload.message;
             console.error(action);
         });
+        builder.addCase(updateCountEvent.pending, (state) => {
+            // Bật trạng thái loading
+            state.isLoading = true;
+        });
+        builder.addCase(updateCountEvent.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.count_event = action.payload;
+        });
+        builder.addCase(updateCountEvent.rejected, (state, action) => {
+            // Tắt trạng thái loading, lưu thông báo lỗi vào store
+            state.isLoading = false;
+            // state.errorMessage = action.payload.message;
+            console.error(action);
+        });
     }
 })
-export const { updateCountEvent } = eventSlice.actions;
 export default eventSlice.reducer

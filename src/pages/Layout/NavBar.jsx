@@ -10,7 +10,8 @@ import { Box, makeStyles, useMediaQuery } from "@material-ui/core";
 import MobileHeader from "./MobileHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { countEvents, updateCountEvent } from "../../redux_components/slices/eventsSlice";
-
+import { useSnackbar } from "notistack";
+import { WARNING_TOP_CENTER,  SUCCESS_TOP_CENTER } from "../../utils/snackbar-utils";
 const menu = [
   {
     title: "Transactions-Volumn",
@@ -67,6 +68,7 @@ const SingleLevel = ({ item }) => {
   const classes = useStyles();
   const count = useSelector((state)=>state.events.count_event)
   const [alert, setAlert] = useState(count)
+  const {enqueueSnackbar}=useSnackbar()
   async function getClassName() {
     if (item.title == "Transactions-Volumn") {
       setClassName("");
@@ -79,15 +81,22 @@ const SingleLevel = ({ item }) => {
       setAlert(0)
     }
   }
-  const handleClick = () => {
+  function handleClick () {
     if(item.title=='Alert'){
+      if (alert>0){
+        enqueueSnackbar("There are "+alert+" transactions having more than 10,000 USD in the last 24h!", WARNING_TOP_CENTER);
+      }else{
+        enqueueSnackbar("Everything is ok!", SUCCESS_TOP_CENTER);
+      }
       setAlert(0)
       dp(updateCountEvent(0))
     }
   }; 
+  console.log(useSelector((state)=>state.events.count_event))
   useEffect(() => {
     resetAlert()
     getClassName();
+    // handleClick()
   }, []);
   return (
     <NavLink
@@ -96,7 +105,10 @@ const SingleLevel = ({ item }) => {
     >
       <ListItem button onClick={handleClick}>
         <ListItemText className={className} primary={item.title} />
+        <div style={{color:'red'}}>
         {item.title==='Alert' && alert > 0 ?<div>{alert}</div>:<div></div>}
+        </div>
+        
       </ListItem>
     </NavLink>
   );
@@ -133,9 +145,11 @@ const MultiLevel = ({ item, key }) => {
     <React.Fragment>
       <ListItem button onClick={handleClick}>
         <ListItemText primary={item.title} />
+        <div style={{color:'red'}}>
         {
           item.title=="Monitor" && alert>0? <div>1</div>:<div></div> 
         }
+        </div>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
