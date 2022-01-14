@@ -560,6 +560,9 @@ const Transactions = () => {
     coin.push({ name: tokens[i] });
   }
   const handleChangeTokenName = (value) => {
+    if(value==null){
+      return
+    }
     setTokenName(value.name);
   };
   return (

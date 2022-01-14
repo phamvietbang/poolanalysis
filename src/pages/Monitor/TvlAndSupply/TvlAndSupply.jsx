@@ -222,6 +222,9 @@ const TvlAndSupply = () => {
     coin.push({ name: tokens[i] });
   }
   const handleChangeTokenName = (value) => {
+    if(value==null){
+      return
+    }
     setTokenName(value.name);
   };
 
