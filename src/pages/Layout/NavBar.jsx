@@ -83,7 +83,7 @@ const SingleLevel = ({ item }) => {
     }
   }
   function handleClick () {
-    if(item.title=='Alert' && admin.address!==""){
+    if(item.title=='Alert' || admin.address!==""){
       if (alert>0){
         enqueueSnackbar("There are "+alert+" transactions having more than 10,000 USD in the last 24h!", WARNING_TOP_CENTER);
       }else{
