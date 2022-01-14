@@ -90,8 +90,10 @@ const SingleLevel = ({ item }) => {
       }
       setAlert(0)
       dp(updateCountEvent(0))
+    }else{
+      dp(countEvents())
     }
-  }; 
+  };
   console.log(useSelector((state)=>state.events.count_event))
   useEffect(() => {
     resetAlert()
