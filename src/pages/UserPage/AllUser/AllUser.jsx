@@ -153,6 +153,7 @@ const AllUsers = () => {
           },
         },
         tooltip: {
+          
           y: {
             formatter: function (val) {
               return numberWithCommas(val, 2) + " USD";
@@ -260,14 +261,6 @@ const AllUsers = () => {
           title: {
             text: "Date time",
           },
-          labels: {
-            datetimeFormatter: {
-              year: "yyyy",
-              month: "MMM 'yy",
-              day: "dd MMM",
-              hour: "HH:mm",
-            },
-          },
         },
         yaxis: [
           {
@@ -288,6 +281,9 @@ const AllUsers = () => {
           },
         ],
         tooltip: {
+          x: {
+            format: "dd MMM yyyy hh:mm",
+          },
           y: {
             formatter: function (val, index) {
               return parseInt(val) + " users";
@@ -354,14 +350,7 @@ const AllUsers = () => {
           title: {
             text: "Date time",
           },
-          labels: {
-            datetimeFormatter: {
-              year: "yyyy",
-              month: "MMM 'yy",
-              day: "dd MMM",
-              hour: "HH:mm",
-            },
-          },
+          
         },
         yaxis: [
           {
@@ -382,6 +371,9 @@ const AllUsers = () => {
           },
         ],
         tooltip: {
+          x: {
+            format: "dd MMM yyyy hh:mm",
+          },
           y: {
             formatter: function (val, index) {
               return parseInt(val) + " users";
@@ -846,7 +838,6 @@ const AllUsers = () => {
                         >
                           <MenuItem value={5}>5</MenuItem>
                           <MenuItem value={10}>10</MenuItem>
-                          <MenuItem value={15}>15</MenuItem>
                         </Select>
                       </Grid>
                     </Grid>
@@ -863,7 +854,6 @@ const AllUsers = () => {
                 >
                   <MenuItem value={5}>5</MenuItem>
                   <MenuItem value={10}>10</MenuItem>
-                  <MenuItem value={15}>15</MenuItem>
                 </Select>
               </Grid>
             </Grid>
