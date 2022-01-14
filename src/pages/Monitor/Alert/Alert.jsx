@@ -130,9 +130,8 @@ const Alert = () => {
   useEffect(() => {
     getEventData();
   }, [eventType, eventUser, eventAmount, eventToken, event_data]);
-  console.log(address)
-  console.log(admin)
-  if (!address || !admin) {
+  console.log(!address && !admin.address)
+  if (!address && !admin.address) {
     return (
       <Box className={classes.alertConnect}>
         You must be admin for using this function. Please contact us to have right for using this function!

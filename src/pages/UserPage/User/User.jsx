@@ -813,7 +813,7 @@ const User = () => {
   useEffect(() => {
     makeTokenName();
   }, [loadingAll, data_token]);
-  if (!accountAddress || !admin) {
+  if (!address && !admin.address) {
     return (
       <Box className={classes.alertConnect}>
         You must be admin for using this function. Please contact us to have right for using this function!

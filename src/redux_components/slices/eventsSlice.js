@@ -57,8 +57,7 @@ export const countEvents = createAsyncThunk(
         if (admin['address']==''){
             return 0
         }
-        let end = admin['timestamp'] > now - 3600*24 ? admin['timestamp']-3600*24:now - 3600*24
-        console.log(end)
+        let end = admin['timestamp'] < now - 3600*24 && admin['timestamp']>now - 3600*48? admin['timestamp']:now - 3600*24
         let config = {
             params: {
                 'start_timestamp': end,

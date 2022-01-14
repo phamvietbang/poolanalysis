@@ -94,7 +94,6 @@ const SingleLevel = ({ item }) => {
       dp(countEvents())
     }
   };
-  console.log(useSelector((state)=>state.events.count_event))
   useEffect(() => {
     resetAlert()
     getClassName();
