@@ -13,6 +13,7 @@ import {
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { useSnackbar } from "notistack";
 import { useDispatch, useSelector } from "react-redux";
+import { getAmin } from "../../redux_components/slices/layOutSlice";
 import { formatAddress } from "../../utils/format";
 import { disconnectCurrentWallet } from "../../web3/wallet/event-handler/disconnect";
 
@@ -41,9 +42,20 @@ export default function DisconnectWalletDialog({ hdClosePopup }) {
   const dp = useDispatch();
   const { enqueueSnackbar: eq } = useSnackbar();
 
+  async function handleDisConnectWallet() {
+    disconnectCurrentWallet(dp, eq);
+    
+    hdClosePopup();
+    await dp(getAmin(""));
+  }
+
   return (
     <div>
-      <Dialog open={true} onClose={hdClosePopup} style={{ borderRadius: "10px" }}>
+      <Dialog
+        open={true}
+        onClose={hdClosePopup}
+        style={{ borderRadius: "10px" }}
+      >
         <DialogTitle>
           <Typography variant="h6">Wallet Connection</Typography>
           <Divider></Divider>
@@ -55,17 +67,18 @@ export default function DisconnectWalletDialog({ hdClosePopup }) {
           </Typography>
 
           <Box my={2} className={cls.flexBox}>
-            <a href={`https://bscscan.com/address/${accountAddress}`} target="_blank" className={cls.link}>
+            <a
+              href={`https://bscscan.com/address/${accountAddress}`}
+              target="_blank"
+              className={cls.link}
+            >
               View on BscScan <OpenInNewIcon fontSize="small" />
             </a>
 
             <Button
               variant="outlined"
               color="secondary"
-              onClick={() => {
-                disconnectCurrentWallet(dp, eq);
-                hdClosePopup();
-              }}
+              onClick={handleDisConnectWallet}
             >
               Disconnect
             </Button>

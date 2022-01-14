@@ -17,7 +17,7 @@ export default function DesktopHeader() {
       setIsOpenConnectModal(true);
     } else {
       setIsOpenDisconnectModal(true);
-      dp(getAmin(""))
+      // dp(getAmin(""))
     }
   }
 
