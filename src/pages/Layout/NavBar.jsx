@@ -83,14 +83,14 @@ const SingleLevel = ({ item }) => {
     }
   }
   function handleClick () {
-    if(item.title=='Alert' || admin.address!==""){
+    if(item.title=='Alert' && admin.address!=="" ){
       if (alert>0){
         enqueueSnackbar("There are "+alert+" transactions having more than 10,000 USD in the last 24h!", WARNING_TOP_CENTER);
       }else{
         enqueueSnackbar("Everything is ok!", SUCCESS_TOP_CENTER);
       }
       setAlert(0)
-      dp(updateCountEvent(0))
+      // dp(updateCountEvent(0))
     }else{
       dp(countEvents())
     }
@@ -117,6 +117,7 @@ const SingleLevel = ({ item }) => {
 };
 const MultiLevel = ({ item, key }) => {
   const { items: children } = item;
+  const dp = useDispatch()
   const [open, setOpen] = useState(false);
   const count = useSelector((state)=>state.events.count_event)
   const [alert, setAlert] = useState(count)
@@ -130,6 +131,8 @@ const MultiLevel = ({ item, key }) => {
   const handleClick = () => {
     if(item.title=='Monitor'){
       setAlert(0)
+    }else{
+      dp(countEvents())
     }
     setOpen((prev) => !prev);
   };
