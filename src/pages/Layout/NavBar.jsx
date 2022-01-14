@@ -69,6 +69,7 @@ const SingleLevel = ({ item }) => {
   const count = useSelector((state)=>state.events.count_event)
   const [alert, setAlert] = useState(count)
   const {enqueueSnackbar}=useSnackbar()
+  const admin = useSelector((state)=>state.layout.admin)
   async function getClassName() {
     if (item.title == "Transactions-Volumn") {
       setClassName("");
@@ -82,7 +83,7 @@ const SingleLevel = ({ item }) => {
     }
   }
   function handleClick () {
-    if(item.title=='Alert'){
+    if(item.title=='Alert' && admin.address!==""){
       if (alert>0){
         enqueueSnackbar("There are "+alert+" transactions having more than 10,000 USD in the last 24h!", WARNING_TOP_CENTER);
       }else{
@@ -94,7 +95,6 @@ const SingleLevel = ({ item }) => {
       dp(countEvents())
     }
   };
-  console.log(useSelector((state)=>state.events.count_event))
   useEffect(() => {
     resetAlert()
     getClassName();
