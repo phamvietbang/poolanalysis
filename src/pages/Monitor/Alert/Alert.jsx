@@ -130,11 +130,8 @@ const Alert = () => {
   useEffect(() => {
     getEventData();
   }, [eventType, eventUser, eventAmount, eventToken, event_data]);
-<<<<<<< HEAD
-  if (!address && admin.address=='') {
-=======
+
   if (!address || admin.address==='') {
->>>>>>> ee9c3fbc635ff7a932ee6c8b49ac7a1746cbf4b1
     console.log(admin.address)
     return (
       <Box className={classes.alertConnect}>
