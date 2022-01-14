@@ -12,6 +12,9 @@ const initialState = {
 function createData(type, datetime, user, amount, name, token, transaction) {
     return { type, datetime, user, amount, name, token, transaction };
 }
+function createDataWallet(type, datetime, user, amount, token, transaction) {
+    return { type, datetime, user, amount, token, transaction };
+}
 export const events_data = createAsyncThunk(
     "events/events_data",
     async (_, thunkAPI) => {
@@ -94,7 +97,7 @@ export const events_data_wallet = createAsyncThunk(
         const event_data = data.data
         const eventData = []
         for (var i = 0; i < event_data.amount.length; i++) {
-            eventData.push(createData(event_data.type[i], event_data.datetime[i],
+            eventData.push(createDataWallet(event_data.type[i], event_data.datetime[i],
                 event_data.user[i], event_data.amount[i], event_data.token[i], event_data.tx_hash[i]))
         }
         return eventData
