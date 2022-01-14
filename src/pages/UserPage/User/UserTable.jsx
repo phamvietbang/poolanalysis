@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   //   height: "35vw"
   // },
   title: {
-    marginTop: "2vw",
+    marginTop: "1vw",
     marginBottom: "3vw",
     textAlign: "center",
     fontSize: "15px",
@@ -64,7 +64,7 @@ export default function BasicTable(props) {
   return (
     <Container className={classes.root}>
       <Typography className={classes.title}>
-        Deposit amount and borrow amount in tokens of wallet right now
+        Deposit amount and borrow amount in tokens of wallet
       </Typography>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">

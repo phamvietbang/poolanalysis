@@ -108,6 +108,7 @@ const User = () => {
   const [openChartFive, setOpenChartFive] = React.useState(false);
   const [loadingAll, setLoadingAll] = React.useState(false);
   const [address, setAddress] = React.useState("");
+  const [labelAddress, setLabelAddress] = React.useState("");
   const [selectedBtn, setSelectedBtn] = React.useState(3);
   const [selectedBtn2, setSelectedBtn2] = React.useState(3);
   const [tokenName, setTokenName] = React.useState("");
@@ -686,6 +687,7 @@ const User = () => {
   const setDefaultAddress = () => {
     if (wallet !== null) {
       setAddress(wallet);
+      setLabelAddress(wallet)
       return;
     }
     // if (lending === "bsc") {
@@ -700,8 +702,13 @@ const User = () => {
     if (event.target.value == null) {
       return;
     }
-    setAddress(event.target.value);
+    setLabelAddress(event.target.value);
   };
+
+  const handleLabelAddress = (event) => {
+    setAddress(labelAddress);
+  };
+
 
   const handleOpenChartOne = () => {
     setOpenChartOne(true);
@@ -833,9 +840,10 @@ const User = () => {
         <TextField
           label="Address"
           variant="outlined"
-          value={address}
+          value={labelAddress}
           onChange={handleChangeAddress}
         />
+        <Button onClick={handleLabelAddress}>Enter</Button>
       </Grid>
       <Grid
         container
