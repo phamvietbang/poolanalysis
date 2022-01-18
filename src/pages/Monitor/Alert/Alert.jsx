@@ -134,7 +134,7 @@ const Alert = () => {
     console.log(admin.address)
     return (
       <Box className={classes.alertConnect}>
-        You must be admin for using this function. Please contact us to have right for using this function!
+        Please connect wallet or use another function!
       </Box>
     );
   }
