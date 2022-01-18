@@ -3,6 +3,8 @@ import client from "./../../services/requests";
 
 
 const initialState = {
+    isLoading: false,
+    errorMessage: '',
     totalValue: {},
     value: {},
     tx_amount: {},
@@ -37,11 +39,11 @@ export const seriesDataToken = createAsyncThunk(
     "user/series_data_token",
     async (data, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        let now = Math.floor(Date.now()/1000)
+        let now = Math.floor(Date.now() / 1000)
         let config = {
             params: {
                 'address': data["wallet"],
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'token': data['token'],
                 'lending': state_.layout.lendingpool,
@@ -52,7 +54,7 @@ export const seriesDataToken = createAsyncThunk(
         config = {
             params: {
                 'address': data["wallet"],
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'token': data['token'],
                 'lending': state_.layout.lendingpool,
@@ -64,21 +66,21 @@ export const seriesDataToken = createAsyncThunk(
         let data_borrow = []
         let de = deposit.data.depositTokenChangeLogs[0]
         let bo = borrow.data.borrowTokenChangeLogs[0]
-        for (var i=deposit.data.timestamp[0]; i<=now; i+=3600){
-            for (var j in deposit.data.timestamp){
-                if(deposit.data.timestamp[j]>=i&&deposit.data.timestamp[j]<=i+3600){
-                    de=deposit.data.depositTokenChangeLogs[j]
+        for (var i = deposit.data.timestamp[0]; i <= now; i += 3600) {
+            for (var j in deposit.data.timestamp) {
+                if (deposit.data.timestamp[j] >= i && deposit.data.timestamp[j] <= i + 3600) {
+                    de = deposit.data.depositTokenChangeLogs[j]
                 }
             }
-            for (var j in borrow.data.timestamp){
-                if(borrow.data.timestamp[j]>=i&&borrow.data.timestamp[j]<=i+3600){
-                    bo=borrow.data.borrowTokenChangeLogs[j]
+            for (var j in borrow.data.timestamp) {
+                if (borrow.data.timestamp[j] >= i && borrow.data.timestamp[j] <= i + 3600) {
+                    bo = borrow.data.borrowTokenChangeLogs[j]
                 }
             }
-            data_deposit.push([i*1000, de])
-            data_borrow.push([i*1000, bo])
+            data_deposit.push([i * 1000, de])
+            data_borrow.push([i * 1000, bo])
         }
-        
+
         let result = {
             'deposit': data_deposit,
             'borrow': data_borrow
@@ -106,11 +108,11 @@ export const transactionAmount = createAsyncThunk(
     "user/transactions",
     async (wallet, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        let now = Math.floor(Date.now()/1000)
+        let now = Math.floor(Date.now() / 1000)
         // let now = 1639432800
         let config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
@@ -120,7 +122,7 @@ export const transactionAmount = createAsyncThunk(
         let deposit = await client.get('/stats/value/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
@@ -130,7 +132,7 @@ export const transactionAmount = createAsyncThunk(
         let borrow = await client.get('/stats/value/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
@@ -140,7 +142,7 @@ export const transactionAmount = createAsyncThunk(
         let withdraw = await client.get('/stats/value/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
@@ -162,11 +164,11 @@ export const valueOfUser = createAsyncThunk(
     "user/deposit_borrow",
     async (wallet, thunkAPI) => {
         let state_ = thunkAPI.getState()
-        let now = Math.floor(Date.now()/1000)
+        let now = Math.floor(Date.now() / 1000)
         // let now = 1639432800
         let config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
@@ -176,7 +178,7 @@ export const valueOfUser = createAsyncThunk(
         let deposit = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
@@ -186,7 +188,7 @@ export const valueOfUser = createAsyncThunk(
         let borrow = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
@@ -196,7 +198,7 @@ export const valueOfUser = createAsyncThunk(
         let lT = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
@@ -206,7 +208,7 @@ export const valueOfUser = createAsyncThunk(
         let ltv = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
         config = {
             params: {
-                'start_timestamp': now-24*3600*30,
+                'start_timestamp': now - 24 * 3600 * 30,
                 'end_timestamp': now,
                 'address': wallet,
                 'lending': state_.layout.lendingpool,
