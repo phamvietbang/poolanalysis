@@ -165,7 +165,7 @@ const MultiLevel = ({ item, key }) => {
   };
 
   const handleClick = () => {
-    if (item.title == 'Monitor') {
+    if (item.title == 'Monitoring') {
       setAlert(0)
     } else {
       dp(countEvents())
@@ -189,7 +189,7 @@ const MultiLevel = ({ item, key }) => {
         <ListItemText primary={item.title} />
         <div style={{ color: 'red' }}>
           {
-            item.title == "Monitor" && alert > 0 ? <div>1</div> : <div></div>
+            item.title == "Monitoring" && alert > 0 ? <div>1</div> : <div></div>
           }
         </div>
         {open ? <ExpandLess /> : <ExpandMore />}
