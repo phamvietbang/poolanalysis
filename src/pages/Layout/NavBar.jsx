@@ -81,6 +81,7 @@ const menu_2 = [
 const useStyles = makeStyles((theme) => ({
   active: {
     color: "rgb(0, 143, 251)",
+    backgroundColor:"rgb(0, 143, 251)",
   },
   loader: {
     height: "100vh",

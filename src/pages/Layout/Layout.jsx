@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    
   },
   drawerPaper: {
     width: drawerWidth,
@@ -162,6 +163,7 @@ export default function PermanentDrawerLeft() {
             }}
             anchor="left"
           >
+            <Toolbar />
             <Toolbar />
             <App />
           </Drawer>
