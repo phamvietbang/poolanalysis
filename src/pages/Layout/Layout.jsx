@@ -16,7 +16,7 @@ import { reloadConfig } from "../../redux_components/other/config-slice";
 import RingLoader from "react-spinners/RingLoader";
 import { formatAddress } from "../../utils/utility";
 import { getAmin } from "./../../redux_components/slices/layOutSlice";
-const drawerWidth = 200;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
