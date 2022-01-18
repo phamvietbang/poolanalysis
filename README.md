@@ -1,3 +1,9 @@
+# Run app by docker
+
+### `docker build -t poolanalysis .`
+### `docker run -it -d -p 3000:80 --name rdocker poolanalysis`
+### `access to 'localhost:3000'`
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
