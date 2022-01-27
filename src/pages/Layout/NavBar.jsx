@@ -73,6 +73,28 @@ const menu_2 = [
     icon: <SupervisorAccountIcon />
   },
   {
+    title: "Your wallet",
+    to: "/user",
+    icon: <PersonIcon />
+  },
+  {
+    title: "Total Value",
+    to: "/tvl-and-total-supply",
+    icon: <TimelineSharpIcon />
+  },
+];
+const menu_3 = [
+  {
+    title: "Transaction Info",
+    to: "/",
+    icon: <MultilineChartIcon />
+  },
+  {
+    title: "All Users",
+    to: "/all-users",
+    icon: <SupervisorAccountIcon />
+  },
+  {
     title: "Total Value",
     to: "/tvl-and-total-supply",
     icon: <TimelineSharpIcon />
@@ -81,7 +103,7 @@ const menu_2 = [
 const useStyles = makeStyles((theme) => ({
   active: {
     color: "rgb(0, 143, 251)",
-    backgroundColor:"rgb(0, 143, 251)",
+    backgroundColor: "rgb(0, 143, 251)",
   },
   loader: {
     height: "100vh",
@@ -106,7 +128,7 @@ const SingleLevel = ({ item }) => {
   const { enqueueSnackbar } = useSnackbar()
   const admin = useSelector((state) => state.layout.admin)
   async function getClassName() {
-    if (item.title == "Transaction Info" || admin.address=="") {
+    if (item.title == "Transaction Info" || admin.address == "") {
       setClassName("");
     } else {
       setClassName("list_item");
@@ -142,7 +164,7 @@ const SingleLevel = ({ item }) => {
     >
       <ListItem button onClick={handleClick}>
         <ListItemIcon className={className} >{item.icon}</ListItemIcon>
-        <ListItemText  primary={item.title} />
+        <ListItemText primary={item.title} />
         <div style={{ color: 'red' }}>
           {item.title === 'Alert' && alert > 0 ? <div>{alert}</div> : <div></div>}
         </div>
@@ -226,10 +248,11 @@ const MenuItem = ({ item, key }) => {
   return <Component item={item} key={key} />;
 };
 export default function App() {
-  let [menuBar, setMenuBar] = React.useState(menu_2)
+  let [menuBar, setMenuBar] = React.useState(menu_3)
   const dp = useDispatch()
   const [loading, setLoading] = React.useState(false)
   const admin = useSelector((state) => state.layout.admin)
+  const wallet = useSelector((state) => state.accountSlice.address);
   const isMobile = useMediaQuery("@media screen and (max-width: 750px)");
 
   const handleSetMenu = () => {
@@ -238,18 +261,20 @@ export default function App() {
     }
     if (admin.address !== "") {
       setMenuBar(menu)
-    }else{
+    } else if (wallet !== null) {
       setMenuBar(menu_2)
+    } else {
+      setMenuBar(menu_3)
     }
   }
 
   useEffect(() => {
     dp(countEvents()).then(() => setLoading(true));
   }, []);
-
+  console.log(menuBar)
   useEffect(() => {
     handleSetMenu()
-  }, [loading, admin])
+  }, [loading, admin, wallet])
   if (!loading) {
     return <div></div>;
   }
