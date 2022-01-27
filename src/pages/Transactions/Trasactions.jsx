@@ -241,7 +241,7 @@ const Transactions = () => {
     let supply = tvl_supply.supply;
     let utilization = [];
     for (var i in borrow) {
-      utilization.push(((100 * borrow[i]) / supply[i]).toFixed(2));
+      utilization.push(((borrow[i]) / supply[i]).toFixed(2));
     }
     let uti_rate = utilization;
     let deposit_rate = null;
@@ -337,13 +337,12 @@ const Transactions = () => {
             axisTicks: {
               show: true,
             },
-
             title: {
               text: "Percentage (%)",
             },
             labels: {
               formatter: function (val, index) {
-                return val.toFixed(2);
+                return numberWithCommas(100*val, 1) + "%";
               },
             },
           },
@@ -354,7 +353,7 @@ const Transactions = () => {
           },
           y: {
             formatter: function (val) {
-              return numberWithCommas(val, 2) + "%";
+              return numberWithCommas(100*val, 2) + "%";
             },
           }
         },
@@ -452,13 +451,12 @@ const Transactions = () => {
             axisTicks: {
               show: true,
             },
-
             title: {
               text: "Percentage (%)",
             },
             labels: {
               formatter: function (val, index) {
-                return val.toFixed(2);
+                return numberWithCommas(100*val, 0) + "%";
               },
             },
           },
@@ -467,6 +465,11 @@ const Transactions = () => {
           x: {
             format: "dd MMM yyyy hh",
           },
+          y: {
+            formatter: function (val) {
+              return numberWithCommas(100*val, 2) + "%";
+            },
+          }
         },
         legend: {
           showForSingleSeries: true,
