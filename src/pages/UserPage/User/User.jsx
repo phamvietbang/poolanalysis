@@ -12,6 +12,7 @@ import {
   Fade,
   CircularProgress,
   Box,
+  Typography,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete } from "@material-ui/lab";
@@ -74,7 +75,7 @@ function createData(token, token_address, deposit, borrow) {
 const User = () => {
   const dispatch = useDispatch();
   const accountAddress = useSelector((state) => state.accountSlice.address);
-  const admin = useSelector((state)=>state.layout.admin)
+  const admin = useSelector((state) => state.layout.admin)
   const classes = useStyles();
   const [optionChartOne, setOptionChartOne] = React.useState({});
   const [optionChartOneAll, setOptionChartOneAll] = React.useState({});
@@ -118,7 +119,6 @@ const User = () => {
   const series_data_token = useSelector(
     (state) => state.user.series_data_token
   );
-
   const lending = useSelector((state) => state.layout.lendingpool);
   const wallet = useSelector((state) => state.accountSlice.address);
   const event = useSelector((state) => state.events.event_wallet);
@@ -699,9 +699,9 @@ const User = () => {
   };
 
   const handleChangeAddress = (event) => {
-    
+
     if (event.target.value == null) {
-  
+
       return;
     }
     setLabelAddress(event.target.value);
@@ -822,7 +822,7 @@ const User = () => {
   useEffect(() => {
     makeTokenName();
   }, [loadingAll, data_token]);
-  if (!address || admin.address==='') {
+  if (wallet===null) {
     return (
       <Box className={classes.alertConnect}>
         Please connect wallet or use another function!
@@ -838,15 +838,23 @@ const User = () => {
   }
   return (
     <Container fixed={true} maxWidth={"lg"}>
-      <Grid className="row_phu card_phu">
-        <TextField
-          label="Address"
-          variant="outlined"
-          value={labelAddress}
-          onChange={handleChangeAddress}
-        />
-        <Button onClick={handleLabelAddress}>Enter</Button>
-      </Grid>
+      {
+        wallet === admin.address ? (
+          <Grid className="row_phu card_phu">
+            <TextField
+              label="Address"
+              variant="outlined"
+              value={labelAddress}
+              onChange={handleChangeAddress}
+            />
+            <Button onClick={handleLabelAddress}>Enter</Button>
+          </Grid>
+        ) : (
+          <Grid className="row_phu card_phu">
+            <Typography> <h3>Your wallet address: {wallet}</h3> </Typography>
+          </Grid>
+        )
+      }
       <Grid
         container
         className="row_user"
