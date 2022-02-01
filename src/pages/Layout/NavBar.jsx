@@ -123,7 +123,7 @@ const SingleLevel = ({ item }) => {
   const dp = useDispatch()
   const [className, setClassName] = useState("");
   const classes = useStyles();
-  const count = useSelector((state) => state.events.count_event)
+  const count = useSelector((state) => state.events.countEvent)
   const [alert, setAlert] = useState(count)
   const { enqueueSnackbar } = useSnackbar()
   const admin = useSelector((state) => state.layout.admin)
@@ -177,7 +177,7 @@ const MultiLevel = ({ item, key }) => {
   const { items: children } = item;
   const dp = useDispatch()
   const [open, setOpen] = useState(false);
-  const count = useSelector((state) => state.events.count_event)
+  const count = useSelector((state) => state.events.countEvent)
   const [alert, setAlert] = useState(count)
 
   const checkOpen = () => {

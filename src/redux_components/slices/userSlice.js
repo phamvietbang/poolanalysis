@@ -7,9 +7,8 @@ const initialState = {
     errorMessage: '',
     totalValue: {},
     value: {},
-    tx_amount: {},
-    data_token: {},
-    series_data_token: {},
+    dataToken: {},
+    seriesDataToken: {},
 }
 function createTxData(tx) {
     let result = []
@@ -30,7 +29,7 @@ export const dataToken = createAsyncThunk(
                 'lending': state_.layout.lendingpool
             }
         }
-        let result = await client.get('/stats/deposit_borrow_token/trava_pool/wallet', config)
+        let result = await client.get('/stats/deposit_borrow_token/wallet', config)
         return result.data
     }
 )
@@ -50,7 +49,7 @@ export const seriesDataToken = createAsyncThunk(
                 'type': 'borrowTokenChangeLogs'
             }
         }
-        let borrow = await client.get('/stats/deposit_borrow_token_by_time/trava_pool/wallet', config)
+        let borrow = await client.get('/stats/deposit_borrow_token_by_time/wallet', config)
         config = {
             params: {
                 'address': data["wallet"],
@@ -61,7 +60,7 @@ export const seriesDataToken = createAsyncThunk(
                 'type': 'depositTokenChangeLogs'
             }
         }
-        let deposit = await client.get('/stats/deposit_borrow_token_by_time/trava_pool/wallet', config)
+        let deposit = await client.get('/stats/deposit_borrow_token_by_time/wallet', config)
         let data_deposit = []
         let data_borrow = []
         let de = deposit.data.depositTokenChangeLogs[0]
@@ -99,66 +98,11 @@ export const totalValueOfUser = createAsyncThunk(
                 'lending': state_.layout.lendingpool,
             },
         }
-        let result = await client.get('/stats/total_amount/trava_pool/wallet', config)
+        let result = await client.get('/stats/total_amount/wallet', config)
         return result.data
     }
 )
 
-export const transactionAmount = createAsyncThunk(
-    "user/transactions",
-    async (wallet, thunkAPI) => {
-        let state_ = thunkAPI.getState()
-        let now = Math.floor(Date.now() / 1000)
-        // let now = 1639432800
-        let config = {
-            params: {
-                'start_timestamp': now - 24 * 3600 * 30,
-                'end_timestamp': now,
-                'address': wallet,
-                'lending': state_.layout.lendingpool,
-                'type': 'deposits',
-            },
-        }
-        let deposit = await client.get('/stats/value/trava_pool/wallet', config)
-        config = {
-            params: {
-                'start_timestamp': now - 24 * 3600 * 30,
-                'end_timestamp': now,
-                'address': wallet,
-                'lending': state_.layout.lendingpool,
-                'type': 'borrows',
-            },
-        }
-        let borrow = await client.get('/stats/value/trava_pool/wallet', config)
-        config = {
-            params: {
-                'start_timestamp': now - 24 * 3600 * 30,
-                'end_timestamp': now,
-                'address': wallet,
-                'lending': state_.layout.lendingpool,
-                'type': 'withdraws',
-            },
-        }
-        let withdraw = await client.get('/stats/value/trava_pool/wallet', config)
-        config = {
-            params: {
-                'start_timestamp': now - 24 * 3600 * 30,
-                'end_timestamp': now,
-                'address': wallet,
-                'lending': state_.layout.lendingpool,
-                'type': 'repays',
-            },
-        }
-        let repay = await client.get('/stats/value/trava_pool/wallet', config)
-        let result = {
-            "deposit": createTxData(deposit.data),
-            "borrow": createTxData(borrow.data),
-            "withdraw": createTxData(withdraw.data),
-            "repay": createTxData(repay.data)
-        }
-        return result
-    }
-)
 
 export const valueOfUser = createAsyncThunk(
     "user/deposit_borrow",
@@ -175,7 +119,7 @@ export const valueOfUser = createAsyncThunk(
                 'type': 'depositLogs',
             },
         }
-        let deposit = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
+        let deposit = await client.get('/stats/total_amount_by_time/wallet', config)
         config = {
             params: {
                 'start_timestamp': now - 24 * 3600 * 30,
@@ -185,7 +129,7 @@ export const valueOfUser = createAsyncThunk(
                 'type': 'borrowLogs',
             },
         }
-        let borrow = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
+        let borrow = await client.get('/stats/total_amount_by_time/wallet', config)
         config = {
             params: {
                 'start_timestamp': now - 24 * 3600 * 30,
@@ -195,7 +139,7 @@ export const valueOfUser = createAsyncThunk(
                 'type': 'liquidationThresholdLogs',
             },
         }
-        let lT = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
+        let lT = await client.get('/stats/total_amount_by_time/wallet', config)
         config = {
             params: {
                 'start_timestamp': now - 24 * 3600 * 30,
@@ -205,7 +149,7 @@ export const valueOfUser = createAsyncThunk(
                 'type': 'loanToValueLogs',
             },
         }
-        let ltv = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
+        let ltv = await client.get('/stats/total_amount_by_time/wallet', config)
         config = {
             params: {
                 'start_timestamp': now - 24 * 3600 * 30,
@@ -215,7 +159,7 @@ export const valueOfUser = createAsyncThunk(
                 'type': 'healthFactorLogs',
             },
         }
-        let hf = await client.get('/stats/total_amount_by_time/trava_pool/wallet', config)
+        let hf = await client.get('/stats/total_amount_by_time/wallet', config)
         let result = {
             'timestamp': deposit.data.timestamp,
             'deposit': deposit.data.value,
@@ -254,7 +198,7 @@ const userSlice = createSlice({
             })
             .addCase(dataToken.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.data_token = action.payload;
+                state.dataToken = action.payload;
             })
             .addCase(dataToken.rejected, (state, action) => {
                 // Tắt trạng thái loading, lưu thông báo lỗi vào store
@@ -268,7 +212,7 @@ const userSlice = createSlice({
             })
             .addCase(seriesDataToken.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.series_data_token = action.payload;
+                state.seriesDataToken = action.payload;
             })
             .addCase(seriesDataToken.rejected, (state, action) => {
                 // Tắt trạng thái loading, lưu thông báo lỗi vào store
@@ -289,20 +233,7 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.errorMessage = action.payload.message;
             });
-        builder
-            .addCase(transactionAmount.pending, (state) => {
-                // Bật trạng thái loading
-                state.isLoading = true;
-            })
-            .addCase(transactionAmount.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.tx_amount = action.payload;
-            })
-            .addCase(transactionAmount.rejected, (state, action) => {
-                // Tắt trạng thái loading, lưu thông báo lỗi vào store
-                state.isLoading = false;
-                state.errorMessage = action.payload.message;
-            });
+        
     }
 
 }
