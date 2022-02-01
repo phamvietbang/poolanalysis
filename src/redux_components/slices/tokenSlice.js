@@ -27,30 +27,15 @@ export const totalValueTokenData = createAsyncThunk(
         end_timestamp: now,
         token: token,
         lending: state_.layout.lendingpool,
-        type: "borrows",
       },
     };
-    const borrow = await client.get(
-      "/stats/total_value_by_time/trava_pool/token",
+    const total_value = await client.get(
+      "/stats/total_value_by_time/token",
       config
     );
-    const timestamp = borrow.data.timestamp;
-    const borrowInUSD = borrow.data.totalBorrowOfTokenChangeLogs;
-    config = {
-      params: {
-        start_timestamp: now - 3600 * 24 * 30,
-        end_timestamp: now,
-        token: token,
-        lending: state_.layout.lendingpool,
-        type: "supply",
-      },
-    };
-    const supply = await client.get(
-      "/stats/total_value_by_time/trava_pool/token",
-      config
-    );
-
-    const supplyInUSD = supply.data.totalSupplyOfTokenChangeLogs;
+    const timestamp = total_value.data.timestamp;
+    const borrowInUSD = total_value.data.totalBorrow;
+    const supplyInUSD = total_value.data.totalSupply;
     const tvl = [];
     for (var i in supplyInUSD) {
       if (
@@ -87,7 +72,7 @@ export const depositBorrowTokenData = createAsyncThunk(
       },
     };
     let deposit_amount = await client.get(
-      "/stats/value/trava_pool/token",
+      "/stats/amount_of_tx/token",
       config
     );
     let d_a_time = deposit_amount.data.timestamp;
@@ -101,7 +86,7 @@ export const depositBorrowTokenData = createAsyncThunk(
       },
     };
     let deposit_tx = await client.get(
-      "/stats/number_of_tx/trava_pool/token",
+      "/stats/number_of_tx/token",
       config
     );
     let timestamp = deposit_tx.data.timestamp;
@@ -116,7 +101,7 @@ export const depositBorrowTokenData = createAsyncThunk(
     };
 
     let borrow_amount = await client.get(
-      "/stats/value/trava_pool/token",
+      "/stats/amount_of_tx/token",
       config
     );
     let b_a_time = borrow_amount.data.timestamp;
@@ -130,7 +115,7 @@ export const depositBorrowTokenData = createAsyncThunk(
       },
     };
     let borrow_tx = await client.get(
-      "/stats/number_of_tx/trava_pool/token",
+      "/stats/number_of_tx/token",
       config
     );
     let deposit_a = [];
@@ -172,44 +157,17 @@ export const interestRateTokenData = createAsyncThunk(
         end_timestamp: now,
         token: token,
         lending: state_.layout.lendingpool,
-        type: "deposits",
       },
     };
-    let deposit_rate = await client.get(
-      "/stats/interest_rate/trava_pool/token",
-      config
-    );
-    config = {
-      params: {
-        start_timestamp: now - 3600 * 24 * 30,
-        end_timestamp: now,
-        token: token,
-        lending: state_.layout.lendingpool,
-        type: "borrows",
-      },
-    };
-    let borrow_rate = await client.get(
-      "/stats/interest_rate/trava_pool/token",
-      config
-    );
-    config = {
-      params: {
-        start_timestamp: now - 3600 * 24 * 30,
-        end_timestamp: now,
-        token: token,
-        lending: state_.layout.lendingpool,
-        type: "utilization",
-      },
-    };
-    let uti_rate = await client.get(
-      "/stats/interest_rate/trava_pool/token",
+    let rate = await client.get(
+      "/stats/interest_rate/token",
       config
     );
     let result = {
-      timestamp: deposit_rate.data.timestamp,
-      deposit_rate: deposit_rate.data.depositRate,
-      borrow_rate: borrow_rate.data.borrowRate,
-      uti_rate: uti_rate.data.utilizationRate,
+      timestamp: rate.data.timestamp,
+      deposit_rate: rate.data.depositRate,
+      borrow_rate: rate.data.borrowRate,
+      uti_rate: rate.data.utilizationRate,
     };
     return result;
   }

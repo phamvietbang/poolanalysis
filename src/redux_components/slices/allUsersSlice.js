@@ -21,7 +21,7 @@ export const clusteringUsersData = createAsyncThunk(
       },
     };
     let result = await client.get(
-      "/stats/deposit_tvl/trava_pool/wallet",
+      "/stats/deposit_tvl/wallet",
       config
     );
     let deposit = result.data.deposit;
@@ -85,7 +85,7 @@ export const countUsersData = createAsyncThunk(
         lending: state_.layout.lendingpool,
       },
     };
-    let result = await client.get("/stats/number_of_users/trava_pool", config);
+    let result = await client.get("/stats/number_of_users", config);
     return result.data;
   }
 );
@@ -100,39 +100,18 @@ export const seriesUsers = createAsyncThunk(
         start_timestamp: now - 3600 * 24 * 30,
         end_timestamp: now,
         lending: state_.layout.lendingpool,
-        type: "totalNumberOfActiveUserChangeLogs",
       },
     };
-    let active = await client.get(
-      "/stats/histogram_of_users/trava_pool",
+    let user = await client.get(
+      "/stats/number_of_users_between_time",
       config
     );
-    config = {
-      params: {
-        start_timestamp: now - 3600 * 24 * 30,
-        end_timestamp: now,
-        lending: state_.layout.lendingpool,
-        type: "totalNumberOfDepositingOnlyUserChangeLogs",
-      },
-    };
-    let jdeposit = await client.get(
-      "/stats/histogram_of_users/trava_pool",
-      config
-    );
-    config = {
-      params: {
-        start_timestamp: now - 3600 * 24 * 30,
-        end_timestamp: now,
-        lending: state_.layout.lendingpool,
-        type: "totalNumberOfBorrowingUserChangeLogs",
-      },
-    };
-    let dp = await client.get("/stats/histogram_of_users/trava_pool", config);
+    
     let result = {
-      timestamp: active.data.timestamp,
-      activeUsers: active.data.users,
-      justDeposits: jdeposit.data.users,
-      depositBorrows: dp.data.users,
+      timestamp: user.data.timestamp,
+      activeUsers: user.data.activeUsers,
+      justDeposits: user.data.depositOnlyUsers,
+      depositBorrows: user.data.borrowingUsers,
     };
     return result;
   }
@@ -148,7 +127,7 @@ export const topDepositsAmount = createAsyncThunk(
         top: top,
       },
     };
-    let result = await client.get("/stats/top_deposit/trava_pool", config);
+    let result = await client.get("/stats/top_deposit", config);
     return result.data;
   }
 );
@@ -164,7 +143,7 @@ export const topDepositsTransact = createAsyncThunk(
       },
     };
     let result = await client.get(
-      "/stats/top_users_transacting/trava_pool",
+      "/stats/top_users_transacting",
       config
     );
     return result.data;

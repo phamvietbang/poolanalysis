@@ -115,13 +115,13 @@ const User = () => {
   const [tokenName, setTokenName] = React.useState("");
   const totalValue = useSelector((state) => state.user.totalValue);
   const value = useSelector((state) => state.user.value);
-  const data_token = useSelector((state) => state.user.data_token);
+  const data_token = useSelector((state) => state.user.dataToken);
   const series_data_token = useSelector(
-    (state) => state.user.series_data_token
+    (state) => state.user.seriesDataToken
   );
   const lending = useSelector((state) => state.layout.lendingpool);
   const wallet = useSelector((state) => state.accountSlice.address);
-  const event = useSelector((state) => state.events.event_wallet);
+  const event = useSelector((state) => state.events.eventWallet);
   const data_token_list = [];
   for (var i in data_token.token) {
     data_token_list.push(

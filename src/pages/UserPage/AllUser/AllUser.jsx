@@ -186,7 +186,7 @@ const AllUsers = () => {
       series: [
         {
           name: "Amount",
-          data: topA.totalAmountOfDepositInUSD,
+          data: topA.depositInUSD,
         },
       ],
     };

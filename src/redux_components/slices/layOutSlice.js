@@ -19,7 +19,7 @@ export const getAmin = createAsyncThunk(
         'timestamp': Math.floor(Date.now() / 1000)
       }
     }
-    let result = await client.get('/timestamp_admin/trava_pool/wallet', config)
+    let result = await client.get('/timestamp_admin/wallet', config)
     return result.data
   }
 )

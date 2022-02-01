@@ -6,8 +6,8 @@ const initialState = {
     errorMessage: '',
     data: [],
     listTokens: [],
-    event_wallet: [],
-    count_event: 0,
+    eventWallet: [],
+    countEvent: 0,
 }
 function createData(type, datetime, user, amount, name, token, transaction) {
     return { type, datetime, user, amount, name, token, transaction };
@@ -28,7 +28,7 @@ export const events_data = createAsyncThunk(
                 'lending': state_.layout.lendingpool
             },
         }
-        const data = await client.get('/stats/events_data/trava_pool', config)
+        const data = await client.get('/stats/events_data', config)
         const event_data = data.data
         const eventData = []
         const coin = []
@@ -68,7 +68,7 @@ export const countEvents = createAsyncThunk(
                 'lending': state_.layout.lendingpool
             },
         }
-        const data = await client.get('/stats/events_data/trava_pool', config)
+        const data = await client.get('/stats/events_data', config)
         const event_data = data.data
         let eventData = 0
         for (var i = 0; i < event_data.amount.length; i++) {
@@ -93,7 +93,7 @@ export const events_data_wallet = createAsyncThunk(
                 'address': wallet
             },
         }
-        const data = await client.get('/stats/events_data/trava_pool/wallet', config)
+        const data = await client.get('/stats/events_data/wallet', config)
         const event_data = data.data
         const eventData = []
         for (var i = 0; i < event_data.amount.length; i++) {
@@ -130,7 +130,7 @@ const eventSlice = createSlice({
         });
         builder.addCase(events_data_wallet.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.event_wallet = action.payload;
+            state.eventWallet = action.payload;
         });
         builder.addCase(events_data_wallet.rejected, (state, action) => {
             // Tắt trạng thái loading, lưu thông báo lỗi vào store
@@ -144,7 +144,7 @@ const eventSlice = createSlice({
         });
         builder.addCase(countEvents.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.count_event = action.payload;
+            state.countEvent = action.payload;
         });
         builder.addCase(countEvents.rejected, (state, action) => {
             // Tắt trạng thái loading, lưu thông báo lỗi vào store
@@ -158,7 +158,7 @@ const eventSlice = createSlice({
         });
         builder.addCase(updateCountEvent.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.count_event = action.payload;
+            state.countEvent = action.payload;
         });
         builder.addCase(updateCountEvent.rejected, (state, action) => {
             // Tắt trạng thái loading, lưu thông báo lỗi vào store

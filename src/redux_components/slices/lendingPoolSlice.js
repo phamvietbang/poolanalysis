@@ -30,23 +30,13 @@ export const totalValueData = createAsyncThunk(
             params: {
                 'start_timestamp': now-3600*24*30,
                 'end_timestamp': now,
-                'lending': state_.layout.lendingpool,
-                'type': "borrows",
+                'lending': state_.layout.lendingpool
             },
         }
-        const borrow = await client.get('/stats/total_value_by_time/trava_pool', config)
-        const timestamp = borrow.data.timestamp
-        const borrowInUSD = toFix2Float(borrow.data.totalBorrowChangeLogs)
-        config = {
-            params: {
-                'start_timestamp': now-3600*24*30,
-                'end_timestamp': now,
-                'lending': state_.layout.lendingpool,
-                'type': "supply",
-            },
-        }
-        const supply = await client.get('/stats/total_value_by_time/trava_pool', config)
-        const supplyInUSD = toFix2Float(supply.data.totalSupplyChangeLogs)
+        const total_value = await client.get('/stats/total_value_by_time', config)
+        const timestamp = total_value.data.timestamp
+        const borrowInUSD = toFix2Float(total_value.data.totalBorrow)
+        const supplyInUSD = toFix2Float(total_value.data.totalSupply)
         const tvl = []
         for (var i in supplyInUSD) {
             tvl.push(supplyInUSD[i] - borrowInUSD[i])
@@ -61,26 +51,16 @@ export const tvlSupplyTokensData = createAsyncThunk(
         // let now = 1639432800
         let config = {
             params: {
-                'timestamp': now,
                 'lending': state_.layout.lendingpool,
-                'type': "tvl",
             },
         }
-        const tvl = await client.get('/stats/tvl_or_total_supply/trava_pool', config)
-        const tokens = tvl.data.token
-        const tokens_address = tvl.data.address
-        const tvl_value = toFix2Float(tvl.data.tvl)
-        const tvl_per = toFix2Float(tvl.data.percentage)
-        config = {
-            params: {
-                'timestamp': now,
-                'lending': state_.layout.lendingpool,
-                'type': "total_supply",
-            },
-        }
-        const supply = await client.get('/stats/tvl_or_total_supply/trava_pool', config)
-        const supply_value = toFix2Float(supply.data.total_supply_in_usd)
-        const supply_per = toFix2Float(supply.data.percentage)
+        const total_value = await client.get('/stats/tvl_or_total_supply', config)
+        const tokens = total_value.data.token
+        const tokens_address = total_value.data.address
+        const tvl_value = toFix2Float(total_value.data.tvl)
+        const tvl_per = toFix2Float(total_value.data.percentageOfTvl)
+        const supply_value = toFix2Float(total_value.data.totalSupply)
+        const supply_per = toFix2Float(total_value.data.percentageOfSupply)
         const totalTvlAndSupply = {
             'name': tokens, 'address': tokens_address,
             "tvl_value": tvl_value, 'tvl_per': tvl_per,
@@ -114,19 +94,10 @@ export const depositBorrowData = createAsyncThunk(
                 'type': "deposits",
             },
         }
-        let deposit_amount = await client.get('/stats/amount_of_tx/trava_pool', config)
-        let timestamp = deposit_amount.data.timestamp
-        let d_a = toFix2Float(deposit_amount.data.deposits)
-        config = {
-            params: {
-                'start_timestamp': now-3600*24*30,
-                'end_timestamp': now,
-                'lending': state_.layout.lendingpool,
-                'type': "deposits",
-            },
-        }
-        let deposit_tx = await client.get('/stats/number_of_tx/trava_pool', config)
-        let d_tx = toFix2Float(deposit_tx.data.deposits)
+        let deposit = await client.get('/stats/amount_and_number_of_lending_tx_between_time', config)
+        let timestamp = deposit.data.timestamp
+        let d_a = toFix2Float(deposit.data.amountOfTx)
+        let d_tx = toFix2Float(deposit.data.numberOfTx)
         config = {
             params: {
                 'start_timestamp': now-3600*24*30,
@@ -135,18 +106,9 @@ export const depositBorrowData = createAsyncThunk(
                 'type': "borrows",
             },
         }
-        let borrow_amount = await client.get('/stats/amount_of_tx/trava_pool', config)
-        let b_a = toFix2Float(borrow_amount.data.borrows)
-        config = {
-            params: {
-                'start_timestamp': now-3600*24*30,
-                'end_timestamp': now,
-                'lending': state_.layout.lendingpool,
-                'type': "borrows",
-            },
-        }
-        let borrow_tx = await client.get('/stats/number_of_tx/trava_pool', config)
-        let b_tx = toFix2Float(borrow_tx.data.borrows)
+        let borrow = await client.get('/stats/amount_and_number_of_lending_tx_between_time', config)
+        let b_a = toFix2Float(borrow.data.amountOfTx)
+        let b_tx = toFix2Float(borrow.data.numberOfTx)
         const result = {
             'timestamp':timestamp,
             'deposit_amount':d_a,
