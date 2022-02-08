@@ -124,9 +124,10 @@ export default function PermanentDrawerLeft() {
                   container
                   display="flex"
                   direction="row"
-                  justifyContent="space-between"
+                  justifyContent="flex-end"
                   alignItems="center"
-                  xs={3}
+                  // xs={3}
+                  style={{maxWidth: "50%"}}
                 >
                   <Grid xs={1}></Grid>
                   <FormControl variant="outlined" className={classes.formControl}>
