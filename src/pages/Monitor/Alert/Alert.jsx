@@ -146,7 +146,7 @@ const Alert = () => {
     );
   }
   return (
-    <Container alignItems="center">
+    <Container alignItems="center" display="flex">
       <Grid
         className="card"
         container
