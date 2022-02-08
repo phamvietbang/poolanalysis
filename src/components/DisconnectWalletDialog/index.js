@@ -44,7 +44,7 @@ export default function DisconnectWalletDialog({ hdClosePopup }) {
 
   async function handleDisConnectWallet() {
     disconnectCurrentWallet(dp, eq);
-    
+
     hdClosePopup();
     await dp(getAmin(""));
   }
