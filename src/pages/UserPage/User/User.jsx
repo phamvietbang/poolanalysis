@@ -837,7 +837,7 @@ const User = () => {
     );
   }
   return (
-    <Container fixed={true} maxWidth={"lg"}>
+    <Container fixed={true} maxWidth={"lg"} display="flex">
       {
         wallet === admin.address ? (
           <Grid className="row_phu card_phu">

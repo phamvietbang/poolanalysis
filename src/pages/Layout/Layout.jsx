@@ -122,6 +122,7 @@ export default function PermanentDrawerLeft() {
                 </Grid>
                 <Grid
                   container
+                  display="flex"
                   direction="row"
                   justifyContent="space-between"
                   alignItems="center"

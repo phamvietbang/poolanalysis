@@ -596,7 +596,7 @@ const AllUsers = () => {
   }
 
   return (
-    <Container fixed={true} maxWidth={"lg"}>
+    <Container fixed={true} maxWidth={"lg"} display="flex">
       <Grid
         style={{ marginTop: "5vw" }}
         container

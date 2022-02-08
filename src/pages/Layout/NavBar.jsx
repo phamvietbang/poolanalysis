@@ -21,7 +21,6 @@ import PersonIcon from '@material-ui/icons/Person';
 import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import MultilineChartIcon from '@material-ui/icons/MultilineChart';
 
-
 const menu = [
   {
     title: "Transaction Info",
@@ -283,7 +282,7 @@ export default function App() {
       {isMobile ? (
         <MobileHeader />
       ) : (
-        <div>
+        <div display='flex'>
           {menuBar.map((item, key) => (
             <MenuItem key={key} item={item} />
           ))}

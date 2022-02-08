@@ -569,7 +569,7 @@ const Transactions = () => {
     setTokenName(value.name);
   };
   return (
-    <Container fixed={true} maxWidth={"lg"}>
+    <Container fixed={true} maxWidth={"lg"} display="flex">
       <Grid
         container
         direction="row"
