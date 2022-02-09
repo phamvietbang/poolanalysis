@@ -344,6 +344,7 @@ const Transactions = () => {
               formatter: function (val, index) {
                 return numberWithCommas(100*val, 1) + "%";
               },
+              offsetX: 10,
             },
           },
         ],
@@ -704,8 +705,8 @@ const Transactions = () => {
                           options={chartOptionsTwoZoom.options}
                           series={chartOptionsTwoZoom.series}
                           type="line"
-                          high={500}
-                          width={1000}
+                          height={450}
+                          width={800}
                         />
                       </Grid>
                     </Grid>

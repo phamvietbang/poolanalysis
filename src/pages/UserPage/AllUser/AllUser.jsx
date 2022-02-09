@@ -139,6 +139,7 @@ const AllUsers = () => {
           title: {
             text: "Wallet address",
           },
+          // tickAmount: 2,
           categories: wallets,
         },
         yaxis: {
@@ -674,8 +675,8 @@ const AllUsers = () => {
                       <Chart
                         options={{ ...chartOptionsOneAll }.options}
                         series={{ ...chartOptionsOneAll }.series}
-                        height="500"
-                        width={1000}
+                        height="450"
+                        width={800}
                       />
                     </Grid>
                   </Fade>
@@ -762,8 +763,8 @@ const AllUsers = () => {
                         options={{ ...chartOptionsThree }.options}
                         series={{ ...chartOptionsThree }.series}
                         type="bar"
-                        height="500"
-                        width={1000}
+                        height="450"
+                        width={800}
                       />
                     </Grid>
                   </Fade>
@@ -825,8 +826,8 @@ const AllUsers = () => {
                         options={{ ...chartOptionsTwo }.options}
                         series={{ ...chartOptionsTwo }.series}
                         type="bar"
-                        height="500"
-                        width={1000}
+                        height="450"
+                        width={800}
                       />
                       <Grid>
                         <Select
