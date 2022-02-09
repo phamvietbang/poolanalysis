@@ -457,7 +457,7 @@ const Transactions = () => {
             },
             labels: {
               formatter: function (val, index) {
-                return numberWithCommas(100*val, 0) + "%";
+                return numberWithCommas(100*val, 2) + "%";
               },
             },
           },
