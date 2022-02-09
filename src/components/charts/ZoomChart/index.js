@@ -70,8 +70,8 @@ const ZoomChart = (prop) => {
                     options={chartOptions.options}
                     series={chartOptions.series}
                     type='line'
-                    high={500}
-                    width={1000}
+                    height={450}
+                    width={800}
                 />
             </Grid>
 
@@ -127,8 +127,8 @@ export const ZoomChartOneSeries = (prop) => {
                     options={chartOptions.options}
                     series={chartOptions.series}
                     type='line'
-                    high={500}
-                    width={1000}
+                    height={450}
+                    width={800}
                 />
             </Grid>
 
@@ -182,8 +182,8 @@ export const ZoomChartNormal = (prop) => {
                     options={chartOptions.options}
                     series={chartOptions.series}
                     type='line'
-                    high={500}
-                    width={1000}
+                    height={450}
+                    width={800}
                 />
             </Grid>
 

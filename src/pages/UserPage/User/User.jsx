@@ -979,8 +979,8 @@ const User = () => {
                         options={optionChartTwoZoom.options}
                         series={optionChartTwoZoom.series}
                         type="scatter"
-                        high={500}
-                        width={1000}
+                        high={450}
+                        width={800}
                       />
                     </Grid>
                   </Fade>
@@ -1141,8 +1141,8 @@ const User = () => {
                         options={optionChartFiveZoom.options}
                         series={optionChartFiveZoom.series}
                         type="line"
-                        high={500}
-                        width={1000}
+                        high={450}
+                        width={800}
                       />
                     </Grid>
                   </Fade>
