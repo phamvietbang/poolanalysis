@@ -18,14 +18,25 @@ export const clusteringUsersData = createAsyncThunk(
     let config = {
       params: {
         lending: state_.layout.lendingpool,
+        type:'deposit'
       },
     };
     let result = await client.get(
-      "/stats/deposit_tvl/wallet",
+      "/stats/number_of_users_with_deposit_or_tvl",
       config
     );
-    let deposit = result.data.deposit;
-    let tvl = result.data.tvl;
+    let deposit = result.data;
+    config = {
+      params: {
+        lending: state_.layout.lendingpool,
+        type:'tvl'
+      },
+    };
+    result = await client.get(
+      "/stats/number_of_users_with_deposit_or_tvl",
+      config
+    );
+    let tvl = result.data;
     let amount = [
       "<1000",
       "1000-5000",
@@ -34,35 +45,11 @@ export const clusteringUsersData = createAsyncThunk(
       "15000-20000",
       ">20000",
     ];
-    let cluster_tvl = [0, 0, 0, 0, 0, 0];
-    let cluster_deposit = [0, 0, 0, 0, 0, 0];
-    for (var i in tvl) {
-      if (tvl[i] < 1000) {
-        cluster_tvl[0] += 1;
-      } else if (tvl[i] >= 1000 && tvl[i] < 5000) {
-        cluster_tvl[1] += 1;
-      } else if (tvl[i] >= 5000 && tvl[i] < 10000) {
-        cluster_tvl[2] += 1;
-      } else if (tvl[i] >= 10000 && tvl[i] < 15000) {
-        cluster_tvl[3] += 1;
-      } else if (tvl[i] > 15000 && tvl[i] < 20000) {
-        cluster_tvl[4] += 1;
-      } else {
-        cluster_tvl[5] += 1;
-      }
-      if (deposit[i] < 1000) {
-        cluster_deposit[0] += 1;
-      } else if (deposit[i] >= 1000 && deposit[i] < 5000) {
-        cluster_deposit[1] += 1;
-      } else if (deposit[i] >= 5000 && deposit[i] < 10000) {
-        cluster_deposit[2] += 1;
-      } else if (deposit[i] >= 10000 && deposit[i] < 15000) {
-        cluster_deposit[3] += 1;
-      } else if (deposit[i] > 15000 && deposit[i] < 20000) {
-        cluster_deposit[4] += 1;
-      } else {
-        cluster_deposit[5] += 1;
-      }
+    let cluster_deposit = []
+    let cluster_tvl = []
+    for(var i in amount){
+      cluster_deposit.push(deposit[amount[i]])
+      cluster_tvl.push(tvl[amount[i]])
     }
     result = {
       amount: amount,

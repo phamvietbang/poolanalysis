@@ -270,7 +270,6 @@ export default function App() {
   useEffect(() => {
     dp(countEvents()).then(() => setLoading(true));
   }, []);
-  console.log(menuBar)
   useEffect(() => {
     handleSetMenu()
   }, [loading, admin, wallet])
