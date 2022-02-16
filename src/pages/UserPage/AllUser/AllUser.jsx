@@ -180,7 +180,7 @@ const AllUsers = () => {
           },
         },
         title: {
-          text: "Top wallets having the most amount of deposits",
+          text: "Top amount of deposits wallets",
           align: "center",
         },
       },
@@ -239,14 +239,14 @@ const AllUsers = () => {
           type: "line",
         },
         {
-          name: "Deposit and borrow users",
+          name: "Borrow users",
           data: db,
           type: "line",
         },
       ],
       options: {
         title: {
-          text: "Number of users change in a month",
+          text: "Number of users",
           align: "center",
         },
         dataLabels: {
@@ -328,14 +328,14 @@ const AllUsers = () => {
           type: "line",
         },
         {
-          name: "Deposit and borrow users",
+          name: "Borrow users",
           data: db.slice(-100,),
           type: "line",
         },
       ],
       options: {
         title: {
-          text: "Number of users change in a month",
+          text: "Number of users",
           align: "center",
         },
         dataLabels: {

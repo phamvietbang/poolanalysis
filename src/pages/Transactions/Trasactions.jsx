@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  loading:{
+  loading: {
     height: "90vh",
     display: "flex",
     justifyContent: "center",
@@ -72,6 +72,7 @@ const Transactions = () => {
   const [loadingTokenRate, setLoadingTokenRate] = useState(false);
   const [loadingDBT, setLoadingDBT] = useState(false);
   const [selectedBtn, setSelectedBtn] = React.useState(3);
+  const [selectedType, setSelectedType] = useState(1);
   const [tokenName, setTokenName] = useState("ALL");
   const [openChartThree, setOpenChartThree] = React.useState(false);
   const [openChartFour, setOpenChartFour] = React.useState(false);
@@ -154,33 +155,33 @@ const Transactions = () => {
     let deposit_tx = deposits.deposit_tx;
     setChartOptionsThree({
       type: "column",
-      name_two: "Amount of deposits",
+      name_two: "Amount of deposit transactions",
       name_one: "Number of deposit transactions",
       data_two: deposit_amount.slice(-168,),
       data_one: deposit_tx.slice(-168,),
       datetime: datetime.slice(-168,),
-      title: "Amount and Number Of Deposit Transactions",
+      title: "Amount and number of deposit transactions",
       title_two: "Amount (USD)",
       title_one: "Number",
       min_y_left: findMinRoundNumber(Math.min(...deposit_tx.slice(-168,))),
       max_y_left: findMaxRoundNumber(Math.max(...deposit_tx.slice(-168,))),
       min_y_right: findMinRoundNumber(Math.min(...deposit_amount.slice(-168,))),
-      max_y_right:  findMinRoundNumber(Math.max(...deposit_amount.slice(-168,))),
+      max_y_right: findMinRoundNumber(Math.max(...deposit_amount.slice(-168,))),
     });
     setChartOptionsThreeAll({
       type: "column",
-      name_two: "Amount of deposits",
+      name_two: "Amount of deposit transactions",
       name_one: "Number of deposit transactions",
       data_two: deposit_amount,
       data_one: deposit_tx,
       datetime: datetime,
-      title: "Amount and Number Of Deposit Transactions",
+      title: "Amount and number of deposit transactions",
       title_two: "Amount (USD)",
       title_one: "Number",
       min_y_left: findMinRoundNumber(Math.min(...deposit_tx)),
       max_y_left: findMaxRoundNumber(Math.max(...deposit_tx)),
       min_y_right: findMinRoundNumber(Math.min(...deposit_amount)),
-      max_y_right:  findMinRoundNumber(Math.max(...deposit_amount)),
+      max_y_right: findMinRoundNumber(Math.max(...deposit_amount)),
     });
   }
   function makechartOptionsFour() {
@@ -199,12 +200,12 @@ const Transactions = () => {
     let borrow_tx = borrows.borrow_tx;
     setChartOptionsFour({
       type: "column",
-      name_two: "Amount of borrows",
+      name_two: "Amount of borrow transactions",
       name_one: "Number of borrow transactions",
       data_two: borrow_amount.slice(-168,),
       data_one: borrow_tx.slice(-168,),
       datetime: datetime.slice(-168,),
-      title: "Amount and Number Of Borrow Transactions",
+      title: "Amount and number of borrow transactions",
       title_two: "Amount (USD)",
       title_one: "Number",
       min_y_left: findMinRoundNumber(Math.min(...borrow_tx.slice(-168,))),
@@ -214,12 +215,12 @@ const Transactions = () => {
     });
     setChartOptionsFourAll({
       type: "column",
-      name_two: "Amount of borrows",
+      name_two: "Amount of borrow transactions",
       name_one: "Number of borrow transactions",
       data_two: borrow_amount,
       data_one: borrow_tx,
       datetime: datetime,
-      title: "Amount and Number Of Borrow Transactions",
+      title: "Amount and number of borrow transactions",
       title_two: "Amount (USD)",
       title_one: "Number",
       min_y_left: findMinRoundNumber(Math.min(...borrow_tx)),
@@ -232,6 +233,7 @@ const Transactions = () => {
     if (!loadingLp) {
       return;
     }
+    let text = 'Utilization'
     let tvl_supply = totalValue;
     let datetime = [];
     for (var i in tvl_supply.timestamp) {
@@ -255,45 +257,55 @@ const Transactions = () => {
 
     _series = [
       {
-        name: "Utilization rate",
+        name: "Utilization",
         data: uti_rate,
       },
     ];
-    if (borrow_rate && deposit_rate) {
+    if (borrow_rate && deposit_rate && selectedType == 2) {
       _series = [
         {
-          name: "Utilization rate",
-          data: uti_rate,
-        },
-        {
-          name: "Deposit rate",
+          name: "Deposit",
           data: deposit_rate,
         },
         {
-          name: "Borrow rate",
+          name: "Borrow",
           data: borrow_rate,
+        },
+      ];
+      text = 'Interest Rate'
+    }else {
+      text = 'Utilization'
+      _series = [
+        {
+          name: "Utilization",
+          data: uti_rate,
         },
       ];
     }
     let _series_dup = [
       {
-        name: "Utilization rate",
+        name: "Utilization",
         data: uti_rate.slice(-168,),
       },
     ];
-    if (borrow_rate && deposit_rate) {
+    if (borrow_rate && deposit_rate && selectedType == 2) {
+      text = 'Interest Rate'
       _series_dup = [
         {
-          name: "Utilization rate",
-          data: uti_rate.slice(-168,),
-        },
-        {
-          name: "Deposit rate",
+          name: "Deposit",
           data: deposit_rate.slice(-168,),
         },
         {
-          name: "Borrow rate",
+          name: "Borrow",
           data: borrow_rate.slice(-168,),
+        },
+      ];
+    } else {
+      text = 'Utilization'
+      _series_dup = [
+        {
+          name: "Utilization",
+          data: uti_rate.slice(-168,),
         },
       ];
     }
@@ -301,7 +313,7 @@ const Transactions = () => {
       series: _series_dup,
       options: {
         title: {
-          text: "Interest Rate",
+          text: text,
           align: "center",
         },
         color: ["#6ab04c", "#2980b9"],
@@ -342,7 +354,7 @@ const Transactions = () => {
             },
             labels: {
               formatter: function (val, index) {
-                return numberWithCommas(100*val, 1) + "%";
+                return numberWithCommas(100 * val, 1) + "%";
               },
               offsetX: 10,
             },
@@ -354,7 +366,7 @@ const Transactions = () => {
           },
           y: {
             formatter: function (val) {
-              return numberWithCommas(100*val, 2) + "%";
+              return numberWithCommas(100 * val, 2) + "%";
             },
           }
         },
@@ -391,23 +403,28 @@ const Transactions = () => {
     }
     _series = [
       {
-        name: "utilization rate",
+        name: "Utilization",
         data: uti_rate,
       },
     ];
-    if (borrow_rate && deposit_rate) {
+    if (borrow_rate && deposit_rate && selectedType == 2) {
+      text = 'Interest Rate'
       _series = [
         {
-          name: "utilization rate",
-          data: uti_rate,
-        },
-        {
-          name: "deposit rate",
+          name: "Deposit",
           data: deposit_rate,
         },
         {
-          name: "borrow rate",
+          name: "Borrow",
           data: borrow_rate,
+        },
+      ];
+    } else {
+      text = 'Utilization'
+      _series = [
+        {
+          name: "Utilization",
+          data: uti_rate,
         },
       ];
     }
@@ -416,7 +433,7 @@ const Transactions = () => {
       series: _series,
       options: {
         title: {
-          text: "Interest Rate",
+          text: text,
           align: "center",
         },
         color: ["#6ab04c", "#2980b9"],
@@ -457,7 +474,7 @@ const Transactions = () => {
             },
             labels: {
               formatter: function (val, index) {
-                return numberWithCommas(100*val, 2) + "%";
+                return numberWithCommas(100 * val, 2) + "%";
               },
             },
           },
@@ -468,7 +485,7 @@ const Transactions = () => {
           },
           y: {
             formatter: function (val) {
-              return numberWithCommas(100*val, 2) + "%";
+              return numberWithCommas(100 * val, 2) + "%";
             },
           }
         },
@@ -545,6 +562,7 @@ const Transactions = () => {
     interestRateToken,
     loadingTokenRate,
     selectedBtn,
+    selectedType,
   ]);
   useEffect(() => {
     makechartOptionsThree();
@@ -564,7 +582,7 @@ const Transactions = () => {
     coin.push({ name: tokens[i] });
   }
   const handleChangeTokenName = (value) => {
-    if(value==null){
+    if (value == null) {
       return
     }
     setTokenName(value.name);
@@ -601,13 +619,6 @@ const Transactions = () => {
         <Grid className="col-6">
           <Grid className="card full-height">
             {/* chart */}
-
-            <Chart
-              options={setUpOptions(chartOptionsOne).options}
-              series={setUpOptions(chartOptionsOne).series}
-              type="line"
-              height="150%"
-            />
             <Grid
               container
               direction="row"
@@ -636,23 +647,42 @@ const Transactions = () => {
                 </Modal>
               </Grid>
             </Grid>
+            <Chart
+              options={setUpOptions(chartOptionsOne).options}
+              series={setUpOptions(chartOptionsOne).series}
+              type="line"
+              height="150%"
+            />
           </Grid>
         </Grid>
         <Grid className="col-6">
           <Grid className="card full-height">
             {/* chart */}
-            <Chart
-              options={chartOptionsTwo.options}
-              series={chartOptionsTwo.series}
-              type="line"
-              height="150%"
-            />
             <Grid
               container
               direction="row"
               justifyContent="space-between"
               alignItems="baseline"
             >
+              {
+                tokenName == 'ALL' ? <></> :
+                  <Grid>
+                    <ButtonGroup aria-label="contained primary button group">
+                      <Button
+                        color={selectedType === 1 ? "secondary" : "primary"}
+                        onClick={() => setSelectedType(1)}
+                      >
+                        Utilization
+                      </Button>
+                      <Button
+                        color={selectedType === 2 ? "secondary" : "primary"}
+                        onClick={() => setSelectedType(2)}
+                      >
+                        Interest Rate
+                      </Button>
+                    </ButtonGroup>
+                  </Grid>
+              }
               <Grid>
                 <Button variant="outlined" onClick={handleOpenChartTwo}>
                   Full
@@ -679,6 +709,26 @@ const Transactions = () => {
                       alignItems="center"
                     >
                       <Grid container justifyContent="space-between">
+                        {
+                          tokenName == 'ALL' ? <></> :
+                            <Grid>
+                              <ButtonGroup aria-label="contained primary button group">
+                                <Button
+                                  color={selectedType === 1 ? "secondary" : "primary"}
+                                  onClick={() => setSelectedType(1)}
+                                >
+                                  Utilization
+                                </Button>
+                                <Button
+                                  color={selectedType === 2 ? "secondary" : "primary"}
+                                  onClick={() => setSelectedType(2)}
+                                >
+                                  Interest Rate
+                                </Button>
+                              </ButtonGroup>
+                            </Grid>
+                        }
+
                         <ButtonGroup aria-label="contained primary button group">
                           <Button
                             color={selectedBtn === 1 ? "secondary" : "primary"}
@@ -714,6 +764,12 @@ const Transactions = () => {
                 </Modal>
               </Grid>
             </Grid>
+            <Chart
+              options={chartOptionsTwo.options}
+              series={chartOptionsTwo.series}
+              type="line"
+              height="150%"
+            />
           </Grid>
         </Grid>
       </Grid>
@@ -725,13 +781,6 @@ const Transactions = () => {
       >
         <Grid className="col-6">
           <Grid className="card full-height">
-            {/* chart */}
-            <Chart
-              options={setNumberUserOptions(chartOptionsThree).options}
-              series={setUpOptions(chartOptionsThree).series}
-              // type="line"
-              height="150%"
-            />
             <Grid
               container
               direction="row"
@@ -760,17 +809,16 @@ const Transactions = () => {
                 </Modal>
               </Grid>
             </Grid>
+            <Chart
+              options={setNumberUserOptions(chartOptionsThree).options}
+              series={setUpOptions(chartOptionsThree).series}
+              // type="line"
+              height="150%"
+            />
           </Grid>
         </Grid>
         <Grid className="col-6">
           <Grid className="card full-height">
-            {/* chart */}
-            <Chart
-              options={setNumberUserOptions(chartOptionsFour).options}
-              series={setUpOptions(chartOptionsFour).series}
-              type="line"
-              height="150%"
-            />
             <Grid
               container
               direction="row"
@@ -799,6 +847,12 @@ const Transactions = () => {
                 </Modal>
               </Grid>
             </Grid>
+            <Chart
+              options={setNumberUserOptions(chartOptionsFour).options}
+              series={setUpOptions(chartOptionsFour).series}
+              type="line"
+              height="150%"
+            />
           </Grid>
         </Grid>
       </Grid>
