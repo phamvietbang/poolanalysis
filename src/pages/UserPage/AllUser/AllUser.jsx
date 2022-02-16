@@ -180,7 +180,7 @@ const AllUsers = () => {
           },
         },
         title: {
-          text: "Top amount of deposits wallets",
+          text: "Top amount of deposit wallets",
           align: "center",
         },
       },
@@ -559,22 +559,22 @@ const AllUsers = () => {
   }
   const type_amount = [
     {
-      name: "total user",
+      name: "Total users",
       amount: countUsers.all_users,
       info: "The number of users interacted with trava pool",
     },
     {
-      name: "Active Users",
+      name: "Active users",
       amount: countUsers.active_users,
       info: "Users have amount of deposit more than 10 USD",
     },
     {
-      name: "Just Deposit Users",
+      name: "Just deposit users",
       amount: countUsers.just_deposit_users,
       info: "Users have amount of deposit more than 10 USD and amount of borrow less than 10 USD",
     },
     {
-      name: "Deposit-Borrow Users",
+      name: "Borrow users",
       amount: countUsers.deposit_borrow_users,
       info: "Users have both amount of deposit and amount of borrow more than 10 USD",
     },

@@ -163,12 +163,12 @@ const User = () => {
     }
     let tmp = [
       {
-        name: "Deposits (USD)",
+        name: "Deposit (USD)",
         amount: deposit,
         info: "Amount of user's Deposit (USD) right now",
       },
       {
-        name: "Borrows (USD)",
+        name: "Borrow (USD)",
         amount: borrow,
         info: "Amount of user's Borrow (USD) right now",
       },
