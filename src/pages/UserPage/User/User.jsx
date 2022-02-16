@@ -237,7 +237,7 @@ const User = () => {
       ],
       options: {
         title: {
-          text: "Transaction history of wallet",
+          text: "Transactions history of wallet",
           align: "center",
         },
         chart: {
@@ -374,7 +374,7 @@ const User = () => {
       ],
       options: {
         title: {
-          text: "History transactions of wallet",
+          text: "Transactions history of wallet",
           align: "center",
         },
         chart: {
@@ -440,7 +440,7 @@ const User = () => {
       ],
       options: {
         title: {
-          text: "Deposit amount and borrow amount in token of wallet",
+          text: "Deposit amount and borrow amount in a token",
           align: "center",
         },
         chart: {
@@ -547,7 +547,7 @@ const User = () => {
       ],
       options: {
         title: {
-          text: "Deposit amount and borrow amount in token of wallet",
+          text: "Deposit amount and borrow amount in a token",
           align: "center",
         },
         chart: {
@@ -672,7 +672,7 @@ const User = () => {
       name_one: "Health factor",
       data_one: hf.slice(-168,),
       datetime: datetime.slice(-168,),
-      title: "Health factor of wallet",
+      title: "Health factor",
       title_one: "Health factor",
     });
     setOptionChartFourAll({
@@ -680,7 +680,7 @@ const User = () => {
       name_one: "Health factor",
       data_one: hf,
       datetime: datetime,
-      title: "Health factor of wallet",
+      title: "Health factor",
       title_one: "Health factor",
     });
   };
@@ -829,6 +829,7 @@ const User = () => {
       </Box>
     );
   }
+  console.log(loadingAll)
   if (!loadingAll) {
     return (
       <div className={classes.loading}>

@@ -103,7 +103,6 @@ const Alert = () => {
     setEventType(event.target.value);
   };
   const handleChangeEventAmount = (event) => {
-    console.log(event.target.value)
     if (event.target.value === '') {
       setEventAmount(0)
       return;
@@ -165,7 +164,8 @@ const Alert = () => {
             <MenuItem value={"All"}>All Events</MenuItem>
             <MenuItem value={"DEPOSIT"}>Deposit</MenuItem>
             <MenuItem value={"BORROW"}>Borrow</MenuItem>
-            <MenuItem value={"WITHDRAW"}>WithDraw</MenuItem>
+            <MenuItem value={"WITHDRAW"}>Withdraw</MenuItem>
+            <MenuItem value={"REPAY"}>Repay</MenuItem>
           </Select>
         </FormControl>
         <Autocomplete
@@ -192,7 +192,7 @@ const Alert = () => {
           onChange={handleChangeEventUser}
         />
         <Grid className="col-12">
-          <TableAlert data={eventDataTable} check_data={event_data}/>
+          <TableAlert data={eventDataTable} check_data={event_data} amount={eventAmount}/>
         </Grid>
       </Grid>
     </Container>

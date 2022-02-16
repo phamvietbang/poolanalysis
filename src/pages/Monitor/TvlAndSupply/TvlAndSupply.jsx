@@ -101,7 +101,7 @@ const TvlAndSupply = () => {
       ],
       options: {
         title: {
-          text: "Total value lock and Total Supply",
+          text: "Total value lock and total supply",
           align: "center",
         },
         color: ["#6ab04c", "#2980b9"],

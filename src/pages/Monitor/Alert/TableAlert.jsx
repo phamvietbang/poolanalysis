@@ -209,7 +209,7 @@ export default function EnhancedTable(props) {
                       key={row.tx_hash}
                       selected={isItemSelected}
                       style={{
-                        backgroundColor: row.amount > 10000 ? "#ed5050a8" : "",
+                        backgroundColor: row.amount > 10000 && props.amount<10000? "#ed5050a8" : "",
                       }}
                     >
                       <TableCell align="left">{transformType(row.type)}</TableCell>
