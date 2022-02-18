@@ -708,7 +708,7 @@ const User = () => {
   };
 
   const handleLabelAddress = (event) => {
-    setAddress(labelAddress);
+    setAddress(labelAddress.toLowerCase());
   };
 
 
