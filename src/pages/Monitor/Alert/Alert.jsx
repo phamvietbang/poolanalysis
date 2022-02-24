@@ -113,7 +113,7 @@ const Alert = () => {
     if (event.target.value == null) {
       return;
     }
-    setEventUser(event.target.value);
+    setEventUser(event.target.value.toLowerCase());
   };
   const handleChangeEventToken = (value) => {
     if (value == null) {
